@@ -1,4 +1,5 @@
 import java.sql.Connection;
+import java.util.Map;
 import java.util.Scanner;
 
 public class TA {
@@ -249,6 +250,7 @@ public class TA {
         switch(choice) {
             case 1:
                 //redirect to add content block
+                this.addContentBlock(callingFunction, courseID, chapterID, chapterTitle);
                 break;
             case 2:
                 //redirect to previous page
@@ -264,4 +266,57 @@ public class TA {
                 break;
         }
     }
+
+    //function to add content block
+    private void addContentBlock(String callingFunction, String courseID, String chapterID, String chapterTitle) {
+        System.out.println("Enter content block ID: ");
+        String contentId = scanner.nextLine();
+
+        System.out.println("1. Add text\n2. Add picture\n3. Add activity\n4. Hide activity\n5. Go back");
+        System.out.println("Enter your choice (1-5): ");
+        int choice = scanner.nextInt();
+
+        switch(choice) {
+            case 1:
+                //redirect to add text
+                String text = helper.getText();
+                if(!text.isEmpty()) {
+                    //TODO: handle adding text
+                } else {
+                    this.addContentBlock(callingFunction, courseID, chapterID, chapterTitle);
+                }
+                break;
+            case 2:
+                //redirect to add picture
+                String picture = helper.getPicture();
+                if(!picture.isEmpty()) {
+                    //TODO: handle adding picture
+                } else {
+                    this.addContentBlock(callingFunction, courseID, chapterID, chapterTitle);
+                }
+                break;
+            case 3:
+                //redirect to add activity
+                Map<String, String> activity = helper.getActivity();
+                if(activity.isEmpty()) {
+                    this.addSection(callingFunction, courseID, chapterID, chapterTitle);
+                } else {
+                    //TODO: handle adding activity
+                }
+                break;
+            case 4:
+                //redirect to hide activity
+                break;
+            case 5:
+                //redirect to previous menu (add section menu)
+                this.addSection(callingFunction, courseID, chapterID, chapterTitle);
+                break;
+            default:
+                System.out.println("Invalid entry, exiting application.");
+                System.exit(0);
+                break;
+        }
+    }
+
+
 }
