@@ -212,8 +212,8 @@ public class TA {
         System.out.println("Enter unique chapter ID: ");
         String chapterID = scanner.nextLine();
 
-        System.out.println("1. Add new section\n2. Add new activity\n3. Go back");
-        System.out.println("Enter your choice (1-3): ");
+        System.out.println("1. Add new section\n2. Add new activity\n3. Modify Section\n4. Go back");
+        System.out.println("Enter your choice (1-4): ");
         int choice = scanner.nextInt();
 
         switch(choice) {
@@ -224,8 +224,12 @@ public class TA {
                 break;
             case 2:
                 //redirect to add activity
+                this.addActivity("modifyChapter", courseID, chapterID, "");
                 break;
             case 3:
+                //redirect to modify section
+                this.modifySection("modifyChapter", courseID, chapterID, "");
+            case 4:
                 //redirect to previous page
                 this.goToActiveCourses();
                 break;
@@ -254,7 +258,7 @@ public class TA {
                 break;
             case 2:
                 //redirect to previous page
-                if(callingFunction.equals("addSection")) {
+                if(callingFunction.equals("addChapter")) {
                     this.addChapter(courseID);
                 } else if(callingFunction.equals("modifyChapter")) {
                     this.modifyChapter(courseID);
@@ -299,22 +303,18 @@ public class TA {
                 break;
             case 3:
                 //redirect to add activity
-                Map<String, String> activity = helper.getActivity();
-                if(activity.isEmpty()) {
-                    this.addSection(callingFunction, courseID, chapterID, chapterTitle);
-                } else {
-                    //TODO: handle adding activity
-                }
+                this.addActivity(callingFunction, courseID, chapterID, chapterTitle);
                 break;
             case 4:
                 //redirect to hide activity
+                this.hideActivity(callingFunction, courseID, chapterID, chapterTitle, contentId);
                 break;
             case 5:
                 //redirect to previous menu (add section menu)
                 if(callingFunction.equals("addSection")) {
-                    this.addSection("addContentBlock", courseID, chapterID, chapterTitle);
-                } else if(callingFunction.equals("modifySection")) {
-                    this.modifyContentBlock("addContentBlock", courseID, chapterID, chapterTitle);
+                    this.addSection(callingFunction, courseID, chapterID, chapterTitle);
+                } else if(callingFunction.equals("modifyChapter")) {
+                    this.modifySection(callingFunction, courseID, chapterID, chapterTitle);
                 } else {
                     this.landing();
                 }
@@ -344,21 +344,23 @@ public class TA {
         switch(choice) {
             case 1:
                 //redirect to add content block
-                this.addContentBlock("modifySection", courseID, chapterID, chapterTitle);
+                this.addContentBlock(callingFunction, courseID, chapterID, chapterTitle);
                 break;
             case 2:
                 //redirect to modify content block
-                this.modifyContentBlock("modifySection", courseID, chapterID, chapterTitle);
+                this.modifyContentBlock(callingFunction, courseID, chapterID, chapterTitle);
                 break;
             case 3:
                 //redirect to delete content block
-                this.deleteContentBlock("modifySection", courseID, chapterID, chapterTitle);
+                this.deleteContentBlock(callingFunction, courseID, chapterID, chapterTitle);
                 break;
             case 4:
                 //redirect to hide content block
+                this.hideContentBlock(callingFunction,  courseID, chapterID, chapterTitle);
                 break;
             case 5:
-                //redirect to previous page (unknown flow)
+                //redirect to previous page (modify chapter)
+                this.modifyChapter(courseID);
                 break;
             default:
                 System.out.println("Invalid entry, exiting application.");
@@ -397,19 +399,19 @@ public class TA {
                 break;
             case 3:
                 //redirect to add activity
-                Map<String, String> activity = helper.getActivity();
-                if(activity.isEmpty()) {
-                    this.addSection(callingFunction, courseID, chapterID, chapterTitle);
-                } else {
-                    //TODO: handle adding activity
-                }
+                this.addActivity(callingFunction, courseID, chapterID, chapterTitle);
                 break;
             case 4:
                 //redirect to hide activity
+                this.hideActivity(callingFunction, courseID, chapterID, chapterTitle, contentId);
                 break;
             case 5:
-                //redirect to previous menu (add section menu)
-                this.addSection("modifyContentBlock", courseID, chapterID, chapterTitle);
+                //redirect to previous menu
+                if (callingFunction.equals("addSection")) {
+                    this.addSection(callingFunction, courseID, chapterID, chapterTitle);
+                } else if (callingFunction.equals("modifyChapter")) {
+                    this.modifySection(callingFunction, courseID, chapterID, chapterTitle);
+                }
                 break;
             case 6:
                 //redirect to landing page
@@ -462,6 +464,40 @@ public class TA {
             case 2:
                 //redirect to previous page (modify section)
                 this.modifySection(callingFunction, courseID, chapterID, chapterTitle);
+                break;
+            default:
+                System.out.println("Invalid entry, exiting application.");
+                System.exit(0);
+                break;
+        }
+    }
+
+    private void addActivity(String callingFunction, String courseID, String chapterID, String chapterTitle) {
+        Map<String, String> activity = helper.getActivity();
+        if(activity.isEmpty()) {
+            this.addSection(callingFunction, courseID, chapterID, chapterTitle);
+        } else {
+            //TODO: handle adding activity
+        }
+    }
+
+    private void hideActivity(String callingFunction, String courseID, String chapterID, String chapterTitle, String contentID) {
+        System.out.println("1. Save\n2. Go back");
+        System.out.println("Enter your choice (1-2): ");
+        int choice = scanner.nextInt();
+
+        switch(choice) {
+            case 1:
+                //TODO: handle hide content
+                break;
+            case 2:
+                if (callingFunction.equals("modifyChapter")) {
+                    this.modifyContentBlock(callingFunction, courseID, chapterID, chapterTitle);
+                } else if (callingFunction.equals("addSection")) {
+                    this.addContentBlock(callingFunction, courseID, chapterID, chapterTitle);
+                } else {
+                    this.landing();
+                }
                 break;
             default:
                 System.out.println("Invalid entry, exiting application.");
