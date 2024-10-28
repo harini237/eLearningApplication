@@ -3,10 +3,7 @@ package Repository;
 import Entity.Course;
 import Util.DatabaseConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDateTime;
 
 public class CourseRepository {
@@ -23,8 +20,8 @@ public class CourseRepository {
             pstmt.setString(1, course.getId());
             pstmt.setString(2, course.getTitle());
             pstmt.setString(3, course.getFaculty_id());
-            pstmt.setString(4, course.getStart_date());
-            pstmt.setString(5, course.getEnd_date());
+            pstmt.setDate(4, course.getStart_date());
+            pstmt.setDate(5, course.getEnd_date());
             pstmt.setString(6, course.getType());
             pstmt.setTimestamp(7, course.getCreatedAt());
             pstmt.setString(8, course.getCreatedBy());
@@ -34,5 +31,40 @@ public class CourseRepository {
         } catch (SQLException e) {
             System.out.println("Could not create course.");
         }
+    }
+
+    public Course getCourseById (String id) {
+        String sql = "SELECT id, title, faculty_id, start_date, end_date, type, createdAt, createdBy" +
+                "FROM course WHERE id = ?";
+
+        Course course = null;
+
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, id);
+            try {
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    course = new Course();
+
+                    course.setId(id);
+                    course.setTitle(rs.getString("title"));
+                    course.setFaculty_id(rs.getString("faculty_id"));
+                    course.setStart_date(rs.getDate("start_date"));
+                    course.setEnd_date(rs.getDate("end_date"));
+                    course.setType(rs.getString("type"));
+                    course.setCreatedAt(rs.getTimestamp("createdAt"));
+                    course.setCreatedBy(rs.getString("createdBy"));
+                }
+            } catch (SQLException e) {
+                System.out.println("Could not get course details.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Could not fetch course details.");
+        }
+
+        return course;
     }
 }

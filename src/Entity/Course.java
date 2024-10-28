@@ -1,13 +1,14 @@
 package Entity;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Course {
     private String id;
     private String title;
     private String faculty_id;
-    private String start_date;
-    private String end_date;
+    private Date start_date;
+    private Date end_date;
     private String type;
     private Timestamp createdAt;
     private String createdBy;
@@ -15,7 +16,7 @@ public class Course {
     public Course() {
     }
 
-    public Course(String id, String title, String faculty_id, String start_date, String end_date, String type, Timestamp createdAt, String createdBy) {
+    public Course(String id, String title, String faculty_id, Date start_date, Date end_date, String type, Timestamp createdAt, String createdBy) {
         this.id = id;
         this.title = title;
         this.faculty_id = faculty_id;
@@ -50,19 +51,19 @@ public class Course {
         this.faculty_id = faculty_id;
     }
 
-    public String getStart_date() {
+    public Date getStart_date() {
         return start_date;
     }
 
-    public void setStart_date(String start_date) {
+    public void setStart_date(Date start_date) {
         this.start_date = start_date;
     }
 
-    public String getEnd_date() {
+    public Date getEnd_date() {
         return end_date;
     }
 
-    public void setEnd_date(String end_date) {
+    public void setEnd_date(Date end_date) {
         this.end_date = end_date;
     }
 
