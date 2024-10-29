@@ -1,12 +1,20 @@
 package Repository;
 
+import Entity.Permission;
+import Entity.Role;
 import Entity.User;
 import Util.DatabaseConnection;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserRepository {
+
+    private final RoleRepository roleRepository = new RoleRepository();
+    private final RolePermissionMapRepository rolePermissionMapRepository = new RolePermissionMapRepository();
+
 
     public void createUser(User user) {
         // Generate unique user ID based on rules
@@ -97,6 +105,27 @@ public class UserRepository {
         }
 
         return user;
+    }
+
+    public Role getUserRoles(int userId) {
+        String sql = "SELECT r.id, r.name, r.description FROM role r " +
+                "JOIN user_role ur ON r.id = ur.role_id WHERE ur.user_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                return new Role(rs.getInt("id"), rs.getString("name"), rs.getString("description"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Permission> getUserPermissions(int userId) {
+        Role role = getUserRoles(userId);
+        return rolePermissionMapRepository.getPermissionsForRole(role.getId());
     }
 
     private String generateUserId(String firstName, String lastName) {
