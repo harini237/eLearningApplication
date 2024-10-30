@@ -2,14 +2,14 @@ package Entity;
 
 public class TaCourseMap {
     private String ta_user_id;
-    private String course_id;
+    private String course_token;
 
     public TaCourseMap () {
     }
 
-    public TaCourseMap(String ta_user_id, String course_id) {
+    public TaCourseMap(String ta_user_id, String course_token) {
         this.ta_user_id = ta_user_id;
-        this.course_id = course_id;
+        this.course_token = course_token;
     }
 
     public String getTa_user_id() {
@@ -20,19 +20,19 @@ public class TaCourseMap {
         this.ta_user_id = ta_user_id;
     }
 
-    public String getCourse_id() {
-        return course_id;
+    public String getCourse_token() {
+        return course_token;
     }
 
-    public void setCourse_id(String course_id) {
-        this.course_id = course_id;
+    public void setCourse_token(String course_token) {
+        this.course_token = course_token;
     }
 
     @Override
     public String toString() {
         return "TaCourseMap{" +
                 "ta_user_id='" + ta_user_id + '\'' +
-                ", course_id='" + course_id + '\'' +
+                ", course_token='" + course_token + '\'' +
                 '}';
     }
 }
