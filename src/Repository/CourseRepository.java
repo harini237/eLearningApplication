@@ -33,7 +33,7 @@ public class CourseRepository {
         }
     }
 
-    public Course getCourseById (String id) {
+    public Course findCourseById (String id) {
         String sql = "SELECT id, title, faculty_id, start_date, end_date, type, createdAt, createdBy" +
                 "FROM course WHERE id = ?";
 
