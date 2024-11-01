@@ -76,4 +76,23 @@ public class PendingApprovalRepository {
 
         return approvals;
     }
+
+    public void deletePendingApproval (String student_id, String course_token) {
+        String sql = "DELETE FROM pending_approval" +
+                "WHERE student_id = ?" +
+                "AND course_token = ?";
+
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, student_id);
+            pstmt.setString(2, course_token);
+
+            pstmt.executeUpdate();
+            System.out.println(student_id+ " deleted approval for "+ course_token);
+        } catch (SQLException e) {
+            System.out.println("Could not delete pending approval.");
+        }
+    }
 }
