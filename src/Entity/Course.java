@@ -10,6 +10,7 @@ public class Course {
     private Date start_date;
     private Date end_date;
     private String type;
+    //type in {"active", "eval"}
     private Timestamp createdAt;
     private String createdBy;
 
