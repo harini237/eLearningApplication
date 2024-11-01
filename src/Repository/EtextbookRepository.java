@@ -8,27 +8,31 @@ import java.sql.*;
 public class EtextbookRepository {
 
     public void createEtextbook(Etextbook etextbook) {
-        String sql = "INSERT INTO e_textbook (title) VALUES (?)";
-
+        // Adjust SQL to include the id field for manual input
+        String sql = "INSERT INTO e_textbook (id, title) VALUES (?, ?)";
+    
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
-            pstmt.setString(1, etextbook.getTitle());
-            pstmt.executeUpdate();
-
-            // Get the generated ID
-            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    etextbook.setId(generatedKeys.getInt(1));
-                    System.out.println("E-textbook created successfully with ID: " + etextbook.getId());
-                } else {
-                    throw new SQLException("Creating e-textbook failed, no ID obtained.");
-                }
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    
+            // Set the id and title from the Etextbook object
+            pstmt.setInt(1, etextbook.getId()); // Assuming etextbook has an id field
+            pstmt.setString(2, etextbook.getTitle());
+    
+            // Execute the insert operation
+            int rowsAffected = pstmt.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                System.out.println("E-textbook created successfully with ID: " + etextbook.getId());
+            } else {
+                System.err.println("Failed to create e-textbook.");
             }
+    
         } catch (SQLException e) {
+            // Handle SQL exceptions
             System.err.println("Error creating e-textbook: " + e.getMessage());
         }
     }
+    
 
     public Etextbook getEtextbookById(Integer etextbookId) {
         String sql = "SELECT id, title FROM e_textbook WHERE id = ?";

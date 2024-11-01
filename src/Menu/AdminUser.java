@@ -2,13 +2,15 @@ package Menu;
 
 import Entity.User;
 import Service.UserService;
+import Entity.Etextbook;
+import Service.EtextbookService;
 
 import java.util.Scanner;
 
 public class AdminUser {
 
     private final UserService userService = new UserService();
-//    private final EtextbookService etextbookService = new EtextbookService();
+     private final EtextbookService etextbookService = new EtextbookService();
 //    private final CourseService courseService = new CourseService();
 
     public void displayAdminMenu() {
@@ -67,8 +69,10 @@ public class AdminUser {
         System.out.print("Enter Unique E-textbook ID: ");
         int textbookId = scanner.nextInt();
 
-//        etextbookService.createEtextbook(textbookId, title);
-        System.out.println("E-textbook created successfully.");
+        etextbookService.createEtextbook(textbookId, title);
+
+        // Automatically proceed to add a chapter
+        addChapter(scanner, textbookId);
     }
 
     private void modifyEtextbook(Scanner scanner) {
