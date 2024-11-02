@@ -95,4 +95,59 @@ public class PendingApprovalRepository {
             System.out.println("Could not delete pending approval.");
         }
     }
+
+    public List<PendingApproval> findPendingApprovalsByFaculty (String faculty_id) {
+        String sql = "SELECT A.token" +
+                "FROM active_course A" +
+                "JOIN course C" +
+                "ON A.course_id = C.id" +
+                "JOIN pending_approval P" +
+                "ON A.token = P.course_token" +
+                "WHERE C.faculty_id = ?";
+
+        List<String> course_tokens = new ArrayList<>();
+
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, faculty_id);
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()) {
+                course_tokens.add(rs.getString("A.token"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Could not get course token by faculty.");
+        }
+
+        List<PendingApproval> pendingApprovals = new ArrayList<>();
+        String sql2 = "SELECT course_token, student_id" +
+                "FROM pending_approval" +
+                "WHERE course_token = ?";
+
+        if (course_tokens.isEmpty()) {
+            System.out.println("No active courses to fetch pending approvals for faculty "+ faculty_id);
+        } else {
+            try {
+                Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql2);
+
+                for(String token : course_tokens) {
+                    pstmt.setString(1, token);
+                    ResultSet rs = pstmt.executeQuery();
+
+                    while(rs.next()) {
+                        PendingApproval pendingApproval = new PendingApproval(rs.getString("student_id"),
+                                rs.getString("course_token"));
+                        pendingApprovals.add(pendingApproval);
+                    }
+                }
+            } catch (SQLException e) {
+                System.out.println("Could not get pending approvals for active courses.");
+            }
+        }
+
+        return pendingApprovals;
+    }
 }
