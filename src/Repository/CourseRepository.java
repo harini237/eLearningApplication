@@ -5,6 +5,8 @@ import Util.DatabaseConnection;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CourseRepository {
     public void createCourse (Course course) {
@@ -66,5 +68,42 @@ public class CourseRepository {
         }
 
         return course;
+    }
+
+    public List<Course> findCoursesByFaculty (String faculty_id) {
+        String sql = "SELECT id, title, faculty_id, start_date, end_date, type, createdAt, createdBy" +
+                "FROM course WHERE faculty_id = ?";
+
+        List<Course> courses = new ArrayList<>();
+
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, faculty_id);
+            try {
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    Course course = new Course();
+
+                    course.setId(rs.getString("id"));
+                    course.setTitle(rs.getString("title"));
+                    course.setFaculty_id(faculty_id);
+                    course.setStart_date(rs.getDate("start_date"));
+                    course.setEnd_date(rs.getDate("end_date"));
+                    course.setType(rs.getString("type"));
+                    course.setCreatedAt(rs.getTimestamp("createdAt"));
+                    course.setCreatedBy(rs.getString("createdBy"));
+
+                    courses.add(course);
+                }
+            } catch (SQLException e) {
+                System.out.println("Could not get courses.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Could not fetch courses.");
+        }
+
+        return courses;
     }
 }
