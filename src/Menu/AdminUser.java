@@ -2,13 +2,15 @@ package Menu;
 
 import Entity.User;
 import Service.UserService;
+import Entity.Etextbook;
+import Service.EtextbookService;
 
 import java.util.Scanner;
 
 public class AdminUser {
 
     private final UserService userService = new UserService();
-//    private final EtextbookService etextbookService = new EtextbookService();
+     private final EtextbookService etextbookService = new EtextbookService();
 //    private final CourseService courseService = new CourseService();
 
     public void displayAdminMenu() {
@@ -36,6 +38,25 @@ public class AdminUser {
                 default -> System.out.println("Invalid choice. Please try again.");
             }
         } while (choice != 6);
+    }
+
+    public void displayChapterMenu(int textbookId) {
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n--- Chapter Menu ---");
+            System.out.println("1. Add New Chapter");
+            System.out.println("2. Go Back");
+            System.out.print("Enter choice (1-2): ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1 -> addChapter(scanner, textbookId);
+                case 2 -> displayAdminMenu();
+                default -> System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 2);
     }
 
     private void createFacultyAccount(Scanner scanner) {
@@ -67,8 +88,11 @@ public class AdminUser {
         System.out.print("Enter Unique E-textbook ID: ");
         int textbookId = scanner.nextInt();
 
-//        etextbookService.createEtextbook(textbookId, title);
-        System.out.println("E-textbook created successfully.");
+        etextbookService.createEtextbook(textbookId, title);
+
+        // Automatically proceed to add a chapter
+        displayChapterMenu(textbookId);
+        
     }
 
     private void modifyEtextbook(Scanner scanner) {
@@ -96,12 +120,26 @@ public class AdminUser {
     private void addChapter(Scanner scanner, int textbookId) {
         System.out.print("Enter Chapter Number: ");
         String chapterNumber = scanner.next();
+        
+    // Validate chapter number to ensure it follows the "chapXX" format
+    if (!chapterNumber.matches("chap\\d{2}")) {
+        System.out.println("Invalid chapter number. Please enter a value in the format 'chapXX' (e.g., 'chap01', 'chap12').");
+        return;
+    }
+    
         System.out.print("Enter Chapter Title: ");
         String title = scanner.next();
-
-//        etextbookService.addChapter(textbookId, chapterNumber, title);
-        System.out.println("Chapter added successfully.");
+        
+        // Check if title is empty
+        if (title.trim().isEmpty()) {
+            System.out.println("Chapter title cannot be empty. Please try again.");
+            return;
+        }
+    
+        // Proceed with adding the chapter
+        etextbookService.addChapter(chapterNumber, textbookId, title);
     }
+    
 
     private void modifyChapter(Scanner scanner, int textbookId) {
         System.out.print("Enter Chapter Number to Modify: ");
