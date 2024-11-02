@@ -59,6 +59,28 @@ public class AdminUser {
         } while (choice != 2);
     }
 
+    public void displaySectionMenu(int textbookId, String chapterId) {
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n--- Chapter Menu ---");
+            System.out.println("1. Add New Section");
+            System.out.println("2. Go Back");
+            System.out.println("3. Landing Page");
+            System.out.print("Enter choice (1-3): ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                //for case 1, add addSection function, service and repo
+                case 1 -> System.out.println("addSection(scanner, textbookId, chapterId)");
+                case 2 -> displayChapterMenu(textbookId);
+                case 3 -> displayAdminMenu();
+                default -> System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 2);
+    }
+
     private void createFacultyAccount(Scanner scanner) {
         System.out.println("Creating Faculty Account");
         System.out.print("Enter First Name: ");
@@ -147,7 +169,7 @@ public class AdminUser {
         System.out.print("Enter New Chapter Title: ");
         String title = scanner.next();
 
-//        etextbookService.modifyChapter(textbookId, chapterNumber, title);
+        etextbookService.modifyChapter(textbookId, chapterNumber, title);
         System.out.println("Chapter modified successfully.");
     }
 
