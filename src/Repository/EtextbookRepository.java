@@ -102,4 +102,26 @@ public class EtextbookRepository {
         }
     }
     
+
+    public void modifyChapter(int textbookId, String chapterId, String newTitle) {
+        String sql = "UPDATE chapter SET title = ? WHERE textbook_id = ? AND chapter_id = ?";
+
+        // Use try-with-resources for connection and prepared statement
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setString(1, newTitle);
+            preparedStatement.setInt(2, textbookId);
+            preparedStatement.setString(3, chapterId);
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Chapter modified successfully.");
+            } else {
+                System.out.println("No chapter found with the given details.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error modifying chapter: " + e.getMessage());
+        }
+    }
+    
 }

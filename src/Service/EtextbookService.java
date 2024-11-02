@@ -49,4 +49,13 @@ public class EtextbookService {
         }
     }
     
+
+    public void modifyChapter(int textbookId, String chapterId, String newTitle) {
+        try {
+            etextbookRepository.modifyChapter(textbookId, chapterId, newTitle);
+        } catch (Exception e) {
+            System.err.println("Error modifying chapter: " + e.getMessage());
+        }
+    }
+    
 }
