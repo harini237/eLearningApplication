@@ -70,4 +70,29 @@ public class ActiveCourseRepository {
             System.out.println("Could not update capacity.");
         }
     }
+
+    public ActiveCourse findActiveCourseById (String course_id) {
+        ActiveCourse course = null;
+
+        String sql = "SELECT token, capacity, course_id FROM active_course" +
+                "WHERE course_id = ?";
+
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, course_id);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                course = new ActiveCourse(rs.getString("token"),
+                        rs.getInt("capacity"),
+                        rs.getString("course_id"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Could not find active course.");
+        }
+
+        return course;
+    }
 }
