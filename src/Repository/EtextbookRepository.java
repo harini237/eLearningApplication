@@ -33,26 +33,28 @@ public class EtextbookRepository {
         }
     }
     
-
-    public Etextbook getEtextbookById(Integer etextbookId) {
-        String sql = "SELECT id, title FROM e_textbook WHERE id = ?";
-        Etextbook etextbook = null;
-
+    public void addChapter(String chapterId, int textbookId, String title) {
+        String sql = "INSERT INTO chapter (chapter_id, textbook_id, title) VALUES (?, ?, ?)";
+    
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setInt(1, etextbookId);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    etextbook = new Etextbook();
-                    etextbook.setId(rs.getInt("id"));
-                    etextbook.setTitle(rs.getString("title"));
-                }
+    
+            pstmt.setString(1, chapterId); // Use the user-provided chapter ID
+            pstmt.setInt(2, textbookId);
+            pstmt.setString(3, title);
+            //pstmt.setBoolean(4, visibility);
+    
+            int rowsAffected = pstmt.executeUpdate();
+    
+            if (rowsAffected > 0) {
+                System.out.println("Chapter added successfully with ID: " + chapterId);
+            } else {
+                System.err.println("Failed to add chapter.");
             }
+    
         } catch (SQLException e) {
-            System.err.println("Error retrieving e-textbook: " + e.getMessage());
+            System.err.println("Error adding chapter: " + e.getMessage());
         }
-
-        return etextbook;
     }
+    
 }

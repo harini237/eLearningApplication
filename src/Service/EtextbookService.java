@@ -23,4 +23,14 @@ public class EtextbookService {
             System.err.println("Error creating e-textbook: " + e.getMessage());
         }
     }
+    
+
+    public void addChapter(String chapterId, int textbookId, String title) {    
+        try {
+            etextbookRepository.addChapter(chapterId, textbookId, title);
+        } catch (Exception e) {
+            System.err.println("Error adding chapter: " + e.getMessage());
+        }
+    }
+    
 }
