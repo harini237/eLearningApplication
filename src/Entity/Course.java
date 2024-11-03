@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 public class Course {
     private String id;
     private String title;
+    private Integer textbook_id;
     private String faculty_id;
     private Date start_date;
     private Date end_date;
@@ -17,9 +18,10 @@ public class Course {
     public Course() {
     }
 
-    public Course(String id, String title, String faculty_id, Date start_date, Date end_date, String type, Timestamp createdAt, String createdBy) {
+    public Course(String id, String title, Integer textbook_id, String faculty_id, Date start_date, Date end_date, String type, Timestamp createdAt, String createdBy) {
         this.id = id;
         this.title = title;
+        this.textbook_id = textbook_id;
         this.faculty_id = faculty_id;
         this.start_date = start_date;
         this.end_date = end_date;
@@ -42,6 +44,14 @@ public class Course {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Integer getTextbook_id() {
+        return textbook_id;
+    }
+
+    public void setTextbook_id(Integer textbook_id) {
+        this.textbook_id = textbook_id;
     }
 
     public String getFaculty_id() {
@@ -97,9 +107,10 @@ public class Course {
         return "Course{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
+                ", textbook_id=" + textbook_id +
                 ", faculty_id='" + faculty_id + '\'' +
-                ", start_date='" + start_date + '\'' +
-                ", end_date='" + end_date + '\'' +
+                ", start_date=" + start_date +
+                ", end_date=" + end_date +
                 ", type='" + type + '\'' +
                 ", createdAt=" + createdAt +
                 ", createdBy='" + createdBy + '\'' +
