@@ -9,7 +9,7 @@ public class Main {
             new Home(con);
             con.close();
         } catch (Exception e) {
-            System.out.println("Could not establish jdbc connection.");
+            System.out.println("Could not establish jdbc connection." + e.getMessage());
         }
     }
 }

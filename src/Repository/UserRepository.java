@@ -123,6 +123,38 @@ public class UserRepository {
         return null;
     }
 
+    public User getUserWithRoleUsingEmail(String emailId){
+        String sql = "SELECT user.id, first_name, last_name, email, password, created_at, created_by, role_id, is_pwd_reset_req, r.name as \"role\" " +
+                "FROM user JOIN role r on r.id = user.role_id WHERE email = ? ";
+        User user = null;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, emailId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    user = new User();
+                    user.setId(rs.getString("id"));
+                    user.setFirstName(rs.getString("first_name"));
+                    user.setLastName(rs.getString("last_name"));
+                    user.setEmail(rs.getString("email"));
+                    user.setPassword(rs.getString("password"));
+                    user.setCreatedAt(rs.getTimestamp("created_at"));
+                    user.setCreatedBy(rs.getString("created_by"));
+                    user.setRoleId(rs.getInt("role_id"));
+                    user.setIsPwdResetReq(rs.getBoolean("is_pwd_reset_req"));
+                    user.setRole(rs.getString("role"));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error retrieving user: " + e.getMessage());
+        }
+
+        return user;
+    }
+
     public List<Permission> getUserPermissions(int userId) {
         Role role = getUserRoles(userId);
         return rolePermissionMapRepository.getPermissionsForRole(role.getId());
