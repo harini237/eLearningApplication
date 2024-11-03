@@ -43,10 +43,16 @@ public class UserService {
      * @return The User object if found, otherwise null.
      */
     public User getUserByEmail(String userEmail) {
-        User user = userRepository.getUserByEmail(userEmail);
-        Role role = roleRepository.getRoleById(user.getRoleId());
-        user.setRole(role.getName());
-        return user;
+        return userRepository.getUserByEmail(userEmail);
+    }
+
+    /**
+     * Retrieves a user by Email.
+     * @param userEmail The Email ID of the user to retrieve.
+     * @return The User object if found, otherwise null.
+     */
+    public User getUserWithRoleUsingEmail(String userEmail) {
+        return userRepository.getUserWithRoleUsingEmail(userEmail);
     }
 
 

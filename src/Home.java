@@ -56,7 +56,7 @@ public class Home {
         String password = scanner.nextLine();
 
         // Use UserService to validate login with the hashed password
-        User user = userService.getUserByEmail(username);
+        User user = userService.getUserWithRoleUsingEmail(username);
 
         if (user != null && user.getRole().equalsIgnoreCase(role) && user.getPassword().equals(PasswordUtil.hashPassword(password))) {
             System.out.println("Login successful!");
