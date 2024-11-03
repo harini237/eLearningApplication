@@ -1,7 +1,7 @@
 import java.sql.Connection;
 import java.util.Scanner;
 
-import Menu.AdminUser;
+import Menu.AdminMenu;
 
 public class Home {
     Connection con;
@@ -17,7 +17,7 @@ public class Home {
         //redirect to chosen homepage
         switch(choice) {
             case 1:
-                AdminUser adminUser = new AdminUser();
+                AdminMenu adminUser = new AdminMenu();
                 adminUser.displayAdminMenu(); // Call the method to display the admin menu
                 break;
                 //redirect to admin
