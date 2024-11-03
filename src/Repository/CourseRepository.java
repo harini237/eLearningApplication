@@ -12,8 +12,8 @@ public class CourseRepository {
     public void createCourse (Course course) {
         course.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
-        String sql = "INSERT INTO Course (id, title, faculty_id, start_date, end_date, type, createdAt, createdBy)" +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, NULL)";
+        String sql = "INSERT INTO Course (id, title, faculty_id, start_date, end_date, type, createdAt, createdBy, textbook_id)" +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?)";
 
         try {
             Connection conn = DatabaseConnection.getConnection();
@@ -27,6 +27,7 @@ public class CourseRepository {
             pstmt.setString(6, course.getType());
             pstmt.setTimestamp(7, course.getCreatedAt());
             pstmt.setString(8, course.getCreatedBy());
+            pstmt.setInt(9, course.getTextbook_id());
 
             pstmt.executeUpdate();
             System.out.println("Created course: "+ course.getId());
@@ -36,7 +37,7 @@ public class CourseRepository {
     }
 
     public Course findCourseById (String id) {
-        String sql = "SELECT id, title, faculty_id, start_date, end_date, type, createdAt, createdBy" +
+        String sql = "SELECT id, title, textbook_id, faculty_id, start_date, end_date, type, createdAt, createdBy" +
                 "FROM course WHERE id = ?";
 
         Course course = null;
@@ -53,6 +54,7 @@ public class CourseRepository {
 
                     course.setId(id);
                     course.setTitle(rs.getString("title"));
+                    course.setTextbook_id(rs.getInt("textbook_id"));
                     course.setFaculty_id(rs.getString("faculty_id"));
                     course.setStart_date(rs.getDate("start_date"));
                     course.setEnd_date(rs.getDate("end_date"));
@@ -71,7 +73,7 @@ public class CourseRepository {
     }
 
     public List<Course> findCoursesByFaculty (String faculty_id) {
-        String sql = "SELECT id, title, faculty_id, start_date, end_date, type, createdAt, createdBy" +
+        String sql = "SELECT id, title, textbook_id, faculty_id, start_date, end_date, type, createdAt, createdBy" +
                 "FROM course WHERE faculty_id = ?";
 
         List<Course> courses = new ArrayList<>();
@@ -88,6 +90,7 @@ public class CourseRepository {
 
                     course.setId(rs.getString("id"));
                     course.setTitle(rs.getString("title"));
+                    course.setTextbook_id(rs.getInt("textbook_id"));
                     course.setFaculty_id(faculty_id);
                     course.setStart_date(rs.getDate("start_date"));
                     course.setEnd_date(rs.getDate("end_date"));
