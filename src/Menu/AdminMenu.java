@@ -129,7 +129,6 @@ public class AdminMenu {
 
     private void addChapter(Scanner scanner, int textbookId) {
         System.out.println("\n--- Add New Chapter ---");
-
         System.out.print("Enter Chapter ID: ");
         String chapterId = scanner.next();
         // Validate chapter number to ensure it follows the "chapXX" format
@@ -159,7 +158,6 @@ public class AdminMenu {
         } else {
             navigationStack.pop();  // Go back to E-textbook creation
         }
-
     }
 
     private void addSection(Scanner scanner, int textbookId, String chapterId) {
