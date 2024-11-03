@@ -11,13 +11,14 @@ public class User {
     private Timestamp createdAt;
     private String createdBy;
     private Integer roleId;
+    private String role;
     private Boolean isPwdResetReq = Boolean.FALSE;
 
     // Constructors
     public User() {}
 
     public User(String id, String firstName, String lastName, String email, String password,
-                Timestamp createdAt, String createdBy, Integer roleId, Boolean isPwdResetReq) {
+                Timestamp createdAt, String createdBy, Integer roleId, String role, Boolean isPwdResetReq) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -26,6 +27,7 @@ public class User {
         this.createdAt = createdAt;
         this.createdBy = createdBy;
         this.roleId = roleId;
+        this.role = role;
         this.isPwdResetReq = isPwdResetReq;
     }
 
@@ -114,5 +116,13 @@ public class User {
                 ", roleId=" + roleId +
                 ", isPwdResetReq=" + isPwdResetReq +
                 '}';
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
