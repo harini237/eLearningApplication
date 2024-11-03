@@ -11,7 +11,7 @@ public class User {
     private Timestamp createdAt;
     private String createdBy;
     private Integer roleId;
-    private Boolean isPwdResetReq;
+    private Boolean isPwdResetReq = Boolean.FALSE;
 
     // Constructors
     public User() {}
