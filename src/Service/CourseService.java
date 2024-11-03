@@ -22,10 +22,10 @@ public class CourseService {
         this.taCourseMapRepository = new TaCourseMapRepository();
     }
 
-    public void createCourse (String courseId, String courseTitle, String facultyId,
+    public void createCourse (String courseId, String courseTitle, Integer textbookId, String facultyId,
                                    Date startDate, Date endDate, String type,
                              String token, int capacity) {
-        Course course = new Course(courseId, courseTitle, facultyId, startDate, endDate, type, null, null);
+        Course course = new Course(courseId, courseTitle, textbookId, facultyId, startDate, endDate, type, null, null);
         this.courseRepository.createCourse(course);
 
         if (type.equals("active")) {
