@@ -96,7 +96,7 @@ public class PendingApprovalRepository {
         }
     }
 
-    public List<PendingApproval> findPendingApprovalsByFaculty (String faculty_id) {
+    public List<String> findPendingApprovalTokensByFaculty (String faculty_id) {
         String sql = "SELECT A.token" +
                 "FROM active_course A" +
                 "JOIN course C" +
@@ -114,17 +114,23 @@ public class PendingApprovalRepository {
             pstmt.setString(1, faculty_id);
             ResultSet rs = pstmt.executeQuery();
 
-            while(rs.next()) {
+            while (rs.next()) {
                 course_tokens.add(rs.getString("A.token"));
             }
         } catch (SQLException e) {
             System.out.println("Could not get course token by faculty.");
         }
+        return course_tokens;
+    }
+
+    public List<PendingApproval> findPendingApprovalsByFaculty (String faculty_id) {
 
         List<PendingApproval> pendingApprovals = new ArrayList<>();
         String sql2 = "SELECT course_token, student_id" +
                 "FROM pending_approval" +
                 "WHERE course_token = ?";
+
+        List<String> course_tokens = this.findPendingApprovalTokensByFaculty(faculty_id);
 
         if (course_tokens.isEmpty()) {
             System.out.println("No active courses to fetch pending approvals for faculty "+ faculty_id);
@@ -149,5 +155,39 @@ public class PendingApprovalRepository {
         }
 
         return pendingApprovals;
+    }
+
+    public List<PendingApproval> findApprovalsByStudentAndFaculty(String student_id, String faculty_id) {
+        List<PendingApproval> approvals = new ArrayList<>();
+
+        String sql = "SELECT student_id, course_token FROM pending_approval" +
+                "WHERE student_id = ? AND course_token in " +
+                "(SELECT A.token" +
+                "FROM active_course A" +
+                "JOIN course C" +
+                "ON A.course_id = C.id" +
+                "JOIN pending_approval P" +
+                "ON A.token = P.course_token" +
+                "WHERE C.faculty_id = ?)";
+
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, student_id);
+            pstmt.setString(2, faculty_id);
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()) {
+                PendingApproval pendingApproval = new PendingApproval(rs.getString("student_id"),
+                        rs.getString("course_token"));
+                approvals.add(pendingApproval);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Could not get pending approvals for student & faculty combination.");
+        }
+
+        return approvals;
     }
 }
