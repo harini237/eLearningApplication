@@ -168,16 +168,67 @@ public class AdminMenu {
         System.out.println("2. Add Picture");
         System.out.println("3. Add Activity");
         System.out.println("4. Go Back");
-        System.out.print("Enter choice (1-4): ");
+        System.out.println("5. Landing Page");
+        System.out.print("Enter choice (1-5): ");
         int choice = scanner.nextInt();
 
         switch (choice) {
-//            case 1 -> etextbookService.addTextBlock(textbookId, chapterId, sectionNumber, contentBlockId);
-//            case 2 -> etextbookService.addPictureBlock(textbookId, chapterId, sectionNumber, contentBlockId);
+            case 1 -> navigationStack.push(() -> addText(scanner, textbookId, chapterId, sectionNumber, contentBlockId));
+            case 2 -> navigationStack.push(() -> addPicture(scanner, textbookId, chapterId, sectionNumber, contentBlockId));
             case 3 -> navigationStack.push(() -> addActivity(scanner, textbookId, chapterId, sectionNumber, contentBlockId));
-            case 4 -> navigationStack.pop();  // Go back to Section creation
+            case 4 -> navigationStack.pop();  // Go back to previous menu
+            case 5 -> goToLandingPage();      // Go to landing page
+            default -> System.out.println("Invalid choice. Returning to Content Block Menu.");
         }
     }
+
+    private void addText(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
+        System.out.println("\n--- Add Text Block ---");
+        System.out.print("Enter Text Content: ");
+        scanner.nextLine(); // Consume newline
+        String textContent = scanner.nextLine();
+
+        System.out.println("\n1. Add");
+        System.out.println("2. Go Back");
+        System.out.println("3. Landing Page");
+        System.out.print("Enter choice (1-3): ");
+        int choice = scanner.nextInt();
+
+        switch (choice) {
+            case 1 -> {
+                etextbookService.addContentBlock(textbookId, chapterId, sectionNumber, contentBlockId, "Text", textContent);
+                System.out.println("Text block added successfully.");
+                navigationStack.pop();  // Go back to Content Block Menu
+            }
+            case 2 -> navigationStack.pop();  // Go back to Content Block Menu
+            case 3 -> goToLandingPage();      // Go to landing page
+        }
+    }
+
+    private void addPicture(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
+        System.out.println("\n--- Add Picture Block ---");
+        System.out.print("Enter Picture URL: ");
+        scanner.nextLine(); // Consume newline
+        String pictureUrl = scanner.nextLine();
+
+        System.out.println("\n1. Add");
+        System.out.println("2. Go Back");
+        System.out.println("3. Landing Page");
+        System.out.print("Enter choice (1-3): ");
+        int choice = scanner.nextInt();
+
+        switch (choice) {
+            case 1 -> {
+                etextbookService.addContentBlock(textbookId, chapterId, sectionNumber, contentBlockId, "Picture", pictureUrl);
+                System.out.println("Picture block added successfully.");
+                navigationStack.pop();  // Go back to Content Block Menu
+            }
+            case 2 -> navigationStack.pop();  // Go back to Content Block Menu
+            case 3 -> goToLandingPage();      // Go to landing page
+        }
+    }
+
+
 
     private void addActivity(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
         System.out.println("\n--- Add New Activity ---");
@@ -195,19 +246,66 @@ public class AdminMenu {
             navigationStack.pop();  // Go back to Content Block
         }
     }
-
     private void addQuestion(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId, String activityId) {
         System.out.println("\n--- Add Question ---");
+
         System.out.print("Enter Question ID: ");
         String questionId = scanner.next();
+        scanner.nextLine(); // Consume newline
         System.out.print("Enter Question Text: ");
-        String questionText = scanner.next();
+        String questionText = scanner.nextLine();
 
-//        etextbookService.addActivity(textbookId, chapterId, sectionNumber, contentBlockId, activityId, questionId, questionText);
-        System.out.println("Question and Activity added successfully.");
+        // Collecting option details
+        System.out.print("Enter Option 1 Text: ");
+        String option1Text = scanner.nextLine();
+        System.out.print("Enter Option 1 Explanation: ");
+        String option1Explanation = scanner.nextLine();
+        System.out.print("Enter Option 1 Label (Correct/Incorrect): ");
+        String option1Label = scanner.next();
 
-        navigationStack.pop();  // Go back to Activity page
+        System.out.print("Enter Option 2 Text: ");
+        String option2Text = scanner.nextLine();
+        System.out.print("Enter Option 2 Explanation: ");
+        String option2Explanation = scanner.nextLine();
+        System.out.print("Enter Option 2 Label (Correct/Incorrect): ");
+        String option2Label = scanner.next();
+
+        // Similar entries for options 3 and 4 can be added here
+
+        System.out.println("\n1. Save");
+        System.out.println("2. Cancel");
+        System.out.println("3. Landing Page");
+        System.out.print("Enter choice (1-3): ");
+        int choice = scanner.nextInt();
+
+        switch (choice) {
+            case 1 -> {
+                etextbookService.addQuestion(textbookId, chapterId, sectionNumber, contentBlockId, activityId, questionId, questionText,
+                        new String[]{option1Text, option2Text},
+                        new String[]{option1Explanation, option2Explanation},
+                        new String[]{option1Label, option2Label});
+                System.out.println("Question added successfully.");
+                navigationStack.pop();  // Go back to Add Activity page
+            }
+            case 2 -> navigationStack.pop();  // Go back to Add Activity page without saving
+            case 3 -> goToLandingPage();      // Go to landing page
+            default -> System.out.println("Invalid choice. Returning to previous menu.");
+        }
     }
+
+
+//    private void addQuestion(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId, String activityId) {
+//        System.out.println("\n--- Add Question ---");
+//        System.out.print("Enter Question ID: ");
+//        String questionId = scanner.next();
+//        System.out.print("Enter Question Text: ");
+//        String questionText = scanner.next();
+//
+////        etextbookService.addActivity(textbookId, chapterId, sectionNumber, contentBlockId, activityId, questionId, questionText);
+//        System.out.println("Question and Activity added successfully.");
+//
+//        navigationStack.pop();  // Go back to Activity page
+//    }
 
     private void modifyEtextbook(Scanner scanner) {
         System.out.println("\n--- Modify E-textbook ---");
