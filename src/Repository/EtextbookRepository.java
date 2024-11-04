@@ -78,4 +78,28 @@ public class EtextbookRepository {
         }
     }
     
+    public void addSection(int textbookId, String chapterId, String sectionNumber, String title) {
+        String sql = "INSERT INTO section (section_number, chapter_id, textbook_id, title) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, sectionNumber); // Set section number
+            pstmt.setString(2, chapterId);     // Set chapter ID
+            pstmt.setInt(3, textbookId);       // Set textbook ID
+            pstmt.setString(4, title);         // Set section title
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Section added successfully with Section Number: " + sectionNumber);
+            } else {
+                System.err.println("Failed to add section.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error adding section: " + e.getMessage());
+        }
+    }
+    
 }
