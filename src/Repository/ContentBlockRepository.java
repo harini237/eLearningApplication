@@ -40,6 +40,7 @@ public class ContentBlockRepository {
             System.err.println("Error creating ContentBlock: " + e.getMessage());
         }
     }
+    //
 
     public ContentBlock getContentBlockById(int id, int sectionId, int chapterId, int textbookId) {
         String sql = "SELECT id, section_id, chapter_id, textbook_id, content, content_type, created_by, modified_by, " +
