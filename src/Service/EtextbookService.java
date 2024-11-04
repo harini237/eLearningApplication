@@ -32,5 +32,12 @@ public class EtextbookService {
             System.err.println("Error adding chapter: " + e.getMessage());
         }
     }
+    public void addSection(int textbookId, String chapterId, String sectionNumber, String title) {
+        try {
+            etextbookRepository.addSection(textbookId, chapterId, sectionNumber, title);
+        } catch (Exception e) {
+            System.err.println("Error adding section: " + e.getMessage());
+        }
+    }
     
 }

@@ -132,11 +132,11 @@ public class AdminMenu {
         int choice = scanner.nextInt();
 
         if (choice == 1) {
-            etextbookService.addChapter(chapterId, textbookId, title);
             navigationStack.push(() -> addSection(scanner, textbookId, chapterId));
         } else {
             navigationStack.pop();  // Go back to E-textbook creation
         }
+
     }
 
     private void addSection(Scanner scanner, int textbookId, String chapterId) {
@@ -152,7 +152,7 @@ public class AdminMenu {
         int choice = scanner.nextInt();
 
         if (choice == 1) {
-//            etextbookService.addSection(textbookId, chapterId, sectionNumber, title);
+            etextbookService.addSection(textbookId, chapterId, sectionNumber, title);
             navigationStack.push(() -> addContentBlock(scanner, textbookId, chapterId, sectionNumber));
         } else {
             navigationStack.pop();  // Go back to Chapter creation
