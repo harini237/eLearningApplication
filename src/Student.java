@@ -1,3 +1,4 @@
+import Service.CourseService;
 import Util.Helper;
 
 import java.sql.Connection;
@@ -9,13 +10,12 @@ public class Student {
     Connection con;
     Scanner scanner = new Scanner(System.in);
     Helper helper;
-    String user = "";
-    String pwd = "";
+    private final CourseService courseService = new CourseService();
     public Student(Connection conn) {
         this.con = conn;
         this.helper = new Helper(this.con);
 
-        System.out.println("1. Enroll in a course\n2. Sign in\n3. Go back\nEnter your choice (1-3): ");
+        System.out.println("1. Enroll in a course\n2. Go back\nEnter your choice (1-2): ");
         int choice = scanner.nextInt();
         switch(choice) {
             case 1:
@@ -23,10 +23,6 @@ public class Student {
                 this.enrollPage();
                 break;
             case 2:
-                //redirect to sign in page
-                this.signIn();
-                break;
-            case 3:
                 //redirect to home page
                 new Home(this.con);
                 break;
@@ -46,7 +42,8 @@ public class Student {
         int choice = scanner.nextInt();
         switch(choice) {
             case 1:
-                //TODO: enrollment process
+                Map<String, String> enroll = this.getEnrollDetails();
+                this.courseService.enrollStudent(enroll);
                 break;
             case 2:
                 new Student(this.con);
@@ -56,46 +53,6 @@ public class Student {
                 System.exit(0);
                 break;
         }
-    }
-
-    //function for sign in page
-    private void signIn() {
-        boolean valid = false;
-        do {
-            //get student credentials and validate
-            String[] creds = helper.getCredentials();
-            String user = creds[0];
-            String pwd = creds[1];
-
-            if(this.user.isEmpty() || this.pwd.isEmpty())
-                valid = helper.validateCredentials(user, pwd);
-            else
-                valid = true;
-
-            System.out.println("Welcome student!");
-            System.out.println("1. Sign In\n2. Go Back\nEnter your choice (1-2): ");
-            int choice = scanner.nextInt();
-
-            switch(choice) {
-                case 1:
-                    if(valid) {
-                        System.out.println("Sign in successful.");
-                        this.user = user;
-                        this.pwd = pwd;
-                        this.landing();
-                    } else {
-                        System.out.println("Login incorrect, try again.");
-                    }
-                    break;
-                case 2:
-                    new Home(this.con);
-                    break;
-                default:
-                    System.out.println("Invalid entry, exiting application.");
-                    System.exit(0);
-                    break;
-            }
-        } while(!valid);
     }
 
     //function for landing page
@@ -139,7 +96,6 @@ public class Student {
         return studentDetails;
     }
 
-    //TODO: view block, view participation activity points
     //function to view section
     private void viewSection() {
         System.out.println("Enter chapter ID: ");
