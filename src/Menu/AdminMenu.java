@@ -113,13 +113,14 @@ public class AdminMenu {
         System.out.print("Enter Unique E-textbook ID: ");
         int textbookId = scanner.nextInt();
 
+        etextbookService.createEtextbook(textbookId, title);
+
         System.out.println("\n1. Add New Chapter");
         System.out.println("2. Go Back");
         System.out.print("Enter choice (1-2): ");
         int choice = scanner.nextInt();
-
+        
         if (choice == 1) {
-            etextbookService.createEtextbook(textbookId, title);
             navigationStack.push(() -> addChapter(scanner, textbookId));
         } else {
             navigationStack.pop();  // Go back to Main Admin Menu
@@ -128,13 +129,15 @@ public class AdminMenu {
 
     private void addChapter(Scanner scanner, int textbookId) {
         System.out.println("\n--- Add New Chapter ---");
+
         System.out.print("Enter Chapter ID: ");
         String chapterId = scanner.next();
         // Validate chapter number to ensure it follows the "chapXX" format
         if (!chapterId.matches("chap\\d{2}")) {
-            System.out.println("Invalid chapter number. Please enter a value in the format 'chapXX' (e.g., 'chap01', 'chap12').");
+            System.out.println("Invalid chapter number. Please enter a value in the format.");
             return;
         }
+        
         System.out.print("Enter Chapter Title: ");
         String title = scanner.next();
         // Check if title is empty
@@ -142,6 +145,9 @@ public class AdminMenu {
             System.out.println("Chapter title cannot be empty. Please try again.");
             return;
         }
+        
+        etextbookService.addChapter(chapterId, textbookId, title);
+
 
         System.out.println("\n1. Add New Section");
         System.out.println("2. Go Back");
@@ -160,8 +166,22 @@ public class AdminMenu {
         System.out.println("\n--- Add New Section ---");
         System.out.print("Enter Section Number: ");
         String sectionNumber = scanner.next();
+        // Validate section id to ensure it follows the "chapXX" format
+        if (!sectionNumber.trim().matches("(?i)Sec\\d{2}")) { // '(?i)' makes the regex case-insensitive
+        System.out.println("Invalid section number. Please enter a value in the format.");
+        return;
+    }
+    
+
         System.out.print("Enter Section Title: ");
         String title = scanner.next();
+        // Check if title is empty
+        if (title.trim().isEmpty()) {
+            System.out.println("Section title cannot be empty. Please try again.");
+            return;
+        }
+
+        etextbookService.addSection(textbookId, chapterId, sectionNumber, title);
 
         System.out.println("\n1. Add New Content Block");
         System.out.println("2. Go Back");
@@ -169,7 +189,6 @@ public class AdminMenu {
         int choice = scanner.nextInt();
 
         if (choice == 1) {
-            etextbookService.addSection(textbookId, chapterId, sectionNumber, title);
             navigationStack.push(() -> addContentBlock(scanner, textbookId, chapterId, sectionNumber));
         } else {
             navigationStack.pop();  // Go back to Chapter creation
@@ -191,10 +210,31 @@ public class AdminMenu {
         switch (choice) {
 //            case 1 -> etextbookService.addTextBlock(textbookId, chapterId, sectionNumber, contentBlockId);
 //            case 2 -> etextbookService.addPictureBlock(textbookId, chapterId, sectionNumber, contentBlockId);
+            case 1 -> navigationStack.push(() -> addTextBlock(scanner, textbookId, chapterId, sectionNumber, contentBlockId));
             case 3 -> navigationStack.push(() -> addActivity(scanner, textbookId, chapterId, sectionNumber, contentBlockId));
             case 4 -> navigationStack.pop();  // Go back to Section creation
         }
     }
+
+    private void addTextBlock(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
+        System.out.println("\n--- Add New Text ---");
+        System.out.print("Enter Text: ");
+        scanner.nextLine(); // Consume the newline left by nextInt()
+        String content = scanner.nextLine();  // The content input
+    
+        System.out.println("\n1. Add");
+        System.out.println("2. Go Back");
+        System.out.println("3. Landing Page");
+        System.out.print("Enter choice (1-2): ");
+        int choice = scanner.nextInt();
+    
+        if (choice == 1) {
+            etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, content,  this.loggedUser.getId(), this.loggedUser.getId()); // Pass the content directly
+        } else {
+            navigationStack.pop();  // Go back to Content Block
+        }
+    }
+    
 
     private void addActivity(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
         System.out.println("\n--- Add New Activity ---");

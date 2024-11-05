@@ -79,7 +79,7 @@ public class EtextbookRepository {
     }
 
     public void addSection(int textbookId, String chapterId, String sectionNumber, String title) {
-        String sql = "INSERT INTO section (section_number, chapter_id, textbook_id, title) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO section (section_id, chapter_id, textbook_id, title) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -99,6 +99,35 @@ public class EtextbookRepository {
 
         } catch (SQLException e) {
             System.err.println("Error adding section: " + e.getMessage());
+        }
+    }
+
+    public void addContentBlock(int textbookId, String chapterId, String sectionNumber, String contentBlockId, String content, String createdBy, String modifiedBy) {
+        String sql = "INSERT INTO content_block (block_id, section_id, chapter_id, textbook_id, content, content_type, hidden, created_by, modified_by) " +
+                     "VALUES (?, ?, ?, ?, ?, 'text', 'no')";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, contentBlockId); // Set content block ID
+            pstmt.setString(2, sectionNumber);  // Set section number
+            pstmt.setString(3, chapterId);      // Set chapter ID
+            pstmt.setInt(4, textbookId);        // Set textbook ID
+            pstmt.setString(5, content);        // Set content
+            pstmt.setString(6, createdBy);        // Set createdby
+            pstmt.setString(7, modifiedBy);        // Set modifiedby
+
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Content block added successfully with Content Block ID: " + contentBlockId);
+            } else {
+                System.err.println("Failed to add content block.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error adding content block: " + e.getMessage());
         }
     }
     
