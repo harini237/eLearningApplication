@@ -40,7 +40,7 @@ public class EtextbookService {
             System.err.println("Error modifying chapter: " + e.getMessage());
         }
     }
-    
+
     public void addSection(int textbookId, String chapterId, String sectionNumber, String title) {
         try {
             etextbookRepository.addSection(textbookId, chapterId, sectionNumber, title);
@@ -48,14 +48,6 @@ public class EtextbookService {
             System.err.println("Error adding section: " + e.getMessage());
         }
     }
-    
 
-    public void modifyChapter(int textbookId, String chapterId, String newTitle) {
-        try {
-            etextbookRepository.modifyChapter(textbookId, chapterId, newTitle);
-        } catch (Exception e) {
-            System.err.println("Error modifying chapter: " + e.getMessage());
-        }
-    }
-    
 }
+    
