@@ -66,7 +66,7 @@ public class Home {
                 case "Admin" -> new AdminMenu().displayAdminMenu();
 //                case "Faculty" -> new FacultyMenu(con).displayFacultyMenu();
 //                case "TA" -> new TAMenu(con).displayTAMenu();
-//                case "Student" -> new StudentMenu(con).displayStudentMenu();
+                case "Student" -> new Student(con);
             }
         } else {
             System.out.println("Invalid credentials or role. Please try again.");
