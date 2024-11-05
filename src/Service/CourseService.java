@@ -5,7 +5,9 @@ import Repository.*;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CourseService {
     private final CourseRepository courseRepository;
@@ -22,10 +24,10 @@ public class CourseService {
         this.taCourseMapRepository = new TaCourseMapRepository();
     }
 
-    public void createCourse (String courseId, String courseTitle, String facultyId,
+    public void createCourse (String courseId, String courseTitle, Integer textbookId, String facultyId,
                                    Date startDate, Date endDate, String type,
                              String token, int capacity) {
-        Course course = new Course(courseId, courseTitle, facultyId, startDate, endDate, type, null, null);
+        Course course = new Course(courseId, courseTitle, textbookId, facultyId, startDate, endDate, type, null, null);
         this.courseRepository.createCourse(course);
 
         if (type.equals("active")) {
@@ -57,7 +59,7 @@ public class CourseService {
     }
 
     public void viewStudentsEnrolled (String course_token) {
-        List<String> students = this.enrollmentRepository.findStudentsByCourse(course_token);
+        List<String> students = this.enrollmentRepository.findStudentsByCourseToken(course_token);
         if (students.isEmpty()) {
             System.out.println("No students enrolled!");
         } else {
@@ -93,8 +95,34 @@ public class CourseService {
             }
         }
     }
-/*
-    public void approveEnrollment (String student_id, String faculty_id) {
 
-    }*/
+    public void approveEnrollment (String student_id, String faculty_id) {
+        List<PendingApproval> pendingApprovals = new ArrayList<>();
+        pendingApprovals = this.pendingApprovalRepository.findApprovalsByStudentAndFaculty(student_id, faculty_id);
+
+        for (PendingApproval pa: pendingApprovals) {
+            ActiveCourse ac = this.activeCourseRepository.findActiveCourseByToken(pa.getCourse_token());
+            if (ac.getCapacity() > 0) {
+                Enrollment e = new Enrollment(pa.getCourse_token(), pa.getStudent_id());
+                this.enrollmentRepository.createEnrollment(e);
+                this.pendingApprovalRepository.deletePendingApproval(pa.getStudent_id(), pa.getCourse_token());
+                this.activeCourseRepository.updateCapacity(ac.getToken(), ac.getCapacity() - 1);
+            } else {
+                System.out.println("Could not approve enrollment. Class capacity exceeded!");
+            }
+        }
+    }
+
+    public void viewStudents (String faculty_id) {
+        Map<String,List<String>> courses = new HashMap<>();
+        courses = this.enrollmentRepository.findEnrolledStudentsByFaculty(faculty_id);
+
+        for (String course: courses.keySet()) {
+            List<String> students = courses.get(course);
+            for (String sid: students) {
+                System.out.println("<"+course+", "+sid+">");
+            }
+        }
+    }
+
 }
