@@ -1,3 +1,4 @@
+import Entity.User;
 import Service.CourseService;
 import Util.Helper;
 
@@ -7,13 +8,13 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Student {
-    Connection con;
     Scanner scanner = new Scanner(System.in);
     Helper helper;
     private final CourseService courseService = new CourseService();
-    public Student(Connection conn) {
-        this.con = conn;
-        this.helper = new Helper(this.con);
+    private final User user;
+    public Student(User user) {
+        this.user = user;
+        this.helper = new Helper();
 
         System.out.println("Student Menu:\n1. Enroll in a course\n2. Sign In (Student Landing Page)\n3. Go back\nEnter your choice (1-3): ");
         int choice = scanner.nextInt();
@@ -28,7 +29,7 @@ public class Student {
                 break;
             case 3:
                 //redirect to home page
-                new Home(this.con);
+                new Home();
                 break;
             default:
                 System.out.println("Invalid entry, exiting application.");
@@ -46,11 +47,11 @@ public class Student {
         int choice = scanner.nextInt();
         switch(choice) {
             case 1:
-                this.courseService.enrollStudent(studentDetails);
-                new Student(this.con);
+                this.courseService.enrollStudent(studentDetails, this.user);
+                new Student(this.user);
                 break;
             case 2:
-                new Student(this.con);
+                new Student(this.user);
                 break;
             default:
                 System.out.println("Invalid entry, exiting application.");
@@ -76,7 +77,7 @@ public class Student {
                 this.viewParticipationActivityPoints();
                 break;
             case 3:
-                new Home(this.con);
+                new Home();
                 break;
             default:
                 System.out.println("Invalid entry, exiting application.");

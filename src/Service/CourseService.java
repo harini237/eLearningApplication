@@ -127,9 +127,8 @@ public class CourseService {
         }
     }
 
-    public void enrollStudent (Map<String, String> enroll) {
+    public void enrollStudent (Map<String, String> enroll, User user) {
         String email = enroll.get("email");
-        User user = this.userService.getUserByEmail(email);
         String student_id = user.getId();
         String course_token = enroll.get("courseToken");
         this.requestEnrollment(student_id, course_token);
