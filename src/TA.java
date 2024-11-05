@@ -52,7 +52,7 @@ public class TA {
     //function to go to active courses
     private void goToActiveCourses() {
         System.out.println("Enter course ID: ");
-        String courseID = scanner.nextLine();
+        String courseID = scanner.next();
 
         System.out.println("1. View students\n2. Add new chapter\n3. Modify chapters\n4. Go back");
         System.out.println("Enter your choice (1-4): ");
@@ -100,11 +100,11 @@ public class TA {
     //function to change password
     public void changePassword() {
         System.out.println("Enter current password: ");
-        String currentPwd = scanner.nextLine();
+        String currentPwd = scanner.next();
         System.out.println("Enter new password: ");
-        String newPwd = scanner.nextLine();
+        String newPwd = scanner.next();
         System.out.println("Confirm new password: ");
-        String confirmPwd = scanner.nextLine();
+        String confirmPwd = scanner.next();
 
         System.out.println("1. Update\n2. Go Back");
         System.out.println("Enter your choice (1-2): ");
@@ -149,9 +149,9 @@ public class TA {
     //function to add chapter
     private void addChapter(String courseID) {
         System.out.println("Enter unique chapter ID: ");
-        String chapterID = scanner.nextLine();
+        String chapterID = scanner.next();
         System.out.println("Enter chapter title: ");
-        String chapterTitle = scanner.nextLine();
+        String chapterTitle = scanner.next();
 
         System.out.println("1. Add new section\n2. Go back");
         System.out.println("Enter your choice (1-2): ");
@@ -177,7 +177,7 @@ public class TA {
     //function to modify chapter
     private void modifyChapter(String courseID) {
         System.out.println("Enter unique chapter ID: ");
-        String chapterID = scanner.nextLine();
+        String chapterID = scanner.next();
 
         System.out.println("1. Add new section\n2. Add new activity\n3. Modify Section\n4. Go back");
         System.out.println("Enter your choice (1-4): ");
@@ -210,9 +210,9 @@ public class TA {
     //function to add section
     private void addSection(String callingFunction, String courseID, String chapterID, String chapterTitle) {
         System.out.println("Enter section number: ");
-        String sectionNum = scanner.nextLine();
+        String sectionNum = scanner.next();
         System.out.println("Enter section title: ");
-        String sectionTitle = scanner.nextLine();
+        String sectionTitle = scanner.next();
 
         System.out.println("1. Add new content block\n2. Go back");
         System.out.println("Enter your choice (1-2): ");
@@ -243,7 +243,7 @@ public class TA {
     //function to add content block
     private void addContentBlock(String callingFunction, String courseID, String chapterID, String chapterTitle) {
         System.out.println("Enter content block ID: ");
-        String contentId = scanner.nextLine();
+        String contentId = scanner.next();
 
         System.out.println("1. Add text\n2. Add picture\n3. Add activity\n4. Hide activity\n5. Go back");
         System.out.println("Enter your choice (1-5): ");
@@ -296,13 +296,13 @@ public class TA {
     //function to modify section
     private void modifySection(String callingFunction, String courseID, String chapterID, String chapterTitle) {
         System.out.println("Enter section number: ");
-        String sectionNum = scanner.nextLine();
+        String sectionNum = scanner.next();
         System.out.println("Enter section title: ");
-        String sectionTitle = scanner.nextLine();
+        String sectionTitle = scanner.next();
         System.out.println("Enter chapter ID: ");
-        String chapterId = scanner.nextLine();
+        String chapterId = scanner.next();
         System.out.println("Enter book: ");
-        String bookId = scanner.nextLine();
+        String bookId = scanner.next();
 
         System.out.println("1. Add new content block\n2. Modify content block\n3. Delete content block\n4. Hide content block\n5. Go back");
         System.out.println("Enter your choice (1-5): ");
@@ -339,7 +339,7 @@ public class TA {
     //function to modify content block
     private void modifyContentBlock(String callingFunction, String courseID, String chapterID, String chapterTitle) {
         System.out.println("Enter content block ID: ");
-        String contentId = scanner.nextLine();
+        String contentId = scanner.next();
 
         System.out.println("1. Add text\n2. Add picture\n3. Add activity\n4. Hide activity\n5. Go back\n6. Landing Page");
         System.out.println("Enter your choice (1-6): ");
@@ -394,7 +394,7 @@ public class TA {
     //function to delete content block
     private void deleteContentBlock(String callingFunction, String courseID, String chapterID, String chapterTitle) {
         System.out.println("Enter content block ID: ");
-        String contentId = scanner.nextLine();
+        String contentId = scanner.next();
 
         System.out.println("1. Delete\n2. Go back");
         System.out.println("Enter your choice (1-2): ");
@@ -418,7 +418,7 @@ public class TA {
     //function to hide content block
     private void hideContentBlock(String callingFunction, String courseID, String chapterID, String chapterTitle) {
         System.out.println("Enter content block ID: ");
-        String contentId = scanner.nextLine();
+        String contentId = scanner.next();
 
         System.out.println("1. Hide\n2. Go back");
         System.out.println("Enter your choice (1-2): ");
