@@ -21,9 +21,9 @@ public class Helper {
     public String[] getCredentials() {
         System.out.println("Enter your credentials:");
         System.out.println("User ID: ");
-        String userID = scanner.nextLine();
+        String userID = scanner.next();
         System.out.println("Password: ");
-        String pwd = scanner.nextLine();
+        String pwd = scanner.next();
 
         String[] creds = new String[2];
         creds[0] = userID;
@@ -55,7 +55,7 @@ public class Helper {
         String picture = "";
 
         System.out.println("Enter picture filename: ");
-        picture = scanner.nextLine();
+        picture = scanner.next();
 
         System.out.println("1. Add\n2. Go back");
         System.out.println("Enter your choice (1-2): ");
@@ -71,7 +71,7 @@ public class Helper {
     //function to add activity
     public Map<String, String> getActivity() {
         System.out.println("Enter unique activity ID: ");
-        String activityId = scanner.nextLine();
+        String activityId = scanner.next();
 
         System.out.println("1. Add question\n2. Go back");
         System.out.println("Enter your choice (1-2): ");

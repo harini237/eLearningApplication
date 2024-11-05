@@ -15,7 +15,7 @@ public class Student {
         this.con = conn;
         this.helper = new Helper(this.con);
 
-        System.out.println("1. Enroll in a course\n2. Go back\nEnter your choice (1-2): ");
+        System.out.println("Student Menu:\n1. Enroll in a course\n2. Sign In (Student Landing Page)\n3. Go back\nEnter your choice (1-3): ");
         int choice = scanner.nextInt();
         switch(choice) {
             case 1:
@@ -23,6 +23,10 @@ public class Student {
                 this.enrollPage();
                 break;
             case 2:
+                //redirect to student landing page
+                this.landing();
+                break;
+            case 3:
                 //redirect to home page
                 new Home(this.con);
                 break;
@@ -38,12 +42,12 @@ public class Student {
     private void enrollPage() {
         Map<String,String> studentDetails = this.getEnrollDetails();
 
-        System.out.println("1. Enroll\n2. Go Back\nEnter your choice (1-2): ");
+        System.out.println("Enrollment Menu:\n1. Enroll\n2. Go Back\nEnter your choice (1-2): ");
         int choice = scanner.nextInt();
         switch(choice) {
             case 1:
-                Map<String, String> enroll = this.getEnrollDetails();
-                this.courseService.enrollStudent(enroll);
+                this.courseService.enrollStudent(studentDetails);
+                new Student(this.con);
                 break;
             case 2:
                 new Student(this.con);
@@ -58,7 +62,7 @@ public class Student {
     //function for landing page
     private void landing() {
         //TODO: fetch and display textbooks contents
-        System.out.println("1. View a section\n2. View participation activity points\n3. Logout");
+        System.out.println("Landing Menu:\n1. View a section\n2. View participation activity points\n3. Logout");
         System.out.println("Enter your choice (1-3): ");
         int choice = scanner.nextInt();
 
@@ -84,14 +88,14 @@ public class Student {
     //function to get student details for enrollment
     private Map<String,String> getEnrollDetails() {
         Map<String,String> studentDetails = new HashMap<>();
-        System.out.println("Enter your details:\n1. First Name: ");
-        studentDetails.put("firstName",scanner.nextLine());
+        System.out.println("Enter your enrollment details:\n1. First Name: ");
+        studentDetails.put("firstName",scanner.next());
         System.out.println("2. Last Name: ");
-        studentDetails.put("lastName",scanner.nextLine());
+        studentDetails.put("lastName",scanner.next());
         System.out.println("3. Email: ");
-        studentDetails.put("email",scanner.nextLine());
+        studentDetails.put("email",scanner.next());
         System.out.println("4. Course Token: ");
-        studentDetails.put("courseToken",scanner.nextLine());
+        studentDetails.put("courseToken",scanner.next());
 
         return studentDetails;
     }
@@ -99,11 +103,11 @@ public class Student {
     //function to view section
     private void viewSection() {
         System.out.println("Enter chapter ID: ");
-        String chapterId = scanner.nextLine();
+        String chapterId = scanner.next();
         System.out.println("Enter section ID: ");
-        String sectionId = scanner.nextLine();
+        String sectionId = scanner.next();
 
-        System.out.println("1. View block\n2. Go back");
+        System.out.println("Section Menu\n1. View block\n2. Go back");
         System.out.println("Enter your choice (1-2): ");
         int choice = scanner.nextInt();
 
@@ -138,7 +142,7 @@ public class Student {
     //function for content block
     private void contentBlock() {
         //TODO: display contents
-        System.out.println("1. Next\n2. Go back");
+        System.out.println("Block Menu:\n1. Next\n2. Go back");
         System.out.println("Enter your choice (1-2): ");
         int choice = scanner.nextInt();
 
@@ -161,7 +165,7 @@ public class Student {
     private void activityBlock() {
         //TODO: display activity
         System.out.println("Enter answer ID: ");
-        String answerId = scanner.nextLine();
+        String answerId = scanner.next();
 
         System.out.println("1. Submit\n2. Go back");
         System.out.println("Enter your choice (1-2): ");
@@ -186,7 +190,7 @@ public class Student {
     //function to show points
     private void viewParticipationActivityPoints() {
         //TODO: fetch and display points of user
-        System.out.println("1. Go back");
+        System.out.println("Score Menu:\n1. Go back");
         System.out.println("Enter your choice (1): ");
         int choice = scanner.nextInt();
 
