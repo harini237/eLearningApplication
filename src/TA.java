@@ -5,15 +5,13 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class TA {
-    Connection con;
     Scanner scanner = new Scanner(System.in);
     Helper helper;
     String user = "";
     String pwd = "";
 
-    public TA(Connection conn) {
-        this.con = conn;
-        this.helper = new Helper(this.con);
+    public TA() {
+        this.helper = new Helper();
 
         System.out.println("Welcome TA!");
         this.landing();
@@ -40,7 +38,7 @@ public class TA {
                 break;
             case 4:
                 //redirect to home page
-                new Home(this.con);
+                new Home();
                 break;
             default:
                 System.out.println("Invalid entry, exiting application.");

@@ -6,11 +6,9 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Helper {
-    Connection con;
     Scanner scanner = new Scanner(System.in);
 
-    public Helper(Connection conn) {
-        this.con = conn;
+    public Helper() {
     }
 
     public boolean validateCredentials(String user, String pass) {
