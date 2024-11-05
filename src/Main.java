@@ -6,7 +6,7 @@ public class Main {
         try {
             Connection con = DatabaseConnection.getConnection();
             System.out.println("Successfully connected!");
-            new Home(con);
+            new Home();
             con.close();
         } catch (Exception e) {
             System.out.println("Could not establish jdbc connection." + e.getMessage());

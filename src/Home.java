@@ -9,11 +9,9 @@ import Entity.User;
 import Util.PasswordUtil;
 
 public class Home {
-    private final Connection con;
     private final UserService userService;
 
-    public Home(Connection conn) {
-        this.con = conn;
+    public Home() {
         this.userService = new UserService();  // Initialize the user service for login validation
         displayHomeScreen();
     }
@@ -66,11 +64,16 @@ public class Home {
                 case "Admin" -> new AdminMenu().displayAdminMenu(user);
 //                case "Faculty" -> new FacultyMenu(con).displayFacultyMenu();
 //                case "TA" -> new TAMenu(con).displayTAMenu();
-                case "Student" -> new Student(con);
+                case "Student" -> new Student(user);
             }
         } else {
-            System.out.println("Invalid credentials or role. Please try again.");
-            displayHomeScreen();  // Retry by displaying the home screen
+            if (role.equals("Student")) {
+                System.out.println("Would you like to register and enroll? (Y/N) : ");
+                //redirect as per option
+            } else {
+                System.out.println("Invalid credentials or role. Please try again.");
+                displayHomeScreen();  // Retry by displaying the home screen
+            }
         }
     }
 }
