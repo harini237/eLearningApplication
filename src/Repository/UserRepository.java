@@ -46,8 +46,8 @@ public class UserRepository {
     }
 
     public User getUserById(String userId) {
-        String sql = "SELECT id, first_name, last_name, email, password, created_at, created_by, role_id, is_pwd_reset_req " +
-                "FROM user WHERE id = ?";
+        String sql = "SELECT user.id, first_name, last_name, email, password, created_at, created_by, role_id, is_pwd_reset_req, r.name as role " +
+                "FROM user JOIN role r on r.id = user.role_id  WHERE user.id = ?";
         User user = null;
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -66,6 +66,7 @@ public class UserRepository {
                     user.setCreatedBy(rs.getString("created_by"));
                     user.setRoleId(rs.getInt("role_id"));
                     user.setIsPwdResetReq(rs.getBoolean("is_pwd_reset_req"));
+                    user.setRole(rs.getString("role"));
                 }
             }
 
@@ -77,8 +78,8 @@ public class UserRepository {
     }
 
     public User getUserByEmail(String emailId) {
-        String sql = "SELECT id, first_name, last_name, email, password, created_at, created_by, role_id, is_pwd_reset_req " +
-                "FROM user WHERE email = ?";
+        String sql = "SELECT user.id, first_name, last_name, email, password, created_at, created_by, role_id, is_pwd_reset_req, r.name as role " +
+                "FROM user JOIN role r on r.id = user.role_id  WHERE user.email = ?";
         User user = null;
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -97,6 +98,7 @@ public class UserRepository {
                     user.setCreatedBy(rs.getString("created_by"));
                     user.setRoleId(rs.getInt("role_id"));
                     user.setIsPwdResetReq(rs.getBoolean("is_pwd_reset_req"));
+                    user.setRole(rs.getString("role"));
                 }
             }
 
@@ -109,7 +111,7 @@ public class UserRepository {
 
     public Role getUserRoles(int userId) {
         String sql = "SELECT r.id, r.name, r.description FROM role r " +
-                "JOIN user_role ur ON r.id = ur.role_id WHERE ur.user_id = ?";
+                "JOIN user ur ON r.id = ur.role_id WHERE ur.user_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, userId);
@@ -154,6 +156,25 @@ public class UserRepository {
 
         return user;
     }
+
+    public boolean updatePassword(String userId, String hashedPassword) {
+        String sql = "UPDATE user SET password = ? WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, hashedPassword);
+            pstmt.setString(2, userId);
+
+            int rowsUpdated = pstmt.executeUpdate();
+            return rowsUpdated > 0; // Return true if the update was successful
+
+        } catch (SQLException e) {
+            System.err.println("Error updating password: " + e.getMessage());
+            return false;
+        }
+    }
+
 
     public List<Permission> getUserPermissions(int userId) {
         Role role = getUserRoles(userId);

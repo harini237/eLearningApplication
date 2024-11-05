@@ -10,10 +10,25 @@ import java.util.Stack;
 
 public class AdminMenu {
 
+    User loggedUser;
+
     private final UserService userService = new UserService();
     private final EtextbookService etextbookService = new EtextbookService();
     private final CourseService courseService = new CourseService();
     private final Stack<Runnable> navigationStack = new Stack<>();  // Stack to track previous menus
+
+    public void displayAdminMenu(User loggingUser) {
+        goToLandingPage();  // Initialize stack with the landing page
+        if(this.loggedUser == null){
+            if(loggingUser.getId().isEmpty()){
+                throw new SecurityException("User Not Logged In");
+            }
+            this.loggedUser = loggingUser;
+        }
+        while (!navigationStack.isEmpty()) {
+            navigationStack.peek().run();  // Execute the current menu state
+        }
+    }
 
     public void displayAdminMenu() {
         goToLandingPage();  // Initialize stack with the landing page

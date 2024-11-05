@@ -29,6 +29,28 @@ public class UserService {
     }
 
     /**
+     * Creates a new TA in the database.
+     * @param firstName The firstname of the TA
+     * @param lastName The lastname of the TA
+     * @param email The email of the TA
+     * @param password The password of the TA
+     */
+    public void createTA(String firstName, String lastName, String email, String password) {
+        User newUser = new User();
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setEmail(email);
+        newUser.setPassword(password);  // The password should be hashed in UserService
+        newUser.setRoleId(3);  // Assuming 2 is the role ID for Faculty
+        try {
+            this.createUser(newUser);
+            System.out.println("Faculty account created successfully.");
+        }catch (Exception ignored){
+            System.out.println("Error While creating user account Error: " + ignored.getMessage());
+        }
+    }
+
+    /**
      * Retrieves a user by ID.
      * @param userId The ID of the user to retrieve.
      * @return The User object if found, otherwise null.
@@ -81,5 +103,35 @@ public class UserService {
     public boolean hasUserRole(String userId, int roleId) {
         User user = userRepository.getUserById(userId);
         return user != null && user.getRoleId() == roleId;
+    }
+
+    /**
+     * Handles the password reset process.
+     *
+     * @param userId The ID of the user whose password is being updated.
+     * @param currentPassword The new  password to store.
+     */
+    public void resetPassword(String userId, String currentPassword, String newPassword) {
+
+        // Retrieve the user details
+        User user = userRepository.getUserById(userId);
+        if (user == null) {
+            System.out.println("User not found.");
+            return;
+        }
+
+        // Validate current password
+        if (!PasswordUtil.hashPassword(currentPassword).equals(user.getPassword())) {
+            System.out.println("Incorrect current password. Please try again.");
+            return;
+        }
+
+        // Update password in the repository
+        String hashedNewPassword = PasswordUtil.hashPassword(newPassword);
+        if (userRepository.updatePassword(userId, hashedNewPassword)) {
+            System.out.println("Password updated successfully.");
+        } else {
+            System.out.println("Error updating password. Please try again.");
+        }
     }
 }
