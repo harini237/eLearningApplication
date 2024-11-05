@@ -63,7 +63,7 @@ public class Home {
 
             // Redirect to the appropriate menu based on role
             switch (role) {
-                case "Admin" -> new AdminMenu().displayAdminMenu();
+                case "Admin" -> new AdminMenu().displayAdminMenu(user);
 //                case "Faculty" -> new FacultyMenu(con).displayFacultyMenu();
 //                case "TA" -> new TAMenu(con).displayTAMenu();
                 case "Student" -> new Student(con);
