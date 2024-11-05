@@ -15,43 +15,8 @@ public class TA {
         this.con = conn;
         this.helper = new Helper(this.con);
 
-        boolean valid = false;
-
-        do {
-            //get ta credentials and validate
-            String[] creds = helper.getCredentials();
-            String user = creds[0];
-            String pwd = creds[1];
-
-            if(this.user.isEmpty() || this.pwd.isEmpty())
-                valid = helper.validateCredentials(user, pwd);
-            else
-                valid = true;
-
-            System.out.println("Welcome TA!");
-            System.out.println("1. Sign In\n2. Go Back\nEnter your choice (1-2): ");
-            int choice = scanner.nextInt();
-
-            switch(choice) {
-                case 1:
-                    if(valid) {
-                        System.out.println("Sign in successful.");
-                        this.user = user;
-                        this.pwd = pwd;
-                        this.landing();
-                    } else {
-                        System.out.println("Login incorrect, try again.");
-                    }
-                    break;
-                case 2:
-                    new Home(this.con);
-                    break;
-                default:
-                    System.out.println("Invalid entry, exiting application.");
-                    System.exit(0);
-                    break;
-            }
-        } while(!valid);
+        System.out.println("Welcome TA!");
+        this.landing();
     }
 
     //function for landing page

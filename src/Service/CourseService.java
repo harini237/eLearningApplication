@@ -15,6 +15,7 @@ public class CourseService {
     private final EnrollmentRepository enrollmentRepository;
     private final PendingApprovalRepository pendingApprovalRepository;
     private final TaCourseMapRepository taCourseMapRepository;
+    private final UserService userService;
 
     public CourseService () {
         this.courseRepository = new CourseRepository();
@@ -22,6 +23,7 @@ public class CourseService {
         this.enrollmentRepository = new EnrollmentRepository();
         this.pendingApprovalRepository = new PendingApprovalRepository();
         this.taCourseMapRepository = new TaCourseMapRepository();
+        this.userService = new UserService();
     }
 
     public void createCourse (String courseId, String courseTitle, Integer textbookId, String facultyId,
@@ -123,6 +125,14 @@ public class CourseService {
                 System.out.println("<"+course+", "+sid+">");
             }
         }
+    }
+
+    public void enrollStudent (Map<String, String> enroll) {
+        String email = enroll.get("email");
+        User user = this.userService.getUserByEmail(email);
+        String student_id = user.getId();
+        String course_token = enroll.get("courseToken");
+        this.requestEnrollment(student_id, course_token);
     }
 
 }

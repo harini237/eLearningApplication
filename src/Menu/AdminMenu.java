@@ -1,8 +1,10 @@
 package Menu;
+import Service.CourseService;
 import Service.UserService;
 import Entity.User;
 import Service.EtextbookService;
 
+import java.sql.Date;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -10,7 +12,7 @@ public class AdminMenu {
 
     private final UserService userService = new UserService();
     private final EtextbookService etextbookService = new EtextbookService();
-//    private final CourseService courseService = new CourseService();
+    private final CourseService courseService = new CourseService();
     private final Stack<Runnable> navigationStack = new Stack<>();  // Stack to track previous menus
 
     public void displayAdminMenu() {
@@ -243,20 +245,25 @@ public class AdminMenu {
     private void createActiveCourse(Scanner scanner) {
         System.out.println("\n--- Create New Active Course ---");
         System.out.print("Enter Course ID: ");
-        int courseId = scanner.nextInt();
+        String courseId = scanner.next();
         System.out.print("Enter Course Title: ");
         String courseTitle = scanner.next();
+        System.out.print("Enter textbook ID: ");
+        Integer textbookId = scanner.nextInt();
         System.out.print("Enter Faculty ID: ");
-        int facultyId = scanner.nextInt();
+        String facultyId = scanner.next();
         System.out.print("Enter Start Date (yyyy-mm-dd): ");
         String startDate = scanner.next();
         System.out.print("Enter End Date (yyyy-mm-dd): ");
         String endDate = scanner.next();
+        System.out.print("Enter unique course token: ");
+        String token = scanner.next();
         System.out.print("Enter Course Capacity: ");
         int capacity = scanner.nextInt();
 
-        // Collect additional course details and call course service
-//        courseService.createActiveCourse(courseId, courseTitle, facultyId, startDate, endDate, capacity);
+        String type = "active";
+
+        courseService.createCourse(courseId, courseTitle, textbookId, facultyId, Date.valueOf(startDate), Date.valueOf(endDate), type, token, capacity);
 
         System.out.println("Active Course created successfully.");
         navigationStack.pop();  // Go back to Main Admin Menu
@@ -265,18 +272,21 @@ public class AdminMenu {
     private void createEvaluationCourse(Scanner scanner) {
         System.out.println("\n--- Create New Evaluation Course ---");
         System.out.print("Enter Course ID: ");
-        int courseId = scanner.nextInt();
+        String courseId = scanner.next();
         System.out.print("Enter Course Title: ");
         String courseTitle = scanner.next();
+        System.out.print("Enter textbook ID: ");
+        Integer textbookId = scanner.nextInt();
         System.out.print("Enter Faculty ID: ");
-        int facultyId = scanner.nextInt();
+        String facultyId = scanner.next();
         System.out.print("Enter Start Date (yyyy-mm-dd): ");
         String startDate = scanner.next();
         System.out.print("Enter End Date (yyyy-mm-dd): ");
         String endDate = scanner.next();
+        String type = "eval";
 
-//        courseService.createEvaluationCourse(courseId, courseTitle, facultyId, startDate, endDate);
-        // Collect additional course details and call course service
+        this.courseService.createCourse(courseId, courseTitle, textbookId, facultyId, Date.valueOf(startDate), Date.valueOf(endDate), type, null, 0);
+
         System.out.println("Evaluation Course created successfully.");
         navigationStack.pop();  // Go back to Main Admin Menu
     }
