@@ -158,6 +158,7 @@ public class AdminMenu {
         } else {
             navigationStack.pop();  // Go back to E-textbook creation
         }
+
     }
 
     private void addSection(Scanner scanner, int textbookId, String chapterId) {
