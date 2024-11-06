@@ -34,15 +34,15 @@ public class EtextbookRepository {
     }
     
     public void addChapter(String chapterId, int textbookId, String title) {
-        String sql = "INSERT INTO chapter (chapter_id, textbook_id, title) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO chapter (chapter_id, textbook_id, title, visibility) VALUES (?, ?, ?, ?)";
     
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
     
             pstmt.setString(1, chapterId); // Use the user-provided chapter ID
-            pstmt.setInt(2, textbookId);
-            pstmt.setString(3, title);
-            //pstmt.setBoolean(4, visibility);
+            pstmt.setInt(2, textbookId);   // Set textbook ID
+            pstmt.setString(3, title);     // Set chapter title
+            pstmt.setInt(4, 1);            // Set visibility to 1 (true)
     
             int rowsAffected = pstmt.executeUpdate();
     
@@ -55,7 +55,7 @@ public class EtextbookRepository {
         } catch (SQLException e) {
             System.err.println("Error adding chapter: " + e.getMessage());
         }
-    }
+    }  
 
     public void modifyChapter(int textbookId, String chapterId, String newTitle) {
         String sql = "UPDATE chapter SET title = ? WHERE textbook_id = ? AND chapter_id = ?";
@@ -109,26 +109,74 @@ public class EtextbookRepository {
     
     
     public void addSection(int textbookId, String chapterId, String sectionNumber, String title) {
-        String sql = "INSERT INTO section (section_id, chapter_id, textbook_id, title) VALUES (?, ?, ?, ?)";
-
+        String sql = "INSERT INTO section (section_id, chapter_id, textbook_id, title, visibility) VALUES (?, ?, ?, ?, ?)";
+    
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+    
             pstmt.setString(1, sectionNumber); // Set section number
             pstmt.setString(2, chapterId);     // Set chapter ID
             pstmt.setInt(3, textbookId);       // Set textbook ID
             pstmt.setString(4, title);         // Set section title
-
+            pstmt.setInt(5, 1);                // Set visibility to 1 (true)
+    
             int rowsAffected = pstmt.executeUpdate();
-
+    
             if (rowsAffected > 0) {
                 System.out.println("Section added successfully with Section Number: " + sectionNumber);
             } else {
                 System.err.println("Failed to add section.");
             }
-
+    
         } catch (SQLException e) {
             System.err.println("Error adding section: " + e.getMessage());
+        }
+    }
+    
+
+    public void hideSection(int textbookId, String chapterId, String sectionId) {
+        String sql = "UPDATE section SET visibility = 0 WHERE section_id = ? AND chapter_id = ? AND textbook_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, sectionId);
+            pstmt.setString(2, chapterId);
+            pstmt.setInt(3, textbookId);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Section visibility updated to hidden.");
+            } else {
+                System.err.println("No section found to hide.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error hiding section: " + e.getMessage());
+        }
+    }
+
+    public void deleteSection(int textbookId, String chapterId, String sectionId) {
+        String sql = "DELETE FROM section WHERE section_id = ? AND chapter_id = ? AND textbook_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, sectionId);
+            pstmt.setString(2, chapterId);
+            pstmt.setInt(3, textbookId);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Section deleted successfully.");
+            } else {
+                System.err.println("No section found to delete.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error deleting section: " + e.getMessage());
         }
     }
     
