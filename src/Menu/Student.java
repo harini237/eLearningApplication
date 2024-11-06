@@ -2,6 +2,7 @@ package Menu;
 
 import Entity.User;
 import Service.CourseService;
+import Service.EtextbookService;
 import Util.Helper;
 
 import java.sql.Connection;
@@ -13,6 +14,7 @@ public class Student {
     Scanner scanner = new Scanner(System.in);
     Helper helper;
     private final CourseService courseService = new CourseService();
+    private final EtextbookService etextbookService = new EtextbookService();
     private final User user;
     public Student(User user) {
         this.user = user;
@@ -64,7 +66,10 @@ public class Student {
 
     //function for landing page
     private void landing() {
-        //TODO: fetch and display textbooks contents
+        this.etextbookService.listAllEtextbooks();
+        System.out.println("Enter TextbookId to view detials:");
+        int textbookId = scanner.nextInt();
+
         System.out.println("Landing Menu:\n1. View a section\n2. View participation activity points\n3. Logout");
         System.out.println("Enter your choice (1-3): ");
         int choice = scanner.nextInt();
@@ -72,7 +77,7 @@ public class Student {
         switch(choice) {
             case 1:
                 //redirect to view section
-                this.viewSection();
+                this.viewSection(textbookId);
                 break;
             case 2:
                 //redirect to view points
@@ -104,7 +109,7 @@ public class Student {
     }
 
     //function to view section
-    private void viewSection() {
+    private void viewSection(int textbookId) {
         System.out.println("Enter chapter ID: ");
         String chapterId = scanner.next();
         System.out.println("Enter section ID: ");
@@ -117,7 +122,7 @@ public class Student {
         switch(choice) {
             case 1:
                 //redirect to view block
-                this.viewBlock(chapterId, sectionId);
+                this.viewBlock(textbookId, chapterId, sectionId);
                 break;
             case 2:
                 //redirect to previous page (landing)
@@ -131,19 +136,19 @@ public class Student {
     }
 
     //function to view block
-    private void viewBlock(String chapterId, String sectionId) {
+    private void viewBlock(int textbookId, String chapterId, String sectionId) {
         //TODO: fetch block details from db
         String menuOption = "";
         /*
         IF BLOCK IS CONTENT
-            this.contentBlock();
+            this.contentBlock( textbookId,  chapterId,  sectionId);
         IF BLOCK IS ACTIVTY
-            this.activityBlock();
+            this.activityBlock( textbookId,  chapterId,  sectionId);
         */
     }
 
     //function for content block
-    private void contentBlock() {
+    private void contentBlock(int textbookId, String chapterId, String sectionId) {
         //TODO: display contents
         System.out.println("Block Menu:\n1. Next\n2. Go back");
         System.out.println("Enter your choice (1-2): ");
@@ -155,7 +160,7 @@ public class Student {
                 break;
             case 2:
                 //redirect to previous page (view section)
-                this.viewSection();
+                this.viewSection(textbookId);
                 break;
             default:
                 System.out.println("Invalid entry, exiting application.");
@@ -165,7 +170,7 @@ public class Student {
     }
 
     //function for activity block
-    private void activityBlock() {
+    private void activityBlock(int textbookId, String chapterId, String sectionId) {
         //TODO: display activity
         System.out.println("Enter answer ID: ");
         String answerId = scanner.next();
@@ -181,7 +186,7 @@ public class Student {
                 break;
             case 2:
                 //redirect to previous page (view section)
-                this.viewSection();
+                this.viewSection(textbookId);
                 break;
             default:
                 System.out.println("Invalid entry, exiting application.");

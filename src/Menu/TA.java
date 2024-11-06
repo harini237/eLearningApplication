@@ -27,7 +27,7 @@ public class TA {
 
     //function for landing page
     private void landing() {
-        System.out.println("Menu.TA Landing Menu:\n1. Go to active courses\n2. View courses\n3. Change password\n4. Logout");
+        System.out.println("TA Landing Menu:\n1. Go to active courses\n2. View courses\n3. Change password\n4. Logout");
         System.out.println("Enter your choice (1-4): ");
         int choice = scanner.nextInt();
 
@@ -61,12 +61,14 @@ public class TA {
         String courseID = scanner.next();
 
         System.out.println("Active Courses Menu:\n1. View students\n2. Add new chapter\n3. Modify chapter\n4. Go back");
+        System.out.println("Active Courses Menu:\n1. View students\n2. Add new chapter\n3. Modify chapter\n4. Go back");
         System.out.println("Enter your choice (1-4): ");
         int choice = scanner.nextInt();
 
         switch(choice) {
             case 1:
                 //redirect to view students
+
                 if (this.courseService.checkTaByCourseId(this.user.getId(), courseID)) {
                     this.viewStudents(courseID);
                 } else {
@@ -82,9 +84,21 @@ public class TA {
                     System.out.println("Access restricted. You can only add chapters in your course.");
                     this.landing();
                 }
+                if (this.courseService.checkTaByCourseId(this.user.getId(), courseID)) {
+                    this.addChapter(courseID);
+                } else {
+                    System.out.println("Access restricted. You can only add chapters in your course.");
+                    this.landing();
+                }
                 break;
             case 3:
                 //redirect to modify chapter
+                if (this.courseService.checkTaByCourseId(this.user.getId(), courseID)) {
+                    this.modifyChapter(courseID);
+                } else {
+                    System.out.println("Access restricted. You can only modify chapters in your course.");
+                    this.landing();
+                }
                 if (this.courseService.checkTaByCourseId(this.user.getId(), courseID)) {
                     this.modifyChapter(courseID);
                 } else {
@@ -106,6 +120,7 @@ public class TA {
     //function to view courses
     public void viewCourses() {
         this.courseService.viewAssignedCoursesByTa(this.user.getId());
+        this.courseService.viewAssignedCoursesByTa(this.user.getId());
         System.out.println("1. Go Back");
         System.out.println("Enter your choice (1): ");
         int choice = scanner.nextInt();
@@ -117,9 +132,19 @@ public class TA {
             System.exit(0);
         }
     }
+    private void hideActivity(Scanner scanner, String contentBlockID, String sectionId, String chapterId, int textbookId) {
+        System.out.println("\n--- Hide Activity ---");
+        System.out.print("Enter Unique Activity ID to hide: ");
+        String uniqueActivityId = scanner.next();
+
+        etextbookService.hideActivity(contentBlockID, sectionId, chapterId, textbookId, uniqueActivityId);
+        System.out.println("Activity hidden successfully.");
+    }
+
 
     //function to change password
     public void changePassword() {
+        System.out.println("Reset Password Questions:\nEnter current password: ");
         System.out.println("Reset Password Questions:\nEnter current password: ");
         String currentPwd = scanner.next();
         System.out.println("Enter new password: ");
@@ -134,6 +159,8 @@ public class TA {
         switch(choice) {
             case 1:
                 if(newPwd.equals(confirmPwd)) {
+                    this.userService.resetPassword(this.user.getId(), currentPwd, newPwd);
+                    this.landing();
                     this.userService.resetPassword(this.user.getId(), currentPwd, newPwd);
                     this.landing();
                 } else {
@@ -154,6 +181,8 @@ public class TA {
 
     //function to view students
     private void viewStudents(String courseID) {
+        System.out.println("Students in course "+ courseID + ":");
+        this.courseService.viewStudentsByCourse(courseID);
         System.out.println("Students in course "+ courseID + ":");
         this.courseService.viewStudentsByCourse(courseID);
         System.out.println("1. Go Back");
@@ -312,7 +341,7 @@ public class TA {
                 //redirect to add text
                 String text = helper.getText();
                 if(!text.isEmpty()) {
-                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, text,  this.user.getId(), this.user.getId());
+                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, text, "text", this.user.getId(), this.user.getId());
                 }
                 this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 break;
@@ -320,7 +349,7 @@ public class TA {
                 //redirect to add picture
                 String picture = helper.getPicture();
                 if(!picture.isEmpty()) {
-                    //TODO: handle adding picture
+                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, picture,  "picture", this.user.getId(), this.user.getId());
                 }
                 this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 break;
@@ -406,7 +435,7 @@ public class TA {
                 //redirect to add text
                 String text = helper.getText();
                 if(!text.isEmpty()) {
-                    //TODO: handle adding text
+                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, text, "text", this.user.getId(), this.user.getId());
                 } else {
                     this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 }
@@ -415,7 +444,7 @@ public class TA {
                 //redirect to add picture
                 String picture = helper.getPicture();
                 if(!picture.isEmpty()) {
-                    //TODO: handle adding picture
+                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, picture, "picture",  this.user.getId(), this.user.getId());
                 } else {
                     this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 }
@@ -478,7 +507,7 @@ public class TA {
 
         switch(choice) {
             case 1:
-                //TODO: handle hiding
+                etextbookService.hideContentBlock(contentId, sectionNumber, chapterID, textbookId);
                 break;
             case 2:
                 //redirect to previous page (modify section)
@@ -507,7 +536,7 @@ public class TA {
 
         switch(choice) {
             case 1:
-                //TODO: handle hide content
+                //TODO: handle hide activity
                 break;
             case 2:
                 this.goToActiveCourses();
