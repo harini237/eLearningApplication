@@ -59,6 +59,41 @@ public class EtextbookService {
             System.err.println("Error adding content block: " + e.getMessage());
         }
     }
+    public void addActivity(String activityId, String sectionNumber, String chapterId, int textbookId, String contentBlockId) {
+        try {
+            etextbookRepository.addActivity(activityId, sectionNumber, chapterId, textbookId, contentBlockId);
+            System.out.println("Activity added successfully!");
+        } catch (Exception e) {
+            System.err.println("Error adding activity: " + e.getMessage());
+        }
+    }
+
+    public void addQuestion(String activityId, int textbookId, String sectionNumber, String chapterId, String contentBlockId, String questionId, String questionText, String option1, String explanation1, String option2, String explanation2, String option3, String explanation3, String option4, String explanation4, int correctOption) {
+        try {
+            etextbookRepository.addQuestion(activityId, textbookId, sectionNumber, chapterId, contentBlockId, questionId, questionText, option1, explanation1, option2, explanation2, option3, explanation3, option4, explanation4, correctOption);
+            System.out.println("Question added successfully!");
+        } catch (Exception e) {
+            System.err.println("Error adding question: " + e.getMessage());
+        }
+    }
+    public void deleteActivity(String activityId) {
+        try {
+            etextbookRepository.deleteActivity(activityId);
+            System.out.println("Activity deleted successfully.");
+        } catch (Exception e) {
+            System.err.println("Error deleting activity: " + e.getMessage());
+        }
+    }
+    
+    public void deleteContentBlock(String contentBlockId, String sectionId, String chapterId, int textbookId) {
+        try {
+            etextbookRepository.deleteContentBlock(contentBlockId, sectionId, chapterId, textbookId);
+            System.out.println("Content block deleted successfully.");
+        } catch (Exception e) {
+            System.err.println("Error deleting content block: " + e.getMessage());
+        }
+    }
+    
 
 }
     

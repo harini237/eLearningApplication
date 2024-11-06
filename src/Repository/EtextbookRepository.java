@@ -132,4 +132,97 @@ public class EtextbookRepository {
         }
     }
     
+    public void addActivity(String activityId, String sectionNumber, String chapterId, int textbookId, String contentBlockId) {
+        String sql = "INSERT INTO activity (unique_activity_id, section_id, chapter_id, textbook_id, content_block_id, hidden) VALUES (?, ?, ?, ?, ?, 'no')";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, activityId);
+            pstmt.setString(2, sectionNumber);
+            pstmt.setString(3, chapterId);
+            pstmt.setInt(4, textbookId);
+            pstmt.setString(5, contentBlockId);
+            
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Activity added successfully with Activity ID: " + activityId);
+            } else {
+                System.err.println("Failed to add activity.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error adding activity: " + e.getMessage());
+        }
+    }
+    
+    public void addQuestion(String activityId, int textbookId, String sectionNumber, String chapterId,  String contentBlockId, String questionId, String questionText, String option1, String explanation1, String option2, String explanation2, String option3, String explanation3, String option4, String explanation4, int correctOption) {
+        String sql = "INSERT INTO question (activity_id, textbook_id, section_id ,chapter_id, content_block_id, id, question_text, option_1, explanation_1, option_2, explanation_2, option_3, explanation_3, option_4, explanation_4, correct_option) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, activityId);
+            pstmt.setInt(2, textbookId);
+            pstmt.setString(3, sectionNumber);
+            pstmt.setString(4, chapterId);
+            pstmt.setString(5, contentBlockId);
+            pstmt.setString(6, questionId);
+            pstmt.setString(7, questionText);
+            pstmt.setString(8, option1);
+            pstmt.setString(9, explanation1);
+            pstmt.setString(10, option2);
+            pstmt.setString(11, explanation2);
+            pstmt.setString(12, option3);
+            pstmt.setString(13, explanation3);
+            pstmt.setString(14, option4);
+            pstmt.setString(15, explanation4);
+            pstmt.setInt(16, correctOption);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Question added successfully with Question ID: " + questionId);
+            } else {
+                System.err.println("Failed to add question.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error adding question: " + e.getMessage());
+        }
+    }
+    public void deleteActivity(String activityId) {
+        String sql = "DELETE FROM activity WHERE unique_activity_id = ?";
+    
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    
+            pstmt.setString(1, activityId);
+            pstmt.executeUpdate();
+    
+        } catch (SQLException e) {
+            System.err.println("Error deleting activity: " + e.getMessage());
+        }
+    }
+    
+    public void deleteContentBlock(String contentBlockId, String sectionId, String chapterId, int textbookId) {
+        String sql = "DELETE FROM content_block WHERE block_id = ? AND section_id = ? AND chapter_id = ? AND textbook_id = ?";
+    
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    
+            pstmt.setString(1, contentBlockId);
+            pstmt.setString(2, sectionId);
+            pstmt.setString(3, chapterId);
+            pstmt.setInt(4, textbookId);
+            pstmt.executeUpdate();
+    
+        } catch (SQLException e) {
+            System.err.println("Error deleting content block: " + e.getMessage());
+        }
+    }
+    
 }
