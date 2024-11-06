@@ -50,16 +50,36 @@ public class Home {
      */
     private void loginUser(Scanner scanner, String role) {
         scanner.nextLine();  // Consume newline left by nextInt
-        System.out.print("Enter username (email): ");
+        System.out.print("Enter username (userId): ");
         String username = scanner.nextLine();
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
 
         // Use UserService to validate login with the hashed password
-        User user = userService.getUserWithRoleUsingEmail(username);
+        User user = userService.getUserById(username);
 
         if (user != null && user.getRole().equalsIgnoreCase(role) && user.getPassword().equals(PasswordUtil.hashPassword(password))) {
             System.out.println("Login successful!");
+
+            if(user.getIsPwdResetReq()){
+                Boolean askForPassword = true;
+                String oldPassword = password;
+                System.out.println("Your Password needs to be reset.");
+                while(askForPassword) {
+                    System.out.println("Please Enter your New Password!");
+                    System.out.println("Enter password: ");
+                    password = scanner.nextLine();
+                    System.out.println("Repeat password: ");
+                    String repeatPassword = scanner.nextLine();
+                    if(!password.equals(repeatPassword)){
+                        System.out.println("Passwords doesn't match");
+                    } else{
+                        askForPassword = false;
+                        userService.resetPassword(user.getId(), oldPassword, password);
+                        break;
+                    }
+                }
+            }
 
             // Redirect to the appropriate menu based on role
             switch (role) {
