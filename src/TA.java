@@ -346,7 +346,7 @@ public class TA {
                 //redirect to add picture
                 String picture = helper.getPicture();
                 if(!picture.isEmpty()) {
-                    //TODO: handle adding picture
+                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, picture,  this.user.getId(), this.user.getId());
                 }
                 this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 break;
@@ -432,7 +432,7 @@ public class TA {
                 //redirect to add text
                 String text = helper.getText();
                 if(!text.isEmpty()) {
-                    //TODO: handle adding text
+                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, text,  this.user.getId(), this.user.getId());
                 } else {
                     this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 }
@@ -441,7 +441,7 @@ public class TA {
                 //redirect to add picture
                 String picture = helper.getPicture();
                 if(!picture.isEmpty()) {
-                    //TODO: handle adding picture
+                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, picture,  this.user.getId(), this.user.getId());
                 } else {
                     this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 }
@@ -504,7 +504,7 @@ public class TA {
 
         switch(choice) {
             case 1:
-                //TODO: handle hiding
+                etextbookService.hideContentBlock(contentId, sectionNumber, chapterID, textbookId);
                 break;
             case 2:
                 //redirect to previous page (modify section)
@@ -533,7 +533,7 @@ public class TA {
 
         switch(choice) {
             case 1:
-                //TODO: handle hide content
+                //TODO: handle hide activity
                 break;
             case 2:
                 this.goToActiveCourses();

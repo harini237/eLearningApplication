@@ -226,7 +226,8 @@ public class AdminMenu {
         int choice = scanner.nextInt();
     
         if (choice == 1) {
-            etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, content,  this.loggedUser.getId(), this.loggedUser.getId()); // Pass the content directly
+            etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, content,  this.loggedUser.getId(), this.loggedUser.getId()); 
+            navigationStack.pop();
         } else {
             navigationStack.pop();  // Go back to Content Block
         }
@@ -245,12 +246,10 @@ public class AdminMenu {
     
         if (choice == 1) {
             etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, picturePath, this.loggedUser.getId(), this.loggedUser.getId());
+            navigationStack.pop();
         } else {
             navigationStack.pop();  // Go back to Content Block
-        }
-
-
-      
+        }   
     }
     
 
@@ -264,8 +263,7 @@ public class AdminMenu {
         System.out.print("Enter choice (1-2): ");
         int choice = scanner.nextInt();
 
-        if (choice == 1) {
-            
+        if (choice == 1) { 
             navigationStack.push(() -> addQuestion(scanner, textbookId, chapterId, sectionNumber, contentBlockId, activityId));
         } else {
             navigationStack.pop();  // Go back to Content Block
