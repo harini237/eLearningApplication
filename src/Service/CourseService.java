@@ -85,6 +85,19 @@ public class CourseService {
         }
     }
 
+    public void viewAssignedCoursesByTa (String ta_user_id) {
+        List<Course> coursesAssigned = new ArrayList<>();
+        coursesAssigned = this.taCourseMapRepository.findCourseIdByTa(ta_user_id);
+        if (coursesAssigned.isEmpty()) {
+            System.out.println("No courses assigned!");
+        } else {
+            System.out.println("Courses assigned to "+ ta_user_id+ ":");
+            for (Course course : coursesAssigned) {
+                System.out.println(course.getId());
+            }
+        }
+    }
+
     public void viewWorklist (String faculty_id) {
         List<PendingApproval> pendingApprovals = new ArrayList<>();
         pendingApprovals = this.pendingApprovalRepository.findPendingApprovalsByFaculty(faculty_id);
@@ -115,7 +128,7 @@ public class CourseService {
         }
     }
 
-    public void viewStudents (String faculty_id) {
+    public void viewStudentsByFaculty (String faculty_id) {
         Map<String,List<String>> courses = new HashMap<>();
         courses = this.enrollmentRepository.findEnrolledStudentsByFaculty(faculty_id);
 
@@ -127,11 +140,28 @@ public class CourseService {
         }
     }
 
+    public void viewStudentsByCourse (String course_id) {
+        List<User> students = new ArrayList<>();
+        students = this.enrollmentRepository.findStudentsByCourseId(course_id);
+
+        for (User stu: students) {
+            System.out.println(stu.getId() + " | " + stu.getFirstName() + " | " + stu.getLastName());
+        }
+    }
+
     public void enrollStudent (Map<String, String> enroll, User user) {
         String email = enroll.get("email");
         String student_id = user.getId();
         String course_token = enroll.get("courseToken");
         this.requestEnrollment(student_id, course_token);
+    }
+
+    public boolean checkTaByCourseId (String ta_user_id, String course_id) {
+        List<String> courseTas = this.taCourseMapRepository.findTasByCourseId(course_id);
+        if (courseTas.contains(ta_user_id)) {
+            return true;
+        }
+        return false;
     }
 
 }
