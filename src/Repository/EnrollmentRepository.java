@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class EnrollmentRepository {
     public void createEnrollment (Enrollment enrollment) {
-        String sql = "INSERT INTO enrollment (course_token, student_id)" +
+        String sql = "INSERT INTO enrollment (course_token, student_id) " +
                 "VALUES (?, ?)";
         try {
             Connection conn = DatabaseConnection.getConnection();
@@ -34,7 +34,7 @@ public class EnrollmentRepository {
     public List<String> findCourseTokenByStudent (String student_id) {
         List<String> course_tokens = new ArrayList<>();
 
-        String sql = "SELECT course_token FROM enrollment" +
+        String sql = "SELECT course_token FROM enrollment " +
                 "WHERE student_id = ?";
 
         try {
@@ -57,7 +57,7 @@ public class EnrollmentRepository {
     public List<String> findStudentsByCourseToken (String course_token) {
         List<String> students = new ArrayList<>();
 
-        String sql = "SELECT student_id FROM enrollment" +
+        String sql = "SELECT student_id FROM enrollment " +
                 "WHERE course_token = ?";
 
         try {
@@ -78,12 +78,12 @@ public class EnrollmentRepository {
     }
 
     public Map<String,List<String>> findEnrolledStudentsByFaculty(String faculty_id) {
-        String sql = "SELECT E.student_id, C.id" +
-                "FROM enrollment E" +
-                "JOIN active_course A" +
-                "ON E.course_token = A.token" +
-                "JOIN course C" +
-                "ON A.course_id = C.id" +
+        String sql = "SELECT E.student_id, C.id " +
+                "FROM enrollment E " +
+                "JOIN active_course A " +
+                "ON E.course_token = A.token " +
+                "JOIN course C " +
+                "ON A.course_id = C.id " +
                 "WHERE faculty_id = ?";
 
         Map<String, List<String>> map = new HashMap<>();
@@ -118,12 +118,12 @@ public class EnrollmentRepository {
     public List<User> findStudentsByCourseId (String course_id) {
         List<User> studentsList = new ArrayList<>();
 
-        String sql = "SELECT U.id, U.firstName, U.lastName" +
-                "FROM user U" +
-                "JOIN enrollment E" +
-                "ON U.id = E.student_id" +
-                "JOIN active_course A" +
-                "ON A.token = E.course_token" +
+        String sql = "SELECT U.id, U.first_name, U.last_name " +
+                "FROM user U " +
+                "JOIN enrollment E " +
+                "ON U.id = E.student_id " +
+                "JOIN active_course A " +
+                "ON A.token = E.course_token " +
                 "WHERE A.course_id = ?";
 
         try {
@@ -136,8 +136,8 @@ public class EnrollmentRepository {
             while (rs.next()) {
                 User user = new User();
                 user.setId(rs.getString("id"));
-                user.setFirstName(rs.getString("firstName"));
-                user.setLastName(rs.getString("lastName"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
                 studentsList.add(user);
             }
         } catch (SQLException e) {
