@@ -39,7 +39,7 @@ public class FacultyMenu {
         switch (choice) {
             case 1 -> navigationStack.push(this::activeCourseMenu);
             case 2 -> navigationStack.push(this::evaluationCourseMenu);
-            case 3 -> facultyService.viewCourses();
+//            case 3 -> facultyService.viewCourses();
             case 4 -> changePassword();
             case 5 -> {
                 navigationStack.pop();
