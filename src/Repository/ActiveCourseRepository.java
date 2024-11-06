@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class ActiveCourseRepository {
     public void createActiveCourse (ActiveCourse activeCourse) {
-        String sql = "INSERT INTO active_course (token, capacity, course_id)" +
+        String sql = "INSERT INTO active_course (token, capacity, course_id) " +
                 "VALUES (?, ?, ?)";
         try {
             Connection conn = DatabaseConnection.getConnection();
@@ -30,7 +30,7 @@ public class ActiveCourseRepository {
     public ActiveCourse findActiveCourseByToken (String token) {
         ActiveCourse course = null;
 
-        String sql = "SELECT token, capacity, course_id FROM active_course" +
+        String sql = "SELECT token, capacity, course_id FROM active_course " +
                 "WHERE token = ?";
 
         try {
@@ -53,8 +53,8 @@ public class ActiveCourseRepository {
     }
 
     public void updateCapacity (String token, int capacity) {
-        String sql = "UPDATE active_course" +
-                "SET capacity = ?" +
+        String sql = "UPDATE active_course " +
+                "SET capacity = ? " +
                 "WHERE token = ?";
 
         try {
@@ -74,7 +74,7 @@ public class ActiveCourseRepository {
     public ActiveCourse findActiveCourseById (String course_id) {
         ActiveCourse course = null;
 
-        String sql = "SELECT token, capacity, course_id FROM active_course" +
+        String sql = "SELECT token, capacity, course_id FROM active_course " +
                 "WHERE course_id = ?";
 
         try {

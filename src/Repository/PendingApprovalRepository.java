@@ -12,7 +12,7 @@ import java.util.List;
 
 public class PendingApprovalRepository {
     public void createApproval (PendingApproval approval) {
-        String sql = "INSERT INTO pending_approval (course_token, student_id)" +
+        String sql = "INSERT INTO pending_approval (course_token, student_id) " +
                 "VALUES (?, ?)";
 
         try {
@@ -32,7 +32,7 @@ public class PendingApprovalRepository {
     public List<PendingApproval> findApprovalsByCourse (String course_token) {
         List<PendingApproval> approvals = new ArrayList<>();
 
-        String sql = "SELECT course_token, student_id FROM pending_approval" +
+        String sql = "SELECT course_token, student_id FROM pending_approval " +
                 "WHERE course_token = ?";
 
         try {
@@ -56,7 +56,7 @@ public class PendingApprovalRepository {
     public List<PendingApproval> findApprovalsByStudent (String student_id) {
         List<PendingApproval> approvals = new ArrayList<>();
 
-        String sql = "SELECT course_token, student_id FROM pending_approval" +
+        String sql = "SELECT course_token, student_id FROM pending_approval " +
                 "WHERE student_id = ?";
 
         try {
@@ -78,8 +78,8 @@ public class PendingApprovalRepository {
     }
 
     public void deletePendingApproval (String student_id, String course_token) {
-        String sql = "DELETE FROM pending_approval" +
-                "WHERE student_id = ?" +
+        String sql = "DELETE FROM pending_approval " +
+                "WHERE student_id = ? " +
                 "AND course_token = ?";
 
         try {
@@ -97,12 +97,12 @@ public class PendingApprovalRepository {
     }
 
     public List<String> findPendingApprovalTokensByFaculty (String faculty_id) {
-        String sql = "SELECT A.token" +
-                "FROM active_course A" +
-                "JOIN course C" +
-                "ON A.course_id = C.id" +
-                "JOIN pending_approval P" +
-                "ON A.token = P.course_token" +
+        String sql = "SELECT A.token " +
+                "FROM active_course A " +
+                "JOIN course C " +
+                "ON A.course_id = C.id " +
+                "JOIN pending_approval P " +
+                "ON A.token = P.course_token " +
                 "WHERE C.faculty_id = ?";
 
         List<String> course_tokens = new ArrayList<>();
@@ -126,8 +126,8 @@ public class PendingApprovalRepository {
     public List<PendingApproval> findPendingApprovalsByFaculty (String faculty_id) {
 
         List<PendingApproval> pendingApprovals = new ArrayList<>();
-        String sql2 = "SELECT course_token, student_id" +
-                "FROM pending_approval" +
+        String sql2 = "SELECT course_token, student_id " +
+                "FROM pending_approval " +
                 "WHERE course_token = ?";
 
         List<String> course_tokens = this.findPendingApprovalTokensByFaculty(faculty_id);
@@ -160,14 +160,14 @@ public class PendingApprovalRepository {
     public List<PendingApproval> findApprovalsByStudentAndFaculty(String student_id, String faculty_id) {
         List<PendingApproval> approvals = new ArrayList<>();
 
-        String sql = "SELECT student_id, course_token FROM pending_approval" +
+        String sql = "SELECT student_id, course_token FROM pending_approval " +
                 "WHERE student_id = ? AND course_token in " +
-                "(SELECT A.token" +
-                "FROM active_course A" +
-                "JOIN course C" +
-                "ON A.course_id = C.id" +
-                "JOIN pending_approval P" +
-                "ON A.token = P.course_token" +
+                "(SELECT A.token " +
+                "FROM active_course A " +
+                "JOIN course C " +
+                "ON A.course_id = C.id " +
+                "JOIN pending_approval P " +
+                "ON A.token = P.course_token " +
                 "WHERE C.faculty_id = ?)";
 
         try {

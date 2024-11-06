@@ -159,8 +159,10 @@ public class CourseService {
     public boolean checkTaByCourseId (String ta_user_id, String course_id) {
         List<String> courseTas = this.taCourseMapRepository.findTasByCourseId(course_id);
         if (courseTas.contains(ta_user_id)) {
+            System.out.println("Ta is present in list");
             return true;
         }
+        System.out.println("Ta not present in list");
         return false;
     }
 

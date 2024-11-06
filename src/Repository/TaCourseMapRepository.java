@@ -13,7 +13,7 @@ import java.util.List;
 
 public class TaCourseMapRepository {
     public void createTaCourseMap (TaCourseMap ta_course) {
-        String sql = "INSERT INTO TaCourseMap (course_token, ta_user_id)" +
+        String sql = "INSERT INTO TaCourseMap (course_token, ta_user_id) " +
                 "VALUES (?, ?)";
         try {
             Connection conn = DatabaseConnection.getConnection();
@@ -32,7 +32,7 @@ public class TaCourseMapRepository {
     public List<String> findCourseTokenByTa (String ta_user_id) {
         List<String> course_tokens = new ArrayList<>();
 
-        String sql = "SELECT course_token FROM ta_course_map" +
+        String sql = "SELECT course_token FROM ta_course_map " +
                 "WHERE ta_user_id = ?";
 
         try {
@@ -55,7 +55,7 @@ public class TaCourseMapRepository {
     public List<String> findTasByCourseToken (String course_token) {
         List<String> ta_user_ids = new ArrayList<>();
 
-        String sql = "SELECT ta_user_id FROM ta_course_map" +
+        String sql = "SELECT ta_user_id FROM ta_course_map " +
                 "WHERE course_token = ?";
 
         try {
@@ -78,10 +78,10 @@ public class TaCourseMapRepository {
     public List<String> findTasByCourseId (String course_id) {
         List<String> ta_user_ids = new ArrayList<>();
 
-        String sql = "SELECT T.ta_user_id" +
-                "FROM ta_course_map T" +
-                "JOIN active_course A" +
-                "ON T.course_token = A.token" +
+        String sql = "SELECT T.ta_user_id " +
+                "FROM ta_course_map T " +
+                "JOIN active_course A " +
+                "ON T.course_token = A.token " +
                 "WHERE A.course_id = ?";
 
         try {
@@ -92,10 +92,10 @@ public class TaCourseMapRepository {
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                ta_user_ids.add(rs.getString("ta_user_id"));
+                ta_user_ids.add(rs.getString("T.ta_user_id"));
             }
         } catch (SQLException e) {
-            System.out.println("Could not find TAs.");
+            System.out.println("Could not find TAs." + e.getMessage());
         }
 
         return ta_user_ids;
@@ -104,12 +104,12 @@ public class TaCourseMapRepository {
     public List<Course> findCourseIdByTa (String ta_user_id) {
         List<Course> courses = new ArrayList<>();
 
-        String sql = "SELECT C.id, C.title, C.faculty_id, C.textbook_id" +
-                "FROM course C" +
-                "JOIN active_course A" +
-                "ON C.id = A.course_id" +
-                "JOIN ta_course_map T" +
-                "ON A.token = T.course_token" +
+        String sql = "SELECT C.id, C.title, C.faculty_id, C.textbook_id " +
+                "FROM course C " +
+                "JOIN active_course A " +
+                "ON C.id = A.course_id " +
+                "JOIN ta_course_map T " +
+                "ON A.token = T.course_token " +
                 "WHERE T.ta_user_id = ?";
 
         try {
