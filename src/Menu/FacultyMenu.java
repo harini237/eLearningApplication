@@ -2,10 +2,13 @@ package Menu;
 
 import java.util.Scanner;
 import java.util.Stack;
+
+import Entity.User;
 import Service.EtextbookService;
 import Service.CourseService;
 
 public class FacultyMenu {
+    User loggedUser;
 
     private final EtextbookService eTextbookService = new EtextbookService();
     private final CourseService courseService = new CourseService();
