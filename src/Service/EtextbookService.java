@@ -71,11 +71,20 @@ public class EtextbookService {
     public void addContentBlock(String contentBlockId, String sectionNumber, String chapterId, int textbookId, String content, String createdBy, String modifiedBy) {
         try {
             etextbookRepository.addContentBlock(textbookId, chapterId, sectionNumber, contentBlockId, content, createdBy, modifiedBy);
-            System.out.println("Content block added successfully!");
         } catch (Exception e) {
             System.err.println("Error adding content block: " + e.getMessage());
         }
     }
+
+    public void hideContentBlock(String contentBlockId, String sectionNumber, String chapterId, int textbookId) {
+        try {
+            etextbookRepository.hideContentBlock(contentBlockId, sectionNumber, chapterId, textbookId);
+        } catch (Exception e) {
+            System.err.println("Error hiding content block: " + e.getMessage());
+        }
+    }
+    
+
     public void addActivity(String activityId, String sectionNumber, String chapterId, int textbookId, String contentBlockId) {
         try {
             etextbookRepository.addActivity(activityId, sectionNumber, chapterId, textbookId, contentBlockId);

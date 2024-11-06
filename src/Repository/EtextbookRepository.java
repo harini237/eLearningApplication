@@ -150,8 +150,35 @@ public class EtextbookRepository {
             System.err.println("Error adding content block: " + e.getMessage());
         }
     }
+
+    public void hideContentBlock(String blockId, String sectionId, String chapterId, int textbookId) {
+        String sql = "UPDATE content_block SET hidden = 'yes' WHERE block_id = ? AND section_id = ? AND chapter_id = ? AND textbook_id = ?";
     
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
     
+            // Set the parameters for the prepared statement
+            pstmt.setString(1, blockId);          // Set block_id
+            pstmt.setString(2, sectionId);        // Set section_id
+            pstmt.setString(3, chapterId);        // Set chapter_id
+            pstmt.setInt(4, textbookId);          // Set textbook_id
+    
+            // Execute the update query
+            int rowsAffected = pstmt.executeUpdate();
+    
+            // Check if the update was successful
+            if (rowsAffected > 0) {
+                System.out.println("Content block with ID " + blockId + " is now hidden.");
+            } else {
+                System.err.println("Content block with ID " + blockId + " not found or already hidden.");
+            }
+    
+        } catch (SQLException e) {
+            System.err.println("Error hiding content block: " + e.getMessage());
+        }
+    }
+     
+   
     public void addSection(int textbookId, String chapterId, String sectionNumber, String title) {
         String sql = "INSERT INTO section (section_id, chapter_id, textbook_id, title, visibility) VALUES (?, ?, ?, ?, ?)";
     
