@@ -10,9 +10,11 @@ import Util.PasswordUtil;
 
 public class Home {
     private final UserService userService;
+    private  final FacultyReportMenu facultyReportMenu;
 
     public Home() {
         this.userService = new UserService();  // Initialize the user service for login validation
+        this.facultyReportMenu = new FacultyReportMenu();
         displayHomeScreen();
     }
 
@@ -20,7 +22,7 @@ public class Home {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Welcome to the e-learning experience!");
-        System.out.println("Login options:\n1. Admin\n2. Faculty\n3. TA\n4. Student\n5. Exit");
+        System.out.println("Login options:\n1. Admin\n2. Faculty\n3. TA\n4. Student \n5. FacultyReport(Queries)\n6. Exit");
         System.out.print("Enter your choice (1-5): ");
         int choice = scanner.nextInt();
 
@@ -29,7 +31,8 @@ public class Home {
             case 2 -> loginUser(scanner, "Faculty");
             case 3 -> loginUser(scanner, "TA");
             case 4 -> loginUser(scanner, "Student");
-            case 5 -> {
+            case 5 -> facultyReportMenu.displayMenu();
+            case 6 -> {
                 System.out.println("Have a nice day!");
                 System.exit(0);
             }
