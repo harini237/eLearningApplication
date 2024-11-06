@@ -27,9 +27,9 @@ public class Home {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> loginUser(scanner, "Admin");
-            case 2 -> loginUser(scanner, "Faculty");
-            case 3 -> loginUser(scanner, "TA");
+            case 1 -> loginUser(scanner, "admin");
+            case 2 -> loginUser(scanner, "faculty");
+            case 3 -> loginUser(scanner, "ta");
             case 4 -> {
                 System.out.println("Would you like to 1. SignIn or 2. Create Account ?");
                 //redirect as per option
@@ -58,7 +58,7 @@ public class Home {
                         System.out.println("Error While creating user account Error: " + ignored.getMessage());
                     }
                 }
-                loginUser(scanner, "Student");
+                loginUser(scanner, "student");
 
             }
             case 5 -> facultyReportMenu.displayMenu();
@@ -89,7 +89,7 @@ public class Home {
         // Use UserService to validate login with the hashed password
         User user = userService.getUserById(username);
 
-        if (user != null && user.getRole().equalsIgnoreCase(role) && user.getPassword().equals(password)) {
+        if (user != null && user.getRole().equalsIgnoreCase(role) && user.getPassword().equals(PasswordUtil.hashPassword(password))) {
             System.out.println("Login successful!");
 
             if(user.getIsPwdResetReq()){
@@ -112,10 +112,10 @@ public class Home {
 
             // Redirect to the appropriate menu based on role
             switch (role) {
-                case "Admin" -> new AdminMenu().displayAdminMenu(user);
-                case "Faculty" -> new FacultyMenu().displayFacultyMenu(user);
-                case "TA" -> new TA(user);
-                case "Student" -> new Student(user);
+                case "admin" -> new AdminMenu().displayAdminMenu(user);
+                case "faculty" -> new FacultyMenu().displayFacultyMenu(user);
+                case "ta" -> new TA(user);
+                case "student" -> new Student(user);
             }
         } else {
                 System.out.println("Invalid credentials or role. Please try again.");

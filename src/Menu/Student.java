@@ -16,7 +16,7 @@ public class Student {
     private final CourseService courseService = new CourseService();
     private final EtextbookService etextbookService = new EtextbookService();
     private final User user;
-    public Student(User user) {
+    public  Student(User user) {
         this.user = user;
         this.helper = new Helper();
 
@@ -138,7 +138,9 @@ public class Student {
     //function to view block
     private void viewBlock(int textbookId, String chapterId, String sectionId) {
         //TODO: fetch block details from db
+        etextbookService.displayContentBlock(sectionId, chapterId, textbookId);
         String menuOption = "";
+
         /*
         IF BLOCK IS CONTENT
             this.contentBlock( textbookId,  chapterId,  sectionId);

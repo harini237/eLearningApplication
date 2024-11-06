@@ -4,6 +4,7 @@ import Entity.Etextbook;
 import Util.DatabaseConnection;
 
 import java.sql.*;
+import java.util.Scanner;
 
 public class EtextbookRepository {
 
@@ -397,7 +398,7 @@ public void deleteChapter(String chapterId, int textbookId) {
 
     public void listAllEtextbooks() {
         String sql = "SELECT " +
-                "et.id as 'EBookId'" +
+//                "et.id as 'EBookId'" +
                 "et.title AS 'EBook', " +
                 "ch.chapter_id AS 'Chapter', " +
                 "sec.section_id AS 'Section', " +
@@ -417,7 +418,7 @@ public void deleteChapter(String chapterId, int textbookId) {
             String currentSection = null;
 
             while (rs.next()) {
-                Integer eBookId = rs.getInt("EBookId");
+//                Integer eBookId = rs.getInt("EBookId");
                 String eBook = rs.getString("EBook");
                 String chapter = rs.getString("Chapter");
                 String section = rs.getString("Section");
@@ -428,7 +429,7 @@ public void deleteChapter(String chapterId, int textbookId) {
                     currentEBook = eBook;
                     currentChapter = null;  // Reset chapter and section for a new E-Book
                     currentSection = null;
-                    System.out.println("E-Book: "+  eBookId.toString() +" "+  currentEBook);
+                    System.out.println("E-Book: "+  currentEBook);
                 }
 
                 // Check if we are in a new Chapter
@@ -514,8 +515,115 @@ public void deleteChapter(String chapterId, int textbookId) {
             System.err.println("Error retrieving e-textbook data: " + e.getMessage());
         }
     }
-    
-    
+
+    public void displaySectionContent(String sectionId, String chapterId, int textbookId) {
+        String query = """
+                SELECT
+                   c.block_id,
+                   c.content_type,
+                   c.content AS content_text,
+                   a.unique_activity_id,
+                   q.question_text,
+                   q.option_1,
+                   q.explanation_1,
+                   q.option_2,
+                   q.explanation_2,
+                   q.option_3,
+                   q.explanation_3,
+                   q.option_4,
+                   q.explanation_4,
+                   q.correct_option
+                FROM
+                   content_block AS c
+                LEFT JOIN
+                   activity AS a ON c.block_id = a.content_block_id
+                               AND c.section_id = a.section_id
+                               AND c.chapter_id = a.chapter_id
+                               AND c.textbook_id = a.textbook_id
+                LEFT JOIN
+                   question AS q ON a.id = q.activity_id
+                               AND a.section_id = q.section_id
+                               AND a.chapter_id = q.chapter_id
+                               AND a.textbook_id = q.textbook_id
+                WHERE
+                    c.section_id = ? AND c.chapter_id = ? AND c.textbook_id = ? AND c.hidden = 'no'
+                ORDER BY
+                   c.section_id,
+                   CASE
+                       WHEN c.content_type = 'text' THEN 1
+                       WHEN c.content_type = 'picture' THEN 2
+                       WHEN c.content_type = 'activity' THEN 3
+                   END
+                """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, sectionId);
+            pstmt.setString(2, chapterId);
+            pstmt.setInt(3, textbookId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                Scanner scanner = new Scanner(System.in);
+                boolean hasMoreBlocks = false;
+
+                while (rs.next()) {
+                    hasMoreBlocks = true;
+                    String contentType = rs.getString("content_type");
+                    String contentText = rs.getString("content_text");
+
+                    if ("text".equals(contentType) || "picture".equals(contentType)) {
+                        System.out.println("Content: " + contentText);
+                        System.out.println("\n--- Menu ---");
+                        System.out.println("1. Next");
+                        System.out.print("Choose an option: ");
+                        int choice = scanner.nextInt();
+
+                        if (choice != 1) {
+                            System.out.println("Invalid choice, moving to next block.");
+                        }
+                    } else if ("activity".equals(contentType)) {
+                        System.out.println("Activity: " + rs.getString("question_text"));
+                        System.out.println("Options:");
+                        System.out.println("1. " + rs.getString("option_1") + " - " + rs.getString("explanation_1"));
+                        System.out.println("2. " + rs.getString("option_2") + " - " + rs.getString("explanation_2"));
+                        System.out.println("3. " + rs.getString("option_3") + " - " + rs.getString("explanation_3"));
+                        System.out.println("4. " + rs.getString("option_4") + " - " + rs.getString("explanation_4"));
+
+                        System.out.print("Enter the ID of the correct answer (1-4): ");
+                        int userAnswer = scanner.nextInt();
+
+                        int correctOption = rs.getInt("correct_option");
+                        if (userAnswer == correctOption) {
+                            System.out.println("Correct Answer!");
+                        } else {
+                            System.out.println("Incorrect Answer. The correct option is " + correctOption);
+                        }
+
+                        System.out.println("\n--- Menu ---");
+                        System.out.println("1. Next");
+                        System.out.print("Choose an option: ");
+                        int choice = scanner.nextInt();
+
+                        if (choice != 1) {
+                            System.out.println("Invalid choice, moving to next block.");
+                        }
+                    }
+                }
+
+                if (!hasMoreBlocks) {
+                    System.out.println("No content blocks available for this section.");
+                } else {
+                    System.out.println("All blocks of this section are completed.");
+                }
+
+            } catch (SQLException e) {
+                System.err.println("Error processing result set: " + e.getMessage());
+            }
+        } catch (SQLException e) {
+            System.err.println("Database error: " + e.getMessage());
+        }
+    }
     
 }
     
