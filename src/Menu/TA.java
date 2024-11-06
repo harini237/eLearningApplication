@@ -132,6 +132,15 @@ public class TA {
             System.exit(0);
         }
     }
+    private void hideActivity(Scanner scanner, String contentBlockID, String sectionId, String chapterId, int textbookId) {
+        System.out.println("\n--- Hide Activity ---");
+        System.out.print("Enter Unique Activity ID to hide: ");
+        String uniqueActivityId = scanner.next();
+
+        etextbookService.hideActivity(contentBlockId, sectionId, chapterId, textbookId, uniqueActivityId);
+        System.out.println("Activity hidden successfully.");
+    }
+
 
     //function to change password
     public void changePassword() {
