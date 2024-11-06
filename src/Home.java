@@ -60,10 +60,9 @@ public class Home {
             System.out.println("Login successful!");
 
             if(user.getIsPwdResetReq()){
-                Boolean askForPassword = true;
                 String oldPassword = password;
                 System.out.println("Your Password needs to be reset.");
-                while(askForPassword) {
+                while(true) {
                     System.out.println("Please Enter your New Password!");
                     System.out.println("Enter password: ");
                     password = scanner.nextLine();
@@ -72,7 +71,6 @@ public class Home {
                     if(!password.equals(repeatPassword)){
                         System.out.println("Passwords doesn't match");
                     } else{
-                        askForPassword = false;
                         userService.resetPassword(user.getId(), oldPassword, password);
                         break;
                     }
