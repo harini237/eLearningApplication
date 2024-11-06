@@ -60,5 +60,21 @@ public class EtextbookService {
         }
     }
 
+        public void deleteSection(int textbookId, String chapterId, String sectionId) {
+            try {
+                etextbookRepository.deleteSection(textbookId, chapterId, sectionId);
+            } catch (Exception e) {
+                System.err.println("Error deleting section: " + e.getMessage());
+            }
+        }
+    
+        public void hideSection(int textbookId, String chapterId, String sectionId) {
+            try {
+                etextbookRepository.hideSection(textbookId, chapterId, sectionId);
+            } catch (Exception e) {
+                System.err.println("Error hiding section: " + e.getMessage());
+            }
+        }
+
 }
     

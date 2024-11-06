@@ -1,6 +1,7 @@
 import Entity.User;
 import Repository.TaCourseMapRepository;
 import Service.CourseService;
+import Service.EtextbookService;
 import Service.UserService;
 import Util.Helper;
 
@@ -14,6 +15,7 @@ public class TA {
     User user;
     private final UserService userService = new UserService();
     private final CourseService courseService = new CourseService();
+    private final EtextbookService etextbookService = new EtextbookService();
 
     public TA(User user) {
         this.helper = new Helper();
@@ -170,8 +172,22 @@ public class TA {
     private void addChapter(String courseID) {
         System.out.println("Add Chapter:\nEnter unique chapter ID: ");
         String chapterID = scanner.next();
+        // Validate chapter number to ensure it follows the "chapXX" format
+        if (!chapterID.matches("chap\\d{2}")) {
+            System.out.println("Invalid chapter number. Please enter a value in the format.");
+            this.goToActiveCourses();
+        }
         System.out.println("Enter chapter title: ");
-        String chapterTitle = scanner.next();
+        String title = scanner.next();
+        // Check if title is empty
+        if (title.trim().isEmpty()) {
+            System.out.println("Chapter title cannot be empty. Please try again.");
+            this.goToActiveCourses();
+        }
+
+        Integer textbookId = this.courseService.getTextbookByCourse(courseID);
+
+        this.etextbookService.addChapter(chapterID, textbookId, title);
 
         System.out.println("1. Add new section\n2. Go back");
         System.out.println("Enter your choice (1-2): ");
@@ -181,7 +197,7 @@ public class TA {
             case 1:
                 //redirect to add section
                 System.out.println("Success.");
-                this.addSection("addChapter", courseID, chapterID, chapterTitle);
+                this.addSection("addChapter", courseID, chapterID, textbookId);
                 break;
             case 2:
                 //redirect to previous page
@@ -199,24 +215,22 @@ public class TA {
         System.out.println("Modify chapter:\nEnter unique chapter ID: ");
         String chapterID = scanner.next();
 
-        System.out.println("1. Add new section\n2. Add new activity\n3. Modify Section\n4. Go back");
-        System.out.println("Enter your choice (1-4): ");
+        Integer textbookId = this.courseService.getTextbookByCourse(courseID);
+
+        System.out.println("1. Add new section\n2. Modify Section\n3. Go back");
+        System.out.println("Enter your choice (1-3): ");
         int choice = scanner.nextInt();
 
         switch(choice) {
             case 1:
                 //redirect to add section
                 System.out.println("Success.");
-                this.addSection("modifyChapter", courseID, chapterID, "");
+                this.addSection("modifyChapter", courseID, chapterID, textbookId);
                 break;
             case 2:
-                //redirect to add activity
-                this.addActivity("modifyChapter", courseID, chapterID, "");
-                break;
-            case 3:
                 //redirect to modify section
-                this.modifySection("modifyChapter", courseID, chapterID, "");
-            case 4:
+                this.modifySection("modifyChapter", courseID, chapterID, textbookId);
+            case 3:
                 //redirect to previous page
                 this.goToActiveCourses();
                 break;
@@ -228,11 +242,35 @@ public class TA {
     }
 
     //function to add section
-    private void addSection(String callingFunction, String courseID, String chapterID, String chapterTitle) {
+    private void addSection(String callingFunction, String courseID, String chapterID, Integer textbookId) {
         System.out.println("Add section:\nEnter section number: ");
-        String sectionNum = scanner.next();
+        String sectionNumber = scanner.next();
+        if (!sectionNumber.trim().matches("(?i)Sec\\d{2}")) { // '(?i)' makes the regex case-insensitive
+            System.out.println("Invalid section number. Please enter a value in the format.");
+            if(callingFunction.equals("addChapter")) {
+                this.addChapter(courseID);
+            } else if(callingFunction.equals("modifyChapter")) {
+                this.modifyChapter(courseID);
+            } else {
+                this.landing();
+            }
+        }
+
         System.out.println("Enter section title: ");
-        String sectionTitle = scanner.next();
+        String title = scanner.next();
+        // Check if title is empty
+        if (title.trim().isEmpty()) {
+            System.out.println("Section title cannot be empty. Please try again.");
+            if(callingFunction.equals("addChapter")) {
+                this.addChapter(courseID);
+            } else if(callingFunction.equals("modifyChapter")) {
+                this.modifyChapter(courseID);
+            } else {
+                this.landing();
+            }
+        }
+
+        this.etextbookService.addSection(textbookId, chapterID, sectionNumber, title);
 
         System.out.println("1. Add new content block\n2. Go back");
         System.out.println("Enter your choice (1-2): ");
@@ -241,7 +279,7 @@ public class TA {
         switch(choice) {
             case 1:
                 //redirect to add content block
-                this.addContentBlock(callingFunction, courseID, chapterID, chapterTitle);
+                this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 break;
             case 2:
                 //redirect to previous page
@@ -261,7 +299,7 @@ public class TA {
     }
 
     //function to add content block
-    private void addContentBlock(String callingFunction, String courseID, String chapterID, String chapterTitle) {
+    private void addContentBlock(String callingFunction, String courseID, String chapterID, Integer textbookId, String sectionNumber) {
         System.out.println("Add content block:\nEnter content block ID: ");
         String contentId = scanner.next();
 
@@ -274,34 +312,32 @@ public class TA {
                 //redirect to add text
                 String text = helper.getText();
                 if(!text.isEmpty()) {
-                    //TODO: handle adding text
-                } else {
-                    this.addContentBlock(callingFunction, courseID, chapterID, chapterTitle);
+                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, text,  this.user.getId(), this.user.getId());
                 }
+                this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 break;
             case 2:
                 //redirect to add picture
                 String picture = helper.getPicture();
                 if(!picture.isEmpty()) {
                     //TODO: handle adding picture
-                } else {
-                    this.addContentBlock(callingFunction, courseID, chapterID, chapterTitle);
                 }
+                this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 break;
             case 3:
                 //redirect to add activity
-                this.addActivity(callingFunction, courseID, chapterID, chapterTitle);
+                this.addActivity(callingFunction, courseID, chapterID, textbookId, sectionNumber, contentId);
                 break;
             case 4:
                 //redirect to hide activity
-                this.hideActivity(callingFunction, courseID, chapterID, chapterTitle, contentId);
+                this.hideActivity(callingFunction, courseID, chapterID, textbookId, sectionNumber, contentId);
                 break;
             case 5:
                 //redirect to previous menu (add section menu)
                 if(callingFunction.equals("addChapter")) {
-                    this.addSection(callingFunction, courseID, chapterID, chapterTitle);
+                    this.addSection(callingFunction, courseID, chapterID, textbookId);
                 } else if(callingFunction.equals("modifyChapter")) {
-                    this.modifySection(callingFunction, courseID, chapterID, chapterTitle);
+                    this.modifySection(callingFunction, courseID, chapterID, textbookId);
                 } else {
                     this.landing();
                 }
@@ -314,9 +350,9 @@ public class TA {
     }
 
     //function to modify section
-    private void modifySection(String callingFunction, String courseID, String chapterID, String chapterTitle) {
+    private void modifySection(String callingFunction, String courseID, String chapterID, Integer textbookId) {
         System.out.println("Modify section:\nEnter section number: ");
-        String sectionNum = scanner.next();
+        String sectionNumber = scanner.next();
         System.out.println("Enter section title: ");
         String sectionTitle = scanner.next();
         System.out.println("Enter chapter ID: ");
@@ -331,19 +367,19 @@ public class TA {
         switch(choice) {
             case 1:
                 //redirect to add content block
-                this.addContentBlock(callingFunction, courseID, chapterID, chapterTitle);
+                this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 break;
             case 2:
                 //redirect to modify content block
-                this.modifyContentBlock(callingFunction, courseID, chapterID, chapterTitle);
+                this.modifyContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 break;
             case 3:
                 //redirect to delete content block
-                this.deleteContentBlock(callingFunction, courseID, chapterID, chapterTitle);
+                this.deleteContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 break;
             case 4:
                 //redirect to hide content block
-                this.hideContentBlock(callingFunction,  courseID, chapterID, chapterTitle);
+                this.hideContentBlock(callingFunction,  courseID, chapterID, textbookId, sectionNumber);
                 break;
             case 5:
                 //redirect to previous page (modify chapter)
@@ -357,7 +393,7 @@ public class TA {
     }
 
     //function to modify content block
-    private void modifyContentBlock(String callingFunction, String courseID, String chapterID, String chapterTitle) {
+    private void modifyContentBlock(String callingFunction, String courseID, String chapterID, Integer textbookId, String sectionNumber) {
         System.out.println("Modify content block:\nEnter content block ID: ");
         String contentId = scanner.next();
 
@@ -372,7 +408,7 @@ public class TA {
                 if(!text.isEmpty()) {
                     //TODO: handle adding text
                 } else {
-                    this.addContentBlock(callingFunction, courseID, chapterID, chapterTitle);
+                    this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 }
                 break;
             case 2:
@@ -381,20 +417,20 @@ public class TA {
                 if(!picture.isEmpty()) {
                     //TODO: handle adding picture
                 } else {
-                    this.addContentBlock(callingFunction, courseID, chapterID, chapterTitle);
+                    this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 }
                 break;
             case 3:
                 //redirect to add activity
-                this.addActivity(callingFunction, courseID, chapterID, chapterTitle);
+                this.addActivity(callingFunction, courseID, chapterID, textbookId, sectionNumber, contentId);
                 break;
             case 4:
                 //redirect to hide activity
-                this.hideActivity(callingFunction, courseID, chapterID, chapterTitle, contentId);
+                this.hideActivity(callingFunction, courseID, chapterID, textbookId, sectionNumber, contentId);
                 break;
             case 5:
                 //redirect to previous menu (modify section)
-                this.modifySection(callingFunction, courseID, chapterID, chapterTitle);
+                this.modifySection(callingFunction, courseID, chapterID, textbookId);
                 break;
             case 6:
                 //redirect to landing page
@@ -408,7 +444,7 @@ public class TA {
     }
 
     //function to delete content block
-    private void deleteContentBlock(String callingFunction, String courseID, String chapterID, String chapterTitle) {
+    private void deleteContentBlock(String callingFunction, String courseID, String chapterID, Integer textbookId, String sectionNumber) {
         System.out.println("Delete content block:\nEnter content block ID: ");
         String contentId = scanner.next();
 
@@ -422,7 +458,7 @@ public class TA {
                 break;
             case 2:
                 //redirect to previous page (modify section)
-                this.modifySection(callingFunction, courseID, chapterID, chapterTitle);
+                this.modifySection(callingFunction, courseID, chapterID, textbookId);
                 break;
             default:
                 System.out.println("Invalid entry, exiting application.");
@@ -432,7 +468,7 @@ public class TA {
     }
 
     //function to hide content block
-    private void hideContentBlock(String callingFunction, String courseID, String chapterID, String chapterTitle) {
+    private void hideContentBlock(String callingFunction, String courseID, String chapterID, Integer textbookId, String sectionNumber) {
         System.out.println("Enter content block ID: ");
         String contentId = scanner.next();
 
@@ -446,7 +482,7 @@ public class TA {
                 break;
             case 2:
                 //redirect to previous page (modify section)
-                this.modifySection(callingFunction, courseID, chapterID, chapterTitle);
+                this.modifySection(callingFunction, courseID, chapterID, textbookId);
                 break;
             default:
                 System.out.println("Invalid entry, exiting application.");
@@ -455,7 +491,7 @@ public class TA {
         }
     }
 
-    private void addActivity(String callingFunction, String courseID, String chapterID, String chapterTitle) {
+    private void addActivity(String callingFunction, String courseID, String chapterID, Integer textbookId, String sectionNumber, String contentId) {
         Map<String, String> activity = helper.getActivity();
         if(!activity.isEmpty()) {
             //TODO: handle adding activity
@@ -464,7 +500,7 @@ public class TA {
         this.goToActiveCourses();
     }
 
-    private void hideActivity(String callingFunction, String courseID, String chapterID, String chapterTitle, String contentID) {
+    private void hideActivity(String callingFunction, String courseID, String chapterID, Integer textbookId, String sectionNumber, String contentID) {
         System.out.println("1. Save\n2. Go back");
         System.out.println("Enter your choice (1-2): ");
         int choice = scanner.nextInt();
