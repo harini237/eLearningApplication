@@ -32,7 +32,7 @@ public class FacultyMenu {
         System.out.println("1. Modify E-Textbooks");
         System.out.println("2. Add Chapters or Sections");
         System.out.println("3. Manage Course Materials");
-        System.out.println("4. View/Approve Student Enrollment");
+        System.out.println("4. View/Approve Menu.Student Enrollment");
         System.out.println("5. Logout");
         System.out.print("Enter choice (1-5): ");
         int choice = scanner.nextInt();
@@ -153,9 +153,9 @@ public class FacultyMenu {
         navigationStack.pop();
     }
 
-    // Option 4: View or Approve Student Enrollment
+    // Option 4: View or Approve Menu.Student Enrollment
     private void viewOrApproveEnrollment() {
-        System.out.println("\n--- View or Approve Student Enrollment ---");
+        System.out.println("\n--- View or Approve Menu.Student Enrollment ---");
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter Course ID to view enrollment list: ");
         String courseId = scanner.next();
@@ -174,11 +174,11 @@ public class FacultyMenu {
 
     // Sub-option for approving enrollment
     private void approveEnrollment(Scanner scanner, String courseId) {
-        System.out.print("Enter Student ID to approve: ");
+        System.out.print("Enter Menu.Student ID to approve: ");
         String studentId = scanner.next();
 
         courseService.approveEnrollment(courseId, studentId);
-        System.out.println("Student enrollment approved.");
+        System.out.println("Menu.Student enrollment approved.");
         navigationStack.pop(); // Return to View/Approve Enrollment
     }
 }
