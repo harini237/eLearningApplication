@@ -1,6 +1,7 @@
 package Repository;
 
 import Entity.Enrollment;
+import Entity.User;
 import Util.DatabaseConnection;
 
 import java.sql.Connection;
@@ -112,6 +113,37 @@ public class EnrollmentRepository {
         }
 
         return map;
+    }
+
+    public List<User> findStudentsByCourseId (String course_id) {
+        List<User> studentsList = new ArrayList<>();
+
+        String sql = "SELECT U.id, U.firstName, U.lastName" +
+                "FROM user U" +
+                "JOIN enrollment E" +
+                "ON U.id = E.student_id" +
+                "JOIN active_course A" +
+                "ON A.token = E.course_token" +
+                "WHERE A.course_id = ?";
+
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, course_id);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getString("id"));
+                user.setFirstName(rs.getString("firstName"));
+                user.setLastName(rs.getString("lastName"));
+                studentsList.add(user);
+            }
+        } catch (SQLException e) {
+            System.out.println("Could not find enrolled students.");
+        }
+        return studentsList;
     }
 
 }

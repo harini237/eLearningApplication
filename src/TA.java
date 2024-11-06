@@ -1,3 +1,7 @@
+import Entity.User;
+import Repository.TaCourseMapRepository;
+import Service.CourseService;
+import Service.UserService;
 import Util.Helper;
 
 import java.sql.Connection;
@@ -7,11 +11,13 @@ import java.util.Scanner;
 public class TA {
     Scanner scanner = new Scanner(System.in);
     Helper helper;
-    String user = "";
-    String pwd = "";
+    User user;
+    private final UserService userService = new UserService();
+    private final CourseService courseService = new CourseService();
 
-    public TA() {
+    public TA(User user) {
         this.helper = new Helper();
+        this.user = user;
 
         System.out.println("Welcome TA!");
         this.landing();
@@ -19,7 +25,7 @@ public class TA {
 
     //function for landing page
     private void landing() {
-        System.out.println("1. Go to active courses\n2. View courses\n3. Change password\n4. Logout");
+        System.out.println("TA Landing Menu:\n1. Go to active courses\n2. View courses\n3. Change password\n4. Logout");
         System.out.println("Enter your choice (1-4): ");
         int choice = scanner.nextInt();
 
@@ -52,22 +58,37 @@ public class TA {
         System.out.println("Enter course ID: ");
         String courseID = scanner.next();
 
-        System.out.println("1. View students\n2. Add new chapter\n3. Modify chapters\n4. Go back");
+        System.out.println("Active Courses Menu:\n1. View students\n2. Add new chapter\n3. Modify chapter\n4. Go back");
         System.out.println("Enter your choice (1-4): ");
         int choice = scanner.nextInt();
 
         switch(choice) {
             case 1:
                 //redirect to view students
-                this.viewStudents(courseID);
+                if (this.courseService.checkTaByCourseId(this.user.getId(), courseID)) {
+                    this.viewStudents(courseID);
+                } else {
+                    System.out.println("Access restricted. You can only view students in your course.");
+                    this.landing();
+                }
                 break;
             case 2:
                 //redirect to add chapter
-                this.addChapter(courseID);
+                if (this.courseService.checkTaByCourseId(this.user.getId(), courseID)) {
+                    this.addChapter(courseID);
+                } else {
+                    System.out.println("Access restricted. You can only add chapters in your course.");
+                    this.landing();
+                }
                 break;
             case 3:
                 //redirect to modify chapter
-                this.modifyChapter(courseID);
+                if (this.courseService.checkTaByCourseId(this.user.getId(), courseID)) {
+                    this.modifyChapter(courseID);
+                } else {
+                    System.out.println("Access restricted. You can only modify chapters in your course.");
+                    this.landing();
+                }
                 break;
             case 4:
                 //redirect to landing page
@@ -82,7 +103,7 @@ public class TA {
 
     //function to view courses
     public void viewCourses() {
-        //TODO: fetch and display courses
+        this.courseService.viewAssignedCoursesByTa(this.user.getId());
         System.out.println("1. Go Back");
         System.out.println("Enter your choice (1): ");
         int choice = scanner.nextInt();
@@ -97,7 +118,7 @@ public class TA {
 
     //function to change password
     public void changePassword() {
-        System.out.println("Enter current password: ");
+        System.out.println("Reset Password Questions:\nEnter current password: ");
         String currentPwd = scanner.next();
         System.out.println("Enter new password: ");
         String newPwd = scanner.next();
@@ -111,8 +132,8 @@ public class TA {
         switch(choice) {
             case 1:
                 if(newPwd.equals(confirmPwd)) {
-                    //TODO: check if current pwd is valid
-                    //TODO: handle pwd update
+                    this.userService.resetPassword(this.user.getId(), currentPwd, newPwd);
+                    this.landing();
                 } else {
                     System.out.println("Passwords don't match, try again.");
                     this.landing();
@@ -131,7 +152,8 @@ public class TA {
 
     //function to view students
     private void viewStudents(String courseID) {
-        //TODO: fetch and display students
+        System.out.println("Students in course "+ courseID + ":");
+        this.courseService.viewStudentsByCourse(courseID);
         System.out.println("1. Go Back");
         System.out.println("Enter your choice (1): ");
         int choice = scanner.nextInt();
@@ -146,7 +168,7 @@ public class TA {
 
     //function to add chapter
     private void addChapter(String courseID) {
-        System.out.println("Enter unique chapter ID: ");
+        System.out.println("Add Chapter:\nEnter unique chapter ID: ");
         String chapterID = scanner.next();
         System.out.println("Enter chapter title: ");
         String chapterTitle = scanner.next();
@@ -174,7 +196,7 @@ public class TA {
 
     //function to modify chapter
     private void modifyChapter(String courseID) {
-        System.out.println("Enter unique chapter ID: ");
+        System.out.println("Modify chapter:\nEnter unique chapter ID: ");
         String chapterID = scanner.next();
 
         System.out.println("1. Add new section\n2. Add new activity\n3. Modify Section\n4. Go back");
@@ -207,7 +229,7 @@ public class TA {
 
     //function to add section
     private void addSection(String callingFunction, String courseID, String chapterID, String chapterTitle) {
-        System.out.println("Enter section number: ");
+        System.out.println("Add section:\nEnter section number: ");
         String sectionNum = scanner.next();
         System.out.println("Enter section title: ");
         String sectionTitle = scanner.next();
@@ -219,7 +241,7 @@ public class TA {
         switch(choice) {
             case 1:
                 //redirect to add content block
-                this.addContentBlock("addSection", courseID, chapterID, chapterTitle);
+                this.addContentBlock(callingFunction, courseID, chapterID, chapterTitle);
                 break;
             case 2:
                 //redirect to previous page
@@ -240,7 +262,7 @@ public class TA {
 
     //function to add content block
     private void addContentBlock(String callingFunction, String courseID, String chapterID, String chapterTitle) {
-        System.out.println("Enter content block ID: ");
+        System.out.println("Add content block:\nEnter content block ID: ");
         String contentId = scanner.next();
 
         System.out.println("1. Add text\n2. Add picture\n3. Add activity\n4. Hide activity\n5. Go back");
@@ -276,7 +298,7 @@ public class TA {
                 break;
             case 5:
                 //redirect to previous menu (add section menu)
-                if(callingFunction.equals("addSection")) {
+                if(callingFunction.equals("addChapter")) {
                     this.addSection(callingFunction, courseID, chapterID, chapterTitle);
                 } else if(callingFunction.equals("modifyChapter")) {
                     this.modifySection(callingFunction, courseID, chapterID, chapterTitle);
@@ -293,7 +315,7 @@ public class TA {
 
     //function to modify section
     private void modifySection(String callingFunction, String courseID, String chapterID, String chapterTitle) {
-        System.out.println("Enter section number: ");
+        System.out.println("Modify section:\nEnter section number: ");
         String sectionNum = scanner.next();
         System.out.println("Enter section title: ");
         String sectionTitle = scanner.next();
@@ -336,7 +358,7 @@ public class TA {
 
     //function to modify content block
     private void modifyContentBlock(String callingFunction, String courseID, String chapterID, String chapterTitle) {
-        System.out.println("Enter content block ID: ");
+        System.out.println("Modify content block:\nEnter content block ID: ");
         String contentId = scanner.next();
 
         System.out.println("1. Add text\n2. Add picture\n3. Add activity\n4. Hide activity\n5. Go back\n6. Landing Page");
@@ -371,12 +393,8 @@ public class TA {
                 this.hideActivity(callingFunction, courseID, chapterID, chapterTitle, contentId);
                 break;
             case 5:
-                //redirect to previous menu
-                if (callingFunction.equals("addSection")) {
-                    this.addSection(callingFunction, courseID, chapterID, chapterTitle);
-                } else if (callingFunction.equals("modifyChapter")) {
-                    this.modifySection(callingFunction, courseID, chapterID, chapterTitle);
-                }
+                //redirect to previous menu (modify section)
+                this.modifySection(callingFunction, courseID, chapterID, chapterTitle);
                 break;
             case 6:
                 //redirect to landing page
@@ -391,7 +409,7 @@ public class TA {
 
     //function to delete content block
     private void deleteContentBlock(String callingFunction, String courseID, String chapterID, String chapterTitle) {
-        System.out.println("Enter content block ID: ");
+        System.out.println("Delete content block:\nEnter content block ID: ");
         String contentId = scanner.next();
 
         System.out.println("1. Delete\n2. Go back");
@@ -439,11 +457,11 @@ public class TA {
 
     private void addActivity(String callingFunction, String courseID, String chapterID, String chapterTitle) {
         Map<String, String> activity = helper.getActivity();
-        if(activity.isEmpty()) {
-            this.addSection(callingFunction, courseID, chapterID, chapterTitle);
-        } else {
+        if(!activity.isEmpty()) {
             //TODO: handle adding activity
+            System.out.println("Added activity");
         }
+        this.goToActiveCourses();
     }
 
     private void hideActivity(String callingFunction, String courseID, String chapterID, String chapterTitle, String contentID) {
@@ -456,13 +474,7 @@ public class TA {
                 //TODO: handle hide content
                 break;
             case 2:
-                if (callingFunction.equals("modifyChapter")) {
-                    this.modifyContentBlock(callingFunction, courseID, chapterID, chapterTitle);
-                } else if (callingFunction.equals("addSection")) {
-                    this.addContentBlock(callingFunction, courseID, chapterID, chapterTitle);
-                } else {
-                    this.landing();
-                }
+                this.goToActiveCourses();
                 break;
             default:
                 System.out.println("Invalid entry, exiting application.");
