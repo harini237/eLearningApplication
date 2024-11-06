@@ -117,7 +117,7 @@ public class FacultyMenu {
         System.out.print("Enter Unique Activity ID to hide: ");
         String uniqueActivityId = scanner.next();
 
-        eTextbookService.hideActivity(contentBlockId, sectionId, chapterId, textbookId, uniqueActivityId);
+        eTextbookService.hideActivity(contentBlockID, sectionId, chapterId, textbookId, uniqueActivityId);
         System.out.println("Activity hidden successfully.");
     }
     private void addActivity(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {

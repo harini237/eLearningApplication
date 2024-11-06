@@ -137,7 +137,7 @@ public class TA {
         System.out.print("Enter Unique Activity ID to hide: ");
         String uniqueActivityId = scanner.next();
 
-        etextbookService.hideActivity(contentBlockId, sectionId, chapterId, textbookId, uniqueActivityId);
+        etextbookService.hideActivity(contentBlockID, sectionId, chapterId, textbookId, uniqueActivityId);
         System.out.println("Activity hidden successfully.");
     }
 
