@@ -43,6 +43,23 @@ public class EtextbookService {
             System.err.println("Error modifying chapter: " + e.getMessage());
         }
     }
+
+    public void deleteChapter(int textbookId, String chapterId) {
+        try {
+            etextbookRepository.deleteChapter(chapterId, textbookId);
+        } catch (Exception e) {
+            System.err.println("Error deleting chapter: " + e.getMessage());
+        }
+    }
+
+    public void hideChapter(int textbookId, String chapterId) {
+        try {
+            etextbookRepository.deleteChapter(chapterId, textbookId);
+        } catch (Exception e) {
+            System.err.println("Error hiding chapter: " + e.getMessage());
+        }
+    }
+
     public void addSection(int textbookId, String chapterId, String sectionNumber, String title) {
         try {
             etextbookRepository.addSection(textbookId, chapterId, sectionNumber, title);

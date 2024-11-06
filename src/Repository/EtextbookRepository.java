@@ -78,6 +78,50 @@ public class EtextbookRepository {
         }
     }
 
+    public void hideChapter(String chapterId, int textbookId) {
+        String sql = "UPDATE chapter SET visibility = 0 WHERE chapter_id = ? AND textbook_id = ?";
+    
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    
+            pstmt.setString(1, chapterId); // Set the chapter ID
+            pstmt.setInt(2, textbookId);   // Set the textbook ID
+    
+            int rowsAffected = pstmt.executeUpdate();
+    
+            if (rowsAffected > 0) {
+                System.out.println("Chapter with ID: " + chapterId + " is now hidden.");
+            } else {
+                System.err.println("Failed to hide chapter with ID: " + chapterId);
+            }
+    
+        } catch (SQLException e) {
+            System.err.println("Error hiding chapter: " + e.getMessage());
+        }
+    }
+
+    public void deleteChapter(String chapterId, int textbookId) {
+        String sql = "DELETE FROM chapter WHERE chapter_id = ? AND textbook_id = ?";
+    
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    
+            pstmt.setString(1, chapterId); // Set the chapter ID
+            pstmt.setInt(2, textbookId);   // Set the textbook ID
+    
+            int rowsAffected = pstmt.executeUpdate();
+    
+            if (rowsAffected > 0) {
+                System.out.println("Chapter with ID: " + chapterId + " deleted successfully.");
+            } else {
+                System.err.println("Failed to delete chapter with ID: " + chapterId);
+            }
+    
+        } catch (SQLException e) {
+            System.err.println("Error deleting chapter: " + e.getMessage());
+        }
+    }   
+
     public void addContentBlock(int textbookId, String chapterId, String sectionNumber, String contentBlockId, String content, String createdBy, String modifiedBy) {
         String sql = "INSERT INTO content_block (block_id, section_id, chapter_id, textbook_id, content, content_type, hidden, created_by, modified_by) " +
                      "VALUES (?, ?, ?, ?, ?, 'text', 'no', ?, ?)";

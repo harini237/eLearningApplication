@@ -206,8 +206,6 @@ public class AdminMenu {
         int choice = scanner.nextInt();
 
         switch (choice) {
-//            case 1 -> etextbookService.addTextBlock(textbookId, chapterId, sectionNumber, contentBlockId);
-//            case 2 -> etextbookService.addPictureBlock(textbookId, chapterId, sectionNumber, contentBlockId);
             case 1 -> navigationStack.push(() -> addTextBlock(scanner, textbookId, chapterId, sectionNumber, contentBlockId));
             case 2 -> navigationStack.push(() -> addPictureBlock(scanner, textbookId, chapterId, sectionNumber, contentBlockId));
             case 3 -> navigationStack.push(() -> addActivity(scanner, textbookId, chapterId, sectionNumber, contentBlockId));
