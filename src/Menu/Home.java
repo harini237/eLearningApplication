@@ -20,15 +20,15 @@ public class Home {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Welcome to the e-learning experience!");
-        System.out.println("Login options:\n1. Admin\n2. Faculty\n3. Menu.TA\n4. Menu.Student\n5. Exit");
+        System.out.println("Login options:\n1. Admin\n2. Faculty\n3. TA\n4. Student\n5. Exit");
         System.out.print("Enter your choice (1-5): ");
         int choice = scanner.nextInt();
 
         switch (choice) {
             case 1 -> loginUser(scanner, "Admin");
             case 2 -> loginUser(scanner, "Faculty");
-            case 3 -> loginUser(scanner, "Menu.TA");
-            case 4 -> loginUser(scanner, "Menu.Student");
+            case 3 -> loginUser(scanner, "TA");
+            case 4 -> loginUser(scanner, "Student");
             case 5 -> {
                 System.out.println("Have a nice day!");
                 System.exit(0);
@@ -80,9 +80,9 @@ public class Home {
             // Redirect to the appropriate menu based on role
             switch (role) {
                 case "Admin" -> new AdminMenu().displayAdminMenu(user);
-//                case "Faculty" -> new FacultyMenu(con).displayFacultyMenu();
-//                case "Menu.TA" -> new TAMenu(con).displayTAMenu();
-                case "Menu.Student" -> new Student(user);
+                case "Faculty" -> new FacultyMenu().displayFacultyMenu();
+                case "TA" -> new TA(user);
+                case "Student" -> new Student(user);
             }
         } else {
             if (role.equals("Menu.Student")) {
