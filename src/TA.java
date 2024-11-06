@@ -28,6 +28,7 @@ public class TA {
     //function for landing page
     private void landing() {
         System.out.println("TA Landing Menu:\n1. Go to active courses\n2. View courses\n3. Change password\n4. Logout");
+        System.out.println("TA Landing Menu:\n1. Go to active courses\n2. View courses\n3. Change password\n4. Logout");
         System.out.println("Enter your choice (1-4): ");
         int choice = scanner.nextInt();
 
@@ -61,12 +62,19 @@ public class TA {
         String courseID = scanner.next();
 
         System.out.println("Active Courses Menu:\n1. View students\n2. Add new chapter\n3. Modify chapter\n4. Go back");
+        System.out.println("Active Courses Menu:\n1. View students\n2. Add new chapter\n3. Modify chapter\n4. Go back");
         System.out.println("Enter your choice (1-4): ");
         int choice = scanner.nextInt();
 
         switch(choice) {
             case 1:
                 //redirect to view students
+                if (this.courseService.checkTaByCourseId(this.user.getId(), courseID)) {
+                    this.viewStudents(courseID);
+                } else {
+                    System.out.println("Access restricted. You can only view students in your course.");
+                    this.landing();
+                }
                 if (this.courseService.checkTaByCourseId(this.user.getId(), courseID)) {
                     this.viewStudents(courseID);
                 } else {
@@ -82,9 +90,21 @@ public class TA {
                     System.out.println("Access restricted. You can only add chapters in your course.");
                     this.landing();
                 }
+                if (this.courseService.checkTaByCourseId(this.user.getId(), courseID)) {
+                    this.addChapter(courseID);
+                } else {
+                    System.out.println("Access restricted. You can only add chapters in your course.");
+                    this.landing();
+                }
                 break;
             case 3:
                 //redirect to modify chapter
+                if (this.courseService.checkTaByCourseId(this.user.getId(), courseID)) {
+                    this.modifyChapter(courseID);
+                } else {
+                    System.out.println("Access restricted. You can only modify chapters in your course.");
+                    this.landing();
+                }
                 if (this.courseService.checkTaByCourseId(this.user.getId(), courseID)) {
                     this.modifyChapter(courseID);
                 } else {
@@ -106,6 +126,7 @@ public class TA {
     //function to view courses
     public void viewCourses() {
         this.courseService.viewAssignedCoursesByTa(this.user.getId());
+        this.courseService.viewAssignedCoursesByTa(this.user.getId());
         System.out.println("1. Go Back");
         System.out.println("Enter your choice (1): ");
         int choice = scanner.nextInt();
@@ -121,6 +142,7 @@ public class TA {
     //function to change password
     public void changePassword() {
         System.out.println("Reset Password Questions:\nEnter current password: ");
+        System.out.println("Reset Password Questions:\nEnter current password: ");
         String currentPwd = scanner.next();
         System.out.println("Enter new password: ");
         String newPwd = scanner.next();
@@ -134,6 +156,8 @@ public class TA {
         switch(choice) {
             case 1:
                 if(newPwd.equals(confirmPwd)) {
+                    this.userService.resetPassword(this.user.getId(), currentPwd, newPwd);
+                    this.landing();
                     this.userService.resetPassword(this.user.getId(), currentPwd, newPwd);
                     this.landing();
                 } else {
@@ -154,6 +178,8 @@ public class TA {
 
     //function to view students
     private void viewStudents(String courseID) {
+        System.out.println("Students in course "+ courseID + ":");
+        this.courseService.viewStudentsByCourse(courseID);
         System.out.println("Students in course "+ courseID + ":");
         this.courseService.viewStudentsByCourse(courseID);
         System.out.println("1. Go Back");
