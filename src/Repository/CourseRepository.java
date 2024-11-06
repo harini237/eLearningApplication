@@ -72,6 +72,32 @@ public class CourseRepository {
         return course;
     }
 
+    public Integer findTextbookByCourseId (String course_id) {
+        Integer textbook = 0;
+
+        String sql = "SELECT textbook_id" +
+                "FROM course" +
+                "WHERE id = ?";
+
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, course_id);
+            try {
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    textbook = rs.getInt("textbook_id");
+                }
+            } catch (SQLException e) {
+                System.out.println("Could not get courses.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Could not fetch courses.");
+        }
+        return textbook;
+    }
+
     public List<Course> findCoursesByFaculty (String faculty_id) {
         String sql = "SELECT id, title, textbook_id, faculty_id, start_date, end_date, type, createdAt, createdBy" +
                 "FROM course WHERE faculty_id = ?";
