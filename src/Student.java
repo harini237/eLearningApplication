@@ -1,5 +1,6 @@
 import Entity.User;
 import Service.CourseService;
+import Service.EtextbookService;
 import Util.Helper;
 
 import java.sql.Connection;
@@ -11,6 +12,7 @@ public class Student {
     Scanner scanner = new Scanner(System.in);
     Helper helper;
     private final CourseService courseService = new CourseService();
+    private final EtextbookService etextbookService = new EtextbookService();
     private final User user;
     public Student(User user) {
         this.user = user;
@@ -62,7 +64,7 @@ public class Student {
 
     //function for landing page
     private void landing() {
-        //TODO: fetch and display textbooks contents
+        this.etextbookService.listAllEtextbooks();
         System.out.println("Landing Menu:\n1. View a section\n2. View participation activity points\n3. Logout");
         System.out.println("Enter your choice (1-3): ");
         int choice = scanner.nextInt();

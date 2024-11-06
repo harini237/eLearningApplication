@@ -93,6 +93,16 @@ public class EtextbookService {
             System.err.println("Error deleting content block: " + e.getMessage());
         }
     }
+
+    public void listAllEtextbooks() {
+        try {
+            etextbookRepository.listAllEtextbooks();
+        } catch (Exception e) {
+            System.err.println("An unexpected error occurred: " + e.getMessage());
+        }
+    }
+    
+    
     
 
 }

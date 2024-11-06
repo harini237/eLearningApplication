@@ -224,5 +224,44 @@ public class EtextbookRepository {
             System.err.println("Error deleting content block: " + e.getMessage());
         }
     }
-    
+
+    public void listAllEtextbooks() {
+        // SQL query to join e-textbooks with their chapters, sections, and content blocks
+        String sql = "SELECT " +
+                     "et.title AS 'E-Book', " +
+                     "ch.chapter_id AS 'Chapter', " +
+                     "sec.section_id AS 'Section', " +
+                     "cb.block_id AS 'Block' " +
+                     "FROM e_textbook et " +
+                     "LEFT JOIN chapter ch ON et.id = ch.textbook_id " +
+                     "LEFT JOIN section sec ON ch.chapter_id = sec.chapter_id AND ch.textbook_id = sec.textbook_id " +
+                     "LEFT JOIN content_block cb ON sec.section_id = cb.section_id AND sec.chapter_id = cb.chapter_id AND sec.textbook_id = cb.textbook_id " +
+                     "ORDER BY et.id, ch.chapter_id, sec.section_id, cb.block_id";
+
+        // Execute the query and print the results
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            // Print header
+            System.out.printf("%-30s %-15s %-15s %-15s%n", "E-Book", "Chapter", "Section", "Block");
+            System.out.println("-------------------------------------------------------------------------------");
+
+            // Iterate through the result set and print each row
+            while (rs.next()) {
+                String eBook = rs.getString("E-Book");
+                String chapter = rs.getString("Chapter");
+                String section = rs.getString("Section");
+                String block = rs.getString("Block");
+
+                // Print the row
+                System.out.printf("%-30s %-15s %-15s %-15s%n", eBook, chapter, section, block);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error retrieving e-textbook data: " + e.getMessage());
+        }
+    }
 }
+    
+

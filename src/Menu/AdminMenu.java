@@ -407,7 +407,6 @@ public class AdminMenu {
         System.out.print("Enter Chapter ID to Modify: ");
         String chapterId = scanner.next();
 
-        // TODO: Add modify chapter logic
         System.out.println("\n1. Add New Section");
         System.out.println("2. Modify Section");
         System.out.println("3. Go Back");
