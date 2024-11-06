@@ -80,9 +80,9 @@ public class Home {
             // Redirect to the appropriate menu based on role
             switch (role) {
                 case "Admin" -> new AdminMenu().displayAdminMenu(user);
-//                case "Faculty" -> new FacultyMenu(con).displayFacultyMenu();
-//                case "Menu.TA" -> new TAMenu(con).displayTAMenu();
-                case "Menu.Student" -> new Student(user);
+                case "Faculty" -> new FacultyMenu().displayFacultyMenu();
+                case "TA" -> new TA(user);
+                case "Student" -> new Student(user);
             }
         } else {
             if (role.equals("Menu.Student")) {
