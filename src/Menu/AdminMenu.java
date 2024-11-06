@@ -434,13 +434,68 @@ public class AdminMenu {
 
         switch (choice) {
             case 1 -> navigationStack.push(() -> addContentBlock(scanner, textbookId, chapterId, sectionNumber));
-           // case 2 -> navigationStack.push(() -> modifyContentBlock(scanner, textbookId));
+            case 2 -> navigationStack.push(() -> addModifyBlock(textbookId, chapterId, sectionNumber));
             case 3 -> navigationStack.pop();
             case 4 -> goToLandingPage();
             default -> System.out.println("Invalid choice. Returning to Admin Menu.");
         }
         System.out.println("Chapter modified successfully.");
         //navigationStack.pop();  // Go back to E-textbook modification
+    }
+
+    private void addModifyBlock(int textbookId, String chapterId, String sectionId) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter Content Block ID: ");
+        String blockId = scanner.next();
+
+        System.out.println("\n--- Add Content Block Menu ---");
+        System.out.println("1. Hide Content Block");
+        System.out.println("2. Delete Content Block");
+        System.out.println("1. Add Text");
+        System.out.println("2. Add Picture");
+        System.out.println("3. Add Activity");
+        System.out.println("4. Go Back");
+        System.out.print("Enter choice (1-4): ");
+        int choice = scanner.nextInt();
+
+        switch (choice) {
+            case 1 -> hideContentBlock(scanner, textbookId, chapterId, sectionId, blockId);
+            case 2 -> deleteContentBlock(scanner, textbookId, chapterId, sectionId, blockId);
+            case 3 -> addTextBlock(scanner, textbookId, chapterId, sectionId, blockId);
+            case 4 -> addPictureBlock(scanner, textbookId, chapterId, sectionId, blockId);
+            case 5 -> addActivity(scanner, textbookId, chapterId, sectionId, blockId);
+            case 6 -> navigationStack.push(() -> modifySection(scanner, textbookId, chapterId));
+            default -> System.out.println("Invalid choice. Returning to Add Content Block Menu.");
+        }
+        navigationStack.push(() -> addContentBlock(scanner, textbookId, chapterId, sectionId));
+    }
+
+    private void hideContentBlock(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
+        System.out.println("\n1. Save");
+        System.out.println("2. Cancel");
+        System.out.print("Enter choice (1-2): ");
+        int choice = scanner.nextInt();
+        
+        if (choice == 1) {
+            etextbookService.hideContentBlock(contentBlockId, sectionNumber, chapterId, textbookId);
+            navigationStack.pop();
+        } else {
+            navigationStack.pop();  // Go back to Content Block
+        }
+    }   
+
+    private void deleteContentBlock(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
+        System.out.println("\n1. Save");
+        System.out.println("2. Cancel");
+        System.out.print("Enter choice (1-2): ");
+        int choice = scanner.nextInt();
+        
+        if (choice == 1) {
+            etextbookService.deleteContentBlock(contentBlockId, sectionNumber, chapterId, textbookId);
+            navigationStack.pop();
+        } else {
+            navigationStack.pop();  // Go back to Content Block
+        }
     }
 
     private void createActiveCourse(Scanner scanner) {
