@@ -367,31 +367,58 @@ public class EtextbookRepository {
                      "LEFT JOIN section sec ON ch.chapter_id = sec.chapter_id AND ch.textbook_id = sec.textbook_id " +
                      "LEFT JOIN content_block cb ON sec.section_id = cb.section_id AND sec.chapter_id = cb.chapter_id AND sec.textbook_id = cb.textbook_id " +
                      "ORDER BY et.id, ch.chapter_id, sec.section_id, cb.block_id";
-
-        // Execute the query and print the results
+    
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
-
-            // Print header
-            System.out.printf("%-30s %-15s %-15s %-15s%n", "E-Book", "Chapter", "Section", "Block");
-            System.out.println("-------------------------------------------------------------------------------");
-
-            // Iterate through the result set and print each row
+    
+            String currentEbook = null;
+            String currentChapter = null;
+            String currentSection = null;
+    
             while (rs.next()) {
                 String eBook = rs.getString("E-Book");
                 String chapter = rs.getString("Chapter");
                 String section = rs.getString("Section");
                 String block = rs.getString("Block");
-
-                // Print the row
-                System.out.printf("%-30s %-15s %-15s %-15s%n", eBook, chapter, section, block);
+    
+                // Skip rows with null Section or Block values
+                if (section == null || block == null) {
+                    continue;
+                }
+    
+                // Print E-Book title if it's new
+                if (!eBook.equals(currentEbook)) {
+                    currentEbook = eBook;
+                    currentChapter = null;
+                    currentSection = null;
+                    System.out.println("E-Book: " + currentEbook);
+                }
+    
+                // Print Chapter if it's new
+                if (!chapter.equals(currentChapter)) {
+                    currentChapter = chapter;
+                    currentSection = null;
+                    System.out.println("  Chapter " + currentChapter);
+                }
+    
+                // Print Section if it's new
+                if (!section.equals(currentSection)) {
+                    currentSection = section;
+                    System.out.println("    Section " + currentSection);
+                }
+    
+                // Print Block
+                System.out.println("      Block " + block);
             }
-
+    
         } catch (SQLException e) {
             System.err.println("Error retrieving e-textbook data: " + e.getMessage());
         }
     }
+    
+    
+    
 }
     
 
