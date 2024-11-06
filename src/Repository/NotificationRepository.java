@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class NotificationRepository {
     public void createNotification (Notification notif) {
-        String sql = "INSERT INTO notification (id, user_id, message, status)" +
+        String sql = "INSERT INTO notification (id, user_id, message, status) " +
                 "VALUES (?, ?, ?, ?)";
 
         try {
@@ -30,8 +30,8 @@ public class NotificationRepository {
     }
 
     public void updateStatus (String id) {
-        String sql = "UPDATE notification" +
-                "SET status = ?" +
+        String sql = "UPDATE notification " +
+                "SET status = ? " +
                 "WHERE id = ?";
 
         try {
@@ -49,8 +49,8 @@ public class NotificationRepository {
     }
 
     public Notification findNotificationById (String id) {
-        String sql = "SELECT id, user_id, message, status" +
-                "FROM notification" +
+        String sql = "SELECT id, user_id, message, status " +
+                "FROM notification " +
                 "WHERE id = ?";
 
         Notification notif = null;

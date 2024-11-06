@@ -12,7 +12,7 @@ public class CourseRepository {
     public void createCourse (Course course) {
         course.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
-        String sql = "INSERT INTO Course (id, title, faculty_id, start_date, end_date, type, createdAt, createdBy, textbook_id)" +
+        String sql = "INSERT INTO Course (id, title, faculty_id, start_date, end_date, type, createdAt, createdBy, textbook_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?)";
 
         try {
@@ -37,7 +37,7 @@ public class CourseRepository {
     }
 
     public Course findCourseById (String id) {
-        String sql = "SELECT id, title, textbook_id, faculty_id, start_date, end_date, type, createdAt, createdBy" +
+        String sql = "SELECT id, title, textbook_id, faculty_id, start_date, end_date, type, createdAt, createdBy " +
                 "FROM course WHERE id = ?";
 
         Course course = null;
@@ -75,8 +75,8 @@ public class CourseRepository {
     public Integer findTextbookByCourseId (String course_id) {
         Integer textbook = 0;
 
-        String sql = "SELECT textbook_id" +
-                "FROM course" +
+        String sql = "SELECT textbook_id " +
+                "FROM course " +
                 "WHERE id = ?";
 
         try {
@@ -99,7 +99,7 @@ public class CourseRepository {
     }
 
     public List<Course> findCoursesByFaculty (String faculty_id) {
-        String sql = "SELECT id, title, textbook_id, faculty_id, start_date, end_date, type, createdAt, createdBy" +
+        String sql = "SELECT id, title, textbook_id, faculty_id, start_date, end_date, type, createdAt, createdBy " +
                 "FROM course WHERE faculty_id = ?";
 
         List<Course> courses = new ArrayList<>();
