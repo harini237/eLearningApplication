@@ -100,27 +100,50 @@ public class EtextbookRepository {
         }
     }
 
-    public void deleteChapter(String chapterId, int textbookId) {
-        String sql = "DELETE FROM chapter WHERE chapter_id = ? AND textbook_id = ?";
-    
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-    
-            pstmt.setString(1, chapterId); // Set the chapter ID
-            pstmt.setInt(2, textbookId);   // Set the textbook ID
-    
-            int rowsAffected = pstmt.executeUpdate();
-    
+public void deleteChapter(String chapterId, int textbookId) {
+    String deleteContentBlockSql = "DELETE FROM content_block WHERE chapter_id = ? AND textbook_id = ?";
+    String deleteSectionSql = "DELETE FROM section WHERE chapter_id = ? AND textbook_id = ?";
+    String deleteChapterSql = "DELETE FROM chapter WHERE chapter_id = ? AND textbook_id = ?";
+
+    try (Connection conn = DatabaseConnection.getConnection()) {
+        // Start a transaction
+        conn.setAutoCommit(false);
+
+        // Step 1: Delete associated content blocks
+        try (PreparedStatement deleteContentBlockStmt = conn.prepareStatement(deleteContentBlockSql)) {
+            deleteContentBlockStmt.setString(1, chapterId);
+            deleteContentBlockStmt.setInt(2, textbookId);
+            deleteContentBlockStmt.executeUpdate();
+        }
+
+        // Step 2: Delete associated sections
+        try (PreparedStatement deleteSectionStmt = conn.prepareStatement(deleteSectionSql)) {
+            deleteSectionStmt.setString(1, chapterId);
+            deleteSectionStmt.setInt(2, textbookId);
+            deleteSectionStmt.executeUpdate();
+        }
+
+        // Step 3: Delete the chapter
+        try (PreparedStatement deleteChapterStmt = conn.prepareStatement(deleteChapterSql)) {
+            deleteChapterStmt.setString(1, chapterId);
+            deleteChapterStmt.setInt(2, textbookId);
+
+            int rowsAffected = deleteChapterStmt.executeUpdate();
+
             if (rowsAffected > 0) {
                 System.out.println("Chapter with ID: " + chapterId + " deleted successfully.");
             } else {
-                System.err.println("Failed to delete chapter with ID: " + chapterId);
+                System.err.println("No chapter found to delete with ID: " + chapterId);
             }
-    
-        } catch (SQLException e) {
-            System.err.println("Error deleting chapter: " + e.getMessage());
         }
-    }   
+
+        // Commit transaction
+        conn.commit();
+    } catch (SQLException e) {
+        System.err.println("Error deleting chapter: " + e.getMessage());
+    }
+}
+ 
 
     public void addContentBlock(int textbookId, String chapterId, String sectionNumber, String contentBlockId, String contentType, String content, String createdBy, String modifiedBy) {
         String sql = "INSERT INTO content_block (block_id, section_id, chapter_id, textbook_id, content, content_type, hidden, created_by, modified_by) " +
@@ -231,27 +254,44 @@ public class EtextbookRepository {
     }
 
     public void deleteSection(int textbookId, String chapterId, String sectionId) {
-        String sql = "DELETE FROM section WHERE section_id = ? AND chapter_id = ? AND textbook_id = ?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, sectionId);
-            pstmt.setString(2, chapterId);
-            pstmt.setInt(3, textbookId);
-
-            int rowsAffected = pstmt.executeUpdate();
-
-            if (rowsAffected > 0) {
-                System.out.println("Section deleted successfully.");
-            } else {
-                System.err.println("No section found to delete.");
+        String deleteContentBlockSql = "DELETE FROM content_block WHERE section_id = ? AND chapter_id = ? AND textbook_id = ?";
+        String deleteSectionSql = "DELETE FROM section WHERE section_id = ? AND chapter_id = ? AND textbook_id = ?";
+    
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            // Start a transaction
+            conn.setAutoCommit(false);
+    
+            // Step 1: Delete associated content blocks
+            try (PreparedStatement deleteContentBlockStmt = conn.prepareStatement(deleteContentBlockSql)) {
+                deleteContentBlockStmt.setString(1, sectionId);
+                deleteContentBlockStmt.setString(2, chapterId);
+                deleteContentBlockStmt.setInt(3, textbookId);
+    
+                deleteContentBlockStmt.executeUpdate();
             }
-
+    
+            // Step 2: Delete the section
+            try (PreparedStatement deleteSectionStmt = conn.prepareStatement(deleteSectionSql)) {
+                deleteSectionStmt.setString(1, sectionId);
+                deleteSectionStmt.setString(2, chapterId);
+                deleteSectionStmt.setInt(3, textbookId);
+    
+                int rowsAffected = deleteSectionStmt.executeUpdate();
+    
+                if (rowsAffected > 0) {
+                    System.out.println("Section deleted successfully.");
+                } else {
+                    System.err.println("No section found to delete.");
+                }
+            }
+    
+            // Commit transaction
+            conn.commit();
         } catch (SQLException e) {
             System.err.println("Error deleting section: " + e.getMessage());
         }
     }
+    
     
     public void addActivity(String activityId, String sectionNumber, String chapterId, int textbookId, String contentBlockId) {
         String sql = "INSERT INTO activity (unique_activity_id, section_id, chapter_id, textbook_id, content_block_id, hidden) VALUES (?, ?, ?, ?, ?, 'no')";
