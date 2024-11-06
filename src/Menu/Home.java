@@ -88,6 +88,16 @@ public class Home {
             if (role.equals("Menu.Student")) {
                 System.out.println("Would you like to register and enroll? (Y/N) : ");
                 //redirect as per option
+                String option = scanner.next();
+                if (option.equals("Y")) {
+                    //createUser method
+                    //User user = <newly created student user>
+                    System.out.println("Student registered!");
+                    //new Student(user);
+                } else {
+                    System.out.println("Aborting action.");
+                    displayHomeScreen();
+                }
             } else {
                 System.out.println("Invalid credentials or role. Please try again.");
                 displayHomeScreen();  // Retry by displaying the home screen
