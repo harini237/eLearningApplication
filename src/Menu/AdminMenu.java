@@ -171,7 +171,6 @@ public class AdminMenu {
         return;
     }
     
-
         System.out.print("Enter Section Title: ");
         String title = scanner.next();
         // Check if title is empty
@@ -292,8 +291,44 @@ public class AdminMenu {
         String chapterId = scanner.next();
 
         // TODO: Add modify chapter logic
+        System.out.println("\n1. Add New Section");
+        System.out.println("2. Modify Section");
+        System.out.println("3. Go Back");
+        System.out.println("4. Landing Page");
+        System.out.print("Enter choice (1-4): ");
+        int choice = scanner.nextInt();
+
+        switch (choice) {
+            case 1 -> navigationStack.push(() -> addSection(scanner, textbookId, chapterId));
+            case 2 -> navigationStack.push(() -> modifySection(scanner, textbookId, chapterId));            
+            case 3 -> navigationStack.pop();
+            case 4 -> goToLandingPage();
+            default -> System.out.println("Invalid choice. Returning to Admin Menu.");
+        }
+        //navigationStack.pop();  // Go back to E-textbook modification
+    }
+
+    private void modifySection(Scanner scanner, int textbookId, String chapterId) {
+        System.out.println("\n--- Modify Section ---");
+        System.out.print("Enter Section ID to Modify: ");
+        String sectionNumber = scanner.next();
+
+        System.out.println("\n1. Add New Content Block");
+        System.out.println("2. Modify Content Block");
+        System.out.println("3. Go Back");
+        System.out.println("4. Landing Page");
+        System.out.print("Enter choice (1-4): ");
+        int choice = scanner.nextInt();
+
+        switch (choice) {
+            case 1 -> navigationStack.push(() -> addContentBlock(scanner, textbookId, chapterId, sectionNumber));
+           // case 2 -> navigationStack.push(() -> modifyContentBlock(scanner, textbookId));
+            case 3 -> navigationStack.pop();
+            case 4 -> goToLandingPage();
+            default -> System.out.println("Invalid choice. Returning to Admin Menu.");
+        }
         System.out.println("Chapter modified successfully.");
-        navigationStack.pop();  // Go back to E-textbook modification
+        //navigationStack.pop();  // Go back to E-textbook modification
     }
 
     private void createActiveCourse(Scanner scanner) {
