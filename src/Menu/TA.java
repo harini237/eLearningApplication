@@ -1,11 +1,11 @@
+package Menu;
+
 import Entity.User;
-import Repository.TaCourseMapRepository;
 import Service.CourseService;
 import Service.EtextbookService;
 import Service.UserService;
 import Util.Helper;
 
-import java.sql.Connection;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -21,13 +21,12 @@ public class TA {
         this.helper = new Helper();
         this.user = user;
 
-        System.out.println("Welcome TA!");
+        System.out.println("Welcome Menu.TA!");
         this.landing();
     }
 
     //function for landing page
     private void landing() {
-        System.out.println("TA Landing Menu:\n1. Go to active courses\n2. View courses\n3. Change password\n4. Logout");
         System.out.println("TA Landing Menu:\n1. Go to active courses\n2. View courses\n3. Change password\n4. Logout");
         System.out.println("Enter your choice (1-4): ");
         int choice = scanner.nextInt();
@@ -69,12 +68,7 @@ public class TA {
         switch(choice) {
             case 1:
                 //redirect to view students
-                if (this.courseService.checkTaByCourseId(this.user.getId(), courseID)) {
-                    this.viewStudents(courseID);
-                } else {
-                    System.out.println("Access restricted. You can only view students in your course.");
-                    this.landing();
-                }
+
                 if (this.courseService.checkTaByCourseId(this.user.getId(), courseID)) {
                     this.viewStudents(courseID);
                 } else {

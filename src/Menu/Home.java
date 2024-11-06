@@ -1,6 +1,6 @@
-import java.sql.Connection;
+package Menu;
+
 import java.util.Scanner;
-import Menu.AdminMenu;
 //import Menu.FacultyMenu;
 //import Menu.TAMenu;
 //import Menu.StudentMenu;
@@ -20,15 +20,15 @@ public class Home {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Welcome to the e-learning experience!");
-        System.out.println("Login options:\n1. Admin\n2. Faculty\n3. TA\n4. Student\n5. Exit");
+        System.out.println("Login options:\n1. Admin\n2. Faculty\n3. Menu.TA\n4. Menu.Student\n5. Exit");
         System.out.print("Enter your choice (1-5): ");
         int choice = scanner.nextInt();
 
         switch (choice) {
             case 1 -> loginUser(scanner, "Admin");
             case 2 -> loginUser(scanner, "Faculty");
-            case 3 -> loginUser(scanner, "TA");
-            case 4 -> loginUser(scanner, "Student");
+            case 3 -> loginUser(scanner, "Menu.TA");
+            case 4 -> loginUser(scanner, "Menu.Student");
             case 5 -> {
                 System.out.println("Have a nice day!");
                 System.exit(0);
@@ -44,7 +44,7 @@ public class Home {
      * Handles the login process for each user type.
      *
      * @param scanner The Scanner object for input.
-     * @param role The role of the user (Admin, Faculty, TA, Student).
+     * @param role The role of the user (Admin, Faculty, Menu.TA, Menu.Student).
      */
     private void loginUser(Scanner scanner, String role) {
         scanner.nextLine();  // Consume newline left by nextInt
@@ -60,10 +60,9 @@ public class Home {
             System.out.println("Login successful!");
 
             if(user.getIsPwdResetReq()){
-                Boolean askForPassword = true;
                 String oldPassword = password;
                 System.out.println("Your Password needs to be reset.");
-                while(askForPassword) {
+                while(true) {
                     System.out.println("Please Enter your New Password!");
                     System.out.println("Enter password: ");
                     password = scanner.nextLine();
@@ -72,7 +71,6 @@ public class Home {
                     if(!password.equals(repeatPassword)){
                         System.out.println("Passwords doesn't match");
                     } else{
-                        askForPassword = false;
                         userService.resetPassword(user.getId(), oldPassword, password);
                         break;
                     }
@@ -83,11 +81,11 @@ public class Home {
             switch (role) {
                 case "Admin" -> new AdminMenu().displayAdminMenu(user);
 //                case "Faculty" -> new FacultyMenu(con).displayFacultyMenu();
-//                case "TA" -> new TAMenu(con).displayTAMenu();
-                case "Student" -> new Student(user);
+//                case "Menu.TA" -> new TAMenu(con).displayTAMenu();
+                case "Menu.Student" -> new Student(user);
             }
         } else {
-            if (role.equals("Student")) {
+            if (role.equals("Menu.Student")) {
                 System.out.println("Would you like to register and enroll? (Y/N) : ");
                 //redirect as per option
             } else {
@@ -103,14 +101,14 @@ public class Home {
 //
 //import Menu.AdminMenu;
 //
-//public class Home {
+//public class Menu.Home {
 //    Connection con;
-//    public Home(Connection conn) {
+//    public Menu.Home(Connection conn) {
 //        this.con = conn;
 //        //display options
 //        Scanner scanner = new Scanner(System.in);
 //        System.out.println("Welcome to the e-learning experience!");
-//        System.out.println("Login options:\n1. Admin\n2. Faculty\n3. TA\n4. Student\n5. Exit");
+//        System.out.println("Login options:\n1. Admin\n2. Faculty\n3. Menu.TA\n4. Menu.Student\n5. Exit");
 //        System.out.println("Enter your choice (1-5): ");
 //        int choice = scanner.nextInt();
 //
@@ -129,7 +127,7 @@ public class Home {
 //                break;
 //            case 4:
 //                //redirect to student
-//                new Student(this.con);
+//                new Menu.Student(this.con);
 //                break;
 //            case 5:
 //                System.out.println("Have a nice day!");

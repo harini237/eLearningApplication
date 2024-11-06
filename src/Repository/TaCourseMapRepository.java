@@ -23,9 +23,9 @@ public class TaCourseMapRepository {
             pstmt.setString(2, ta_course.getTa_user_id());
 
             pstmt.executeUpdate();
-            System.out.println("TA "+ ta_course.getTa_user_id()+ " added to course "+ ta_course.getCourse_token());
+            System.out.println("Menu.TA "+ ta_course.getTa_user_id()+ " added to course "+ ta_course.getCourse_token());
         } catch (SQLException e) {
-            System.out.println("Could not add TA-Course.");
+            System.out.println("Could not add Menu.TA-Course.");
         }
     }
 
