@@ -85,6 +85,7 @@ public class FacultyMenu {
         System.out.println("Chapter added successfully.");
         navigationStack.push(this::modifyETextbook); // Return to Modify E-Textbooks menu
     }
+    
 
     // Option 1.2: Modify an Existing Chapter
     private void modifyChapter(Scanner scanner, int textbookId) {
@@ -106,6 +107,87 @@ public class FacultyMenu {
         }
     }
 
+    //TO DO : add calls for modifying content block
+    
+    
+
+    // Option to hide an activity
+    private void hideActivity(Scanner scanner, String contentBlockID, String sectionId, String chapterId, int textbookId) {
+        System.out.println("\n--- Hide Activity ---");
+        System.out.print("Enter Unique Activity ID to hide: ");
+        String uniqueActivityId = scanner.next();
+
+        eTextbookService.hideActivity(contentBlockId, sectionId, chapterId, textbookId, uniqueActivityId);
+        System.out.println("Activity hidden successfully.");
+    }
+    private void addActivity(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
+        System.out.println("\n--- Add New Activity ---");
+        System.out.print("Enter Activity ID: ");
+        String activityId = scanner.next();
+
+        System.out.println("\n1. Add Question");
+        System.out.println("2. Go Back");
+        System.out.print("Enter choice (1-2): ");
+        int choice = scanner.nextInt();
+
+        if (choice == 1) { 
+            navigationStack.push(() -> addQuestion(scanner, textbookId, chapterId, sectionNumber, contentBlockId, activityId));
+        } else {
+            navigationStack.pop();  // Go back to Content Block
+        }
+    }
+    private void addQuestion(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId, String activityId) {
+        System.out.println("\n--- Add Question ---");
+        System.out.print("Enter Question ID: ");
+        String questionId = scanner.next();
+        System.out.print("Enter Question Text: ");
+        scanner.nextLine(); // Consume newline
+        String questionText = scanner.nextLine();
+    
+        System.out.print("Enter Option 1: ");
+        String option1 = scanner.nextLine();
+        System.out.print("Enter Option 2: ");
+        String option2 = scanner.nextLine();
+        System.out.print("Enter Option 3: ");
+        String option3 = scanner.nextLine();
+        System.out.print("Enter Option 4: ");
+        String option4 = scanner.nextLine();
+    
+        System.out.print("Enter Correct Option Number (1-4): ");
+        int correctOption = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+    
+        System.out.print("Enter Explanation for Option 1: ");
+        String explanation1 = scanner.nextLine();
+        System.out.print("Enter Explanation for Option 2: ");
+        String explanation2 = scanner.nextLine();
+        System.out.print("Enter Explanation for Option 3: ");
+        String explanation3 = scanner.nextLine();
+        System.out.print("Enter Explanation for Option 4: ");
+        String explanation4 = scanner.nextLine();
+    
+        try {
+            // First, add the content block and activity
+            eTextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, activityId, "activity", this.loggedUser.getId(), this.loggedUser.getId());
+            eTextbookService.addActivity(activityId, sectionNumber, chapterId, textbookId, contentBlockId);
+    
+            // Attempt to add the question
+            eTextbookService.addQuestion(activityId, textbookId, sectionNumber, chapterId, contentBlockId, questionId, questionText, option1, explanation1, option2, explanation2, option3, explanation3, option4, explanation4, correctOption);
+            
+            System.out.println("Question added successfully.");
+        } catch (Exception e) {
+            System.err.println("Error adding question: " + e.getMessage());
+    
+            // Rollback: delete the associated activity and content block if question creation fails
+            System.out.println("Rolling back changes due to error.");
+            eTextbookService.deleteActivity(contentBlockId,sectionNumber,chapterId, textbookId,  activityId); // Implement deleteActivity method in EtextbookService
+            eTextbookService.deleteContentBlock(contentBlockId, sectionNumber, chapterId, textbookId); // Implement deleteContentBlock method in EtextbookService
+    
+            System.out.println("Associated activity and content block deleted successfully.");
+        }
+    
+        navigationStack.pop();  // Go back to Activity page
+    }
     // Option 2: Add Chapters or Sections
     private void addChapterOrSection() {
         System.out.println("\n--- Add Chapters or Sections ---");

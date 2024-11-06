@@ -107,17 +107,17 @@ public class EtextbookService {
             System.err.println("Error adding question: " + e.getMessage());
         }
     }
-    public void deleteActivity(String contentBlockId, String sectionId, String chapterId, int textbookId)  {
+    public void deleteActivity(String contentBlockId, String sectionId, String chapterId, int textbookId, String uniqueActivityId)  {
         try {
-            activityRepository.deleteActivity(contentBlockId, sectionId, chapterId, textbookId) ;
+            activityRepository.deleteActivity(contentBlockId, sectionId, chapterId, textbookId, uniqueActivityId) ;
             System.out.println("Activity deleted successfully.");
         } catch (Exception e) {
             System.err.println("Error deleting activity: " + e.getMessage());
         }
     }
-    public void hideActivity(String contentBlockId, String sectionId, String chapterId, int textbookId) {
+    public void hideActivity(String contentBlockId, String sectionId, String chapterId, int textbookId, String uniqueActivityId) {
         try {
-            activityRepository.hideActivity(contentBlockId, sectionId, chapterId, textbookId);
+            activityRepository.hideActivity(contentBlockId, sectionId, chapterId, textbookId, uniqueActivityId);
             System.out.println("Activity hidden successfully.");
         } catch (Exception e) {
             System.err.println("Error hiding activity: " + e.getMessage());

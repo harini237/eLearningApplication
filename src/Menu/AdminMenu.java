@@ -313,7 +313,7 @@ public class AdminMenu {
     
             // Rollback: delete the associated activity and content block if question creation fails
             System.out.println("Rolling back changes due to error.");
-            etextbookService.deleteActivity(activityId); // Implement deleteActivity method in EtextbookService
+            etextbookService.deleteActivity(contentBlockId, sectionNumber, chapterId, textbookId, activityId); // Implement deleteActivity method in EtextbookService
             etextbookService.deleteContentBlock(contentBlockId, sectionNumber, chapterId, textbookId); // Implement deleteContentBlock method in EtextbookService
     
             System.out.println("Associated activity and content block deleted successfully.");

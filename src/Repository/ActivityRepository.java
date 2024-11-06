@@ -60,12 +60,12 @@ public class ActivityRepository {
     }
     private final QuestionRepository questionRepository = new QuestionRepository();
 
-    public void deleteActivity(String contentBlockId, String sectionId, String chapterId, int textbookId) {
+    public void deleteActivity(String contentBlockId, String sectionId, String chapterId, int textbookId, String uniqueActivityId) {
         // Delete associated questions first
         questionRepository.deleteQuestionsByActivityKeys(contentBlockId, sectionId, chapterId, textbookId);
 
         // Now, delete the activity
-        String sql = "DELETE FROM activity WHERE content_block_id = ? AND section_id = ? AND chapter_id = ? AND textbook_id = ?";
+        String sql = "DELETE FROM activity WHERE content_block_id = ? AND section_id = ? AND chapter_id = ? AND textbook_id = ? AND unique_activity_id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -74,6 +74,7 @@ public class ActivityRepository {
             pstmt.setString(2, sectionId);
             pstmt.setString(3, chapterId);
             pstmt.setInt(4, textbookId);
+            pstmt.setString(5, uniqueActivityId);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -86,8 +87,8 @@ public class ActivityRepository {
             System.err.println("Error deleting activity: " + e.getMessage());
         }
     }
-    public void hideActivity(String contentBlockId, String sectionId, String chapterId, int textbookId) {
-        String sql = "UPDATE activity SET hidden = 'yes' WHERE content_block_id = ? AND section_id = ? AND chapter_id = ? AND textbook_id = ?";
+    public void hideActivity(String contentBlockId, String sectionId, String chapterId, int textbookId, String unique_activity_id) {
+        String sql = "UPDATE activity SET hidden = 'yes' WHERE content_block_id = ? AND section_id = ? AND chapter_id = ? AND textbook_id = ? AND unique_activity_id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -96,6 +97,7 @@ public class ActivityRepository {
             pstmt.setString(2, sectionId);
             pstmt.setString(3, chapterId);
             pstmt.setInt(4, textbookId);
+            pstmt.setString(5, unique_activity_id);
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
