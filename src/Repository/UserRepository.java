@@ -158,7 +158,7 @@ public class UserRepository {
     }
 
     public boolean updatePassword(String userId, String hashedPassword) {
-        String sql = "UPDATE user SET password = ? WHERE id = ?";
+        String sql = "UPDATE user SET password = ?, is_pwd_reset_req = 0 WHERE id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

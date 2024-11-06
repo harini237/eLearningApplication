@@ -29,19 +29,24 @@ public class UserService {
     }
 
     /**
-     * Creates a new TA in the database.
-     * @param firstName The firstname of the TA
-     * @param lastName The lastname of the TA
-     * @param email The email of the TA
-     * @param password The password of the TA
+     * Creates a new User in the database.
+     * @param firstName The firstname of the User
+     * @param lastName The lastname of the User
+     * @param email The email of the User
+     * @param password The password of the User
+     * @param roleId The Type of User must be either 3 or 4
      */
-    public void createTA(String firstName, String lastName, String email, String password) {
+    public void createFirstTimeUser(String firstName, String lastName, String email, String password, Integer roleId) {
+        if(!(roleId == 3 || roleId == 4)){
+            throw new IllegalArgumentException("Role Id must be either 3 or 4");
+        }
         User newUser = new User();
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
         newUser.setEmail(email);
         newUser.setPassword(password);  // The password should be hashed in UserService
-        newUser.setRoleId(3);  // Assuming 2 is the role ID for Faculty
+        newUser.setRoleId(roleId);  // Assuming 2 is the role ID for Faculty
+        newUser.setIsPwdResetReq(Boolean.TRUE);
         try {
             this.createUser(newUser);
             System.out.println("Faculty account created successfully.");
@@ -128,6 +133,7 @@ public class UserService {
 
         // Update password in the repository
         String hashedNewPassword = PasswordUtil.hashPassword(newPassword);
+        user.setIsPwdResetReq(false);
         if (userRepository.updatePassword(userId, hashedNewPassword)) {
             System.out.println("Password updated successfully.");
         } else {
