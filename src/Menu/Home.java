@@ -30,7 +30,37 @@ public class Home {
             case 1 -> loginUser(scanner, "Admin");
             case 2 -> loginUser(scanner, "Faculty");
             case 3 -> loginUser(scanner, "TA");
-            case 4 -> loginUser(scanner, "Student");
+            case 4 -> {
+                System.out.println("Would you like to 1. SignIn or 2. Create Account ?");
+                //redirect as per option
+                int option = scanner.nextInt();
+                if (option == 2) {
+                    System.out.println("Creating Student Account");
+                    System.out.print("Enter First Name: ");
+                    String firstName = scanner.next();
+                    System.out.print("Enter Last Name: ");
+                    String lastName = scanner.next();
+                    System.out.print("Enter Email: ");
+                    String email = scanner.next();
+                    System.out.print("Enter Password: ");
+                    String password = scanner.next();
+
+                    User newUser = new User();
+                    newUser.setFirstName(firstName);
+                    newUser.setLastName(lastName);
+                    newUser.setEmail(email);
+                    newUser.setPassword(password);  // The password should be hashed in UserService
+                    newUser.setRoleId(4);
+                    try {
+                        userService.createUser(newUser);
+                        System.out.println("Student registered! Please Login Now");
+                    }catch (Exception ignored){
+                        System.out.println("Error While creating user account Error: " + ignored.getMessage());
+                    }
+                }
+                loginUser(scanner, "Student");
+
+            }
             case 5 -> facultyReportMenu.displayMenu();
             case 6 -> {
                 System.out.println("Have a nice day!");
@@ -88,23 +118,8 @@ public class Home {
                 case "Student" -> new Student(user);
             }
         } else {
-            if (role.equals("Menu.Student")) {
-                System.out.println("Would you like to register and enroll? (Y/N) : ");
-                //redirect as per option
-                String option = scanner.next();
-                if (option.equals("Y")) {
-                    //createUser method
-                    //User user = <newly created student user>
-                    System.out.println("Student registered!");
-                    //new Student(user);
-                } else {
-                    System.out.println("Aborting action.");
-                    displayHomeScreen();
-                }
-            } else {
                 System.out.println("Invalid credentials or role. Please try again.");
                 displayHomeScreen();  // Retry by displaying the home screen
-            }
         }
     }
 }

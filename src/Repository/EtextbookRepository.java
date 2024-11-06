@@ -356,6 +356,64 @@ public class EtextbookRepository {
     }
 
     public void listAllEtextbooks() {
+        String sql = "SELECT " +
+                "et.id as 'EBookId'" +
+                "et.title AS 'EBook', " +
+                "ch.chapter_id AS 'Chapter', " +
+                "sec.section_id AS 'Section', " +
+                "cb.block_id AS 'Block' " +
+                "FROM e_textbook et " +
+                "LEFT JOIN chapter ch ON et.id = ch.textbook_id " +
+                "LEFT JOIN section sec ON ch.chapter_id = sec.chapter_id AND ch.textbook_id = sec.textbook_id " +
+                "LEFT JOIN content_block cb ON sec.section_id = cb.section_id AND sec.chapter_id = cb.chapter_id AND sec.textbook_id = cb.textbook_id " +
+                "ORDER BY et.id, ch.chapter_id, sec.section_id, cb.block_id";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            String currentEBook = null;
+            String currentChapter = null;
+            String currentSection = null;
+
+            while (rs.next()) {
+                Integer eBookId = rs.getInt("EBookId");
+                String eBook = rs.getString("EBook");
+                String chapter = rs.getString("Chapter");
+                String section = rs.getString("Section");
+                String block = rs.getString("Block");
+
+                // Check if we are in a new E-Book
+                if (currentEBook == null || !currentEBook.equals(eBook)) {
+                    currentEBook = eBook;
+                    currentChapter = null;  // Reset chapter and section for a new E-Book
+                    currentSection = null;
+                    System.out.println("E-Book: "+  eBookId.toString() +" "+  currentEBook);
+                }
+
+                // Check if we are in a new Chapter
+                if (currentChapter == null || !currentChapter.equals(chapter)) {
+                    currentChapter = chapter;
+                    currentSection = null;  // Reset section for a new Chapter
+                    System.out.println("    Chapter: " + currentChapter);
+                }
+
+                // Check if we are in a new Section
+                if (currentSection == null || !currentSection.equals(section)) {
+                    currentSection = section;
+                    System.out.println("        Section: " + currentSection);
+                }
+
+                // Always print Block within Section
+                System.out.println("            Block: " + block);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error retrieving e-textbook data: " + e.getMessage());
+        }
+    }
+
+    public void listAllEtextbooksOld() {
         // SQL query to join e-textbooks with their chapters, sections, and content blocks
         String sql = "SELECT " +
                      "et.title AS 'E-Book', " +

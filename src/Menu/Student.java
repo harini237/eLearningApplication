@@ -20,7 +20,7 @@ public class Student {
         this.user = user;
         this.helper = new Helper();
 
-        System.out.println("Student Menu:\n1. Enroll in a course\n2. Sign In (Student Landing Page)\n3. Go back\nEnter your choice (1-3): ");
+        System.out.println("Student Menu:\n1. Enroll in a course\n2. Student Landing Page\n3. Go back\nEnter your choice (1-3): ");
         int choice = scanner.nextInt();
         switch(choice) {
             case 1:
