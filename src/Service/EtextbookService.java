@@ -68,9 +68,9 @@ public class EtextbookService {
         }
     }
 
-    public void addContentBlock(String contentBlockId, String sectionNumber, String chapterId, int textbookId, String content, String createdBy, String modifiedBy) {
+    public void addContentBlock(String contentBlockId, String sectionNumber, String chapterId, int textbookId, String content, String contentType, String createdBy, String modifiedBy) {
         try {
-            etextbookRepository.addContentBlock(textbookId, chapterId, sectionNumber, contentBlockId, content, createdBy, modifiedBy);
+            etextbookRepository.addContentBlock(textbookId, chapterId, sectionNumber, contentBlockId, contentType, content, createdBy, modifiedBy);
         } catch (Exception e) {
             System.err.println("Error adding content block: " + e.getMessage());
         }

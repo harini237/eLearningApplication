@@ -122,34 +122,36 @@ public class EtextbookRepository {
         }
     }   
 
-    public void addContentBlock(int textbookId, String chapterId, String sectionNumber, String contentBlockId, String content, String createdBy, String modifiedBy) {
+    public void addContentBlock(int textbookId, String chapterId, String sectionNumber, String contentBlockId, String contentType, String content, String createdBy, String modifiedBy) {
         String sql = "INSERT INTO content_block (block_id, section_id, chapter_id, textbook_id, content, content_type, hidden, created_by, modified_by) " +
-                     "VALUES (?, ?, ?, ?, ?, 'text', 'no', ?, ?)";
-
+                     "VALUES (?, ?, ?, ?, ?, ?, 'no', ?, ?)";
+    
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+    
             pstmt.setString(1, contentBlockId); // Set content block ID
             pstmt.setString(2, sectionNumber);  // Set section number
             pstmt.setString(3, chapterId);      // Set chapter ID
             pstmt.setInt(4, textbookId);        // Set textbook ID
             pstmt.setString(5, content);        // Set content
-            pstmt.setString(6, createdBy);        // Set createdby
-            pstmt.setString(7, modifiedBy);        // Set modifiedby
-
-
+            pstmt.setString(6, contentType);
+            // Set the seventh parameter for 'hidden', which is already 'no' in the query, so no need to set explicitly
+            pstmt.setString(7, createdBy);      // Set createdBy
+            pstmt.setString(8, modifiedBy);     // Set modifiedBy
+    
             int rowsAffected = pstmt.executeUpdate();
-
+    
             if (rowsAffected > 0) {
                 System.out.println("Content block added successfully with Content Block ID: " + contentBlockId);
             } else {
                 System.err.println("Failed to add content block.");
             }
-
+    
         } catch (SQLException e) {
             System.err.println("Error adding content block: " + e.getMessage());
         }
     }
+    
 
     public void hideContentBlock(String blockId, String sectionId, String chapterId, int textbookId) {
         String sql = "UPDATE content_block SET hidden = 'yes' WHERE block_id = ? AND section_id = ? AND chapter_id = ? AND textbook_id = ?";

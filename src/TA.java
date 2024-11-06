@@ -338,7 +338,7 @@ public class TA {
                 //redirect to add text
                 String text = helper.getText();
                 if(!text.isEmpty()) {
-                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, text,  this.user.getId(), this.user.getId());
+                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, text, "text", this.user.getId(), this.user.getId());
                 }
                 this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 break;
@@ -346,7 +346,7 @@ public class TA {
                 //redirect to add picture
                 String picture = helper.getPicture();
                 if(!picture.isEmpty()) {
-                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, picture,  this.user.getId(), this.user.getId());
+                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, picture,  "picture", this.user.getId(), this.user.getId());
                 }
                 this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 break;
@@ -432,7 +432,7 @@ public class TA {
                 //redirect to add text
                 String text = helper.getText();
                 if(!text.isEmpty()) {
-                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, text,  this.user.getId(), this.user.getId());
+                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, text, "text", this.user.getId(), this.user.getId());
                 } else {
                     this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 }
@@ -441,7 +441,7 @@ public class TA {
                 //redirect to add picture
                 String picture = helper.getPicture();
                 if(!picture.isEmpty()) {
-                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, picture,  this.user.getId(), this.user.getId());
+                    etextbookService.addContentBlock(contentId, sectionNumber, chapterID, textbookId, picture, "picture",  this.user.getId(), this.user.getId());
                 } else {
                     this.addContentBlock(callingFunction, courseID, chapterID, textbookId, sectionNumber);
                 }

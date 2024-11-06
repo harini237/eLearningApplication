@@ -224,9 +224,9 @@ public class AdminMenu {
         System.out.println("3. Landing Page");
         System.out.print("Enter choice (1-2): ");
         int choice = scanner.nextInt();
-    
+        
         if (choice == 1) {
-            etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, content,  this.loggedUser.getId(), this.loggedUser.getId()); 
+            etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, content, "text", this.loggedUser.getId(), this.loggedUser.getId()); 
             navigationStack.pop();
         } else {
             navigationStack.pop();  // Go back to Content Block
@@ -245,7 +245,7 @@ public class AdminMenu {
         int choice = scanner.nextInt();
     
         if (choice == 1) {
-            etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, picturePath, this.loggedUser.getId(), this.loggedUser.getId());
+            etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, picturePath, "picture",this.loggedUser.getId(), this.loggedUser.getId());
             navigationStack.pop();
         } else {
             navigationStack.pop();  // Go back to Content Block
@@ -301,7 +301,7 @@ public class AdminMenu {
     
         try {
             // First, add the content block and activity
-            etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, activityId, this.loggedUser.getId(), this.loggedUser.getId());
+            etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, activityId, "activity", this.loggedUser.getId(), this.loggedUser.getId());
             etextbookService.addActivity(activityId, sectionNumber, chapterId, textbookId, contentBlockId);
     
             // Attempt to add the question
