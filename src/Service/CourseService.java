@@ -164,4 +164,9 @@ public class CourseService {
         return false;
     }
 
+    public Integer getTextbookByCourse (String course_id) {
+        Integer textbook = this.courseRepository.findTextbookByCourseId(course_id);
+        return textbook;
+    }
+
 }
