@@ -483,7 +483,7 @@ public class TA {
 
         switch(choice) {
             case 1:
-                //TODO: handle deletion
+                etextbookService.deleteContentBlock(contentId, sectionNumber, chapterID, textbookId);
                 break;
             case 2:
                 //redirect to previous page (modify section)
