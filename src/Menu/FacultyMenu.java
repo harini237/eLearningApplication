@@ -67,9 +67,9 @@ public class FacultyMenu {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> facultyService.viewWorklist(courseId);
+//            case 1 -> facultyService.viewWorklist(courseId);
             case 2 -> approveEnrollment(courseId);
-            case 3 -> facultyService.viewStudents(courseId);
+//            case 3 -> facultyService.viewStudents(courseId);
             case 4 -> addNewChapter(courseId);
             case 5 -> modifyChapter(courseId);
             case 6 -> addTA(courseId);
@@ -140,7 +140,7 @@ public class FacultyMenu {
         System.out.print("Enter Chapter Title: ");
         String chapterTitle = scanner.next();
 
-        facultyService.addNewChapter(courseId, chapterId, chapterTitle);
+//        facultyService.addNewChapter(courseId, chapterId, chapterTitle);
         System.out.println("New chapter added successfully.");
     }
 
@@ -160,8 +160,8 @@ public class FacultyMenu {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> facultyService.hideChapter(courseId, chapterId);
-            case 2 -> facultyService.deleteChapter(courseId, chapterId);
+//            case 1 -> facultyService.hideChapter(courseId, chapterId);
+//            case 2 -> facultyService.deleteChapter(courseId, chapterId);
             case 3 -> addNewSection(courseId, chapterId);
             case 4 -> modifySection(courseId, chapterId);
             case 5 -> navigationStack.pop();
