@@ -2,6 +2,7 @@
 package Entity;
 
 public class Activity {
+    private int id;
     private String uniqueActivityId; // primary key, unique activity identifier
     private String sectionId;
     private String chapterId;
@@ -12,7 +13,8 @@ public class Activity {
     // Constructors
     public Activity() {}
 
-    public Activity(String uniqueActivityId, String sectionId, String chapterId, Integer textbookId, String contentBlockId, String hidden) {
+    public Activity(Integer id, String uniqueActivityId, String sectionId, String chapterId, Integer textbookId, String contentBlockId, String hidden) {
+        this.id = id;
         this.uniqueActivityId = uniqueActivityId;
         this.sectionId = sectionId;
         this.chapterId = chapterId;
@@ -22,6 +24,16 @@ public class Activity {
     }
 
     // Getters and Setters
+      // New auto-incremented primary key field
+
+    public int getActivityId() {
+    return id;
+    }
+
+    public void setActivityId(int id) {
+    this.id = id;
+    }
+
     public String getUniqueActivityId() { return uniqueActivityId; }
     public void setUniqueActivityId(String uniqueActivityId) { this.uniqueActivityId = uniqueActivityId; }
 
@@ -43,6 +55,7 @@ public class Activity {
     @Override
     public String toString() {
         return "Activity{" +
+                "activityId='" + id + '\'' +
                 "uniqueActivityId='" + uniqueActivityId + '\'' +
                 ", sectionId='" + sectionId + '\'' +
                 ", chapterId='" + chapterId + '\'' +

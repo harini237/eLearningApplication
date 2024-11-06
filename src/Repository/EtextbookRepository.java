@@ -315,19 +315,28 @@ public class EtextbookRepository {
             System.err.println("Error adding question: " + e.getMessage());
         }
     }
-    public void deleteActivity(String activityId) {
-        String sql = "DELETE FROM activity WHERE unique_activity_id = ?";
+    // public void deleteActivity(String contentBlockId, String sectionId, String chapterId, int textbookId) {
+    //     String sql = "DELETE FROM activity WHERE content_block_id = ? AND section_id = ? AND chapter_id = ? AND textbook_id = ?";
     
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    //     try (Connection conn = DatabaseConnection.getConnection();
+    //          PreparedStatement pstmt = conn.prepareStatement(sql)) {
     
-            pstmt.setString(1, activityId);
-            pstmt.executeUpdate();
+    //         pstmt.setString(1, contentBlockId);
+    //         pstmt.setString(2, sectionId);
+    //         pstmt.setString(3, chapterId);
+    //         pstmt.setInt(4, textbookId);
     
-        } catch (SQLException e) {
-            System.err.println("Error deleting activity: " + e.getMessage());
-        }
-    }
+    //         int rowsAffected = pstmt.executeUpdate();
+    //         if (rowsAffected > 0) {
+    //             System.out.println("Activity deleted successfully.");
+    //         } else {
+    //             System.out.println("No activity found with the specified details.");
+    //         }
+    
+    //     } catch (SQLException e) {
+    //         System.err.println("Error deleting activity: " + e.getMessage());
+    //     }
+    // }
     
     public void deleteContentBlock(String contentBlockId, String sectionId, String chapterId, int textbookId) {
         String sql = "DELETE FROM content_block WHERE block_id = ? AND section_id = ? AND chapter_id = ? AND textbook_id = ?";

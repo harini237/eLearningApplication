@@ -24,21 +24,21 @@ public class ActivityRepository {
             pstmt.setString(6, activity.getHidden());
 
             pstmt.executeUpdate();
-            System.out.println("Activity created successfully with Unique Activity ID: " + activity.getUniqueActivityId());
+            System.out.println("Activity created successfully with  Activity ID: " + activity.getActivityId());
 
         } catch (SQLException e) {
             System.err.println("Error creating Activity: " + e.getMessage());
         }
     }
 
-    public Activity getActivityById(String uniqueActivityId) {
-        String sql = "SELECT * FROM activity WHERE unique_activity_id = ?";
+    public Activity getActivityById(Integer activityId) {
+        String sql = "SELECT * FROM activity WHERE id = ?";
         Activity activity = null;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, uniqueActivityId);
+            pstmt.setInt(1, activityId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -58,6 +58,57 @@ public class ActivityRepository {
 
         return activity;
     }
+    private final QuestionRepository questionRepository = new QuestionRepository();
+
+    public void deleteActivity(String contentBlockId, String sectionId, String chapterId, int textbookId) {
+        // Delete associated questions first
+        questionRepository.deleteQuestionsByActivityKeys(contentBlockId, sectionId, chapterId, textbookId);
+
+        // Now, delete the activity
+        String sql = "DELETE FROM activity WHERE content_block_id = ? AND section_id = ? AND chapter_id = ? AND textbook_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, contentBlockId);
+            pstmt.setString(2, sectionId);
+            pstmt.setString(3, chapterId);
+            pstmt.setInt(4, textbookId);
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Activity and associated questions deleted successfully.");
+            } else {
+                System.out.println("No activity found with the specified details.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error deleting activity: " + e.getMessage());
+        }
+    }
+    public void hideActivity(String contentBlockId, String sectionId, String chapterId, int textbookId) {
+        String sql = "UPDATE activity SET hidden = 'yes' WHERE content_block_id = ? AND section_id = ? AND chapter_id = ? AND textbook_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, contentBlockId);
+            pstmt.setString(2, sectionId);
+            pstmt.setString(3, chapterId);
+            pstmt.setInt(4, textbookId);
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Activity hidden successfully.");
+            } else {
+                System.out.println("No activity found with the specified details.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error hiding activity: " + e.getMessage());
+        }
+    }
+    
 
     public List<Activity> getAllActivitiesBySectionId(String SectionId) {
         String sql = "SELECT * FROM activity WHERE section_id = ?";

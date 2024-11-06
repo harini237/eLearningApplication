@@ -87,6 +87,29 @@ public class QuestionRepository {
 
         return question;
     }
+    public void deleteQuestionsByActivityKeys(String contentBlockId, String sectionId, String chapterId, int textbookId) {
+        String sql = "DELETE FROM question WHERE content_block_id = ? AND section_id = ? AND chapter_id = ? AND textbook_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, contentBlockId);
+            pstmt.setString(2, sectionId);
+            pstmt.setString(3, chapterId);
+            pstmt.setInt(4, textbookId);
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Associated questions deleted successfully.");
+            } else {
+                System.out.println("No questions found with the specified details.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error deleting questions: " + e.getMessage());
+        }
+    }
+    
 
     public List<Question> getAllQuestionsByActivityId(String activityId) {
         String sql = "SELECT * FROM question WHERE activity_id = ?";
