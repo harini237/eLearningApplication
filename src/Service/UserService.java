@@ -140,4 +140,9 @@ public class UserService {
             System.out.println("Error updating password. Please try again.");
         }
     }
+
+    public void updateUserRoleById (String userId, int roleId) {
+        Role role = this.roleRepository.getRoleById(roleId);
+        this.userRepository.updateUserRole(userId, roleId, role.getName());
+    }
 }
