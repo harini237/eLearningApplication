@@ -59,7 +59,7 @@ public class EtextbookService {
 
     public void hideChapter(int textbookId, String chapterId) {
         try {
-            etextbookRepository.deleteChapter(chapterId, textbookId);
+            etextbookRepository.hideChapter(chapterId, textbookId);
         } catch (Exception e) {
             System.err.println("Error hiding chapter: " + e.getMessage());
         }

@@ -43,7 +43,7 @@ public class FacultyMenu {
         switch (choice) {
             case 1 -> navigationStack.push(this::activeCourseMenu);
             case 2 -> navigationStack.push(this::evaluationCourseMenu);
-//            case 3 -> facultyService.viewCourses();r
+//            case 3 -> facultyService.viewCourses();
             case 4 -> changePassword();
             case 5 -> {
                 navigationStack.pop();
@@ -172,7 +172,7 @@ public class FacultyMenu {
         switch (choice) {
             case 1 -> etextbookService.hideChapter(textbookId, chapterId);
             case 2 -> etextbookService.deleteChapter(textbookId, chapterId);
-            case 3 -> addNewSection(textbookId, chapterId);
+            case 3 -> addNewSection(scanner, textbookId, chapterId);
             case 4 -> modifySection(textbookId, chapterId);
             case 5 -> navigationStack.pop();
             default -> System.out.println("Invalid choice. Returning to Modify Chapter Menu.");
@@ -197,15 +197,36 @@ public class FacultyMenu {
     }
 
     // Add New Section
-    private void addNewSection(int textbookId, String chapterId) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter Section ID: ");
-        String sectionId = scanner.next();
+    private void addNewSection(Scanner scanner, int textbookId, String chapterId) {
+        System.out.println("\n--- Add New Section ---");
+        System.out.print("Enter Section Number: ");
+        String sectionNumber = scanner.next();
+        // Validate section id to ensure it follows the "chapXX" format
+        if (!sectionNumber.trim().matches("(?i)Sec\\d{2}")) { // '(?i)' makes the regex case-insensitive
+        System.out.println("Invalid section number. Please enter a value in the format.");
+        return;
+    }
+    
         System.out.print("Enter Section Title: ");
-        String sectionTitle = scanner.next();
+        String title = scanner.next();
+        // Check if title is empty
+        if (title.trim().isEmpty()) {
+            System.out.println("Section title cannot be empty. Please try again.");
+            return;
+        }
 
-        etextbookService.addSection(textbookId, chapterId, sectionId, sectionTitle);
-        System.out.println("New section added successfully.");
+        etextbookService.addSection(textbookId, chapterId, sectionNumber, title);
+
+        System.out.println("\n1. Add New Content Block");
+        System.out.println("2. Go Back");
+        System.out.print("Enter choice (1-2): ");
+        int choice = scanner.nextInt();
+
+        if (choice == 1) {
+            navigationStack.push(() -> addContentBlock(textbookId, chapterId, sectionNumber));
+        } else {
+            navigationStack.pop();  // Go back to Chapter creation
+        }
     }
 
     // Modify Section Menu
@@ -228,7 +249,7 @@ public class FacultyMenu {
             case 2 -> etextbookService.deleteSection(textbookId, chapterId, sectionId);
             case 3 -> addContentBlock(textbookId, chapterId, sectionId);
             case 4 -> addModifyBlock(textbookId, chapterId, sectionId);
-            case 5 -> navigationStack.push(() -> modifyChapter(textbookId));
+            case 5 ->  navigationStack.pop();
             default -> System.out.println("Invalid choice. Returning to Modify Section Menu.");
         }
         navigationStack.push(() -> modifySection(textbookId, chapterId));
@@ -252,7 +273,7 @@ public class FacultyMenu {
             case 1 -> addTextBlock(scanner, textbookId, chapterId, sectionId, blockId);
             case 2 -> addPictureBlock(scanner, textbookId, chapterId, sectionId, blockId);
             case 3 -> addActivity(scanner, textbookId, chapterId, sectionId, blockId);
-            case 4 -> navigationStack.push(() -> modifySection(textbookId, chapterId));
+            case 4 ->  navigationStack.pop();
             default -> System.out.println("Invalid choice. Returning to Add Content Block Menu.");
         }
         navigationStack.push(() -> addContentBlock(textbookId, chapterId, sectionId));
@@ -379,7 +400,7 @@ public class FacultyMenu {
     
         if (choice == 1) {
             etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, picturePath, "picture",this.loggedUser.getId(), this.loggedUser.getId());
-            navigationStack.pop();
+           // navigationStack.pop();
         } else {
             navigationStack.pop();  // Go back to Content Block
         }   
