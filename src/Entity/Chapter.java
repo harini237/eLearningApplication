@@ -54,7 +54,7 @@ public class Chapter {
     @Override
     public String toString() {
         return "Chapter{" +
-                "id=" + id +
+                "id=" + chapterId +
                 ", textbookId=" + textbookId +
                 ", title='" + title + '\'' +
                 ", visibility=" + visibility +

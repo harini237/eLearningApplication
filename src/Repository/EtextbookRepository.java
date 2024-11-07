@@ -540,6 +540,7 @@ public void deleteChapter(String chapterId, int textbookId) {
     public void displaySectionContent(String sectionId, String chapterId, int textbookId, String studentId) {
         String query = """
                 SELECT
+                   a.id as activity_id,
                    c.block_id,
                    c.content_type,
                    c.content AS content_text,
@@ -607,10 +608,14 @@ public void deleteChapter(String chapterId, int textbookId) {
                     } else if ("activity".equals(contentType)) {
                         System.out.println("Activity: " + rs.getString("question_text"));
                         System.out.println("Options:");
-                        System.out.println("1. " + rs.getString("option_1") + " - " + rs.getString("explanation_1"));
-                        System.out.println("2. " + rs.getString("option_2") + " - " + rs.getString("explanation_2"));
-                        System.out.println("3. " + rs.getString("option_3") + " - " + rs.getString("explanation_3"));
-                        System.out.println("4. " + rs.getString("option_4") + " - " + rs.getString("explanation_4"));
+                        System.out.println("1. " + rs.getString("option_1"));
+                        System.out.println("2. " + rs.getString("option_2"));
+                        System.out.println("3. " + rs.getString("option_3"));
+                        System.out.println("4. " + rs.getString("option_4"));
+//                        System.out.println("1. " + rs.getString("option_1") + " - " + rs.getString("explanation_1"));
+//                        System.out.println("2. " + rs.getString("option_2") + " - " + rs.getString("explanation_2"));
+//                        System.out.println("3. " + rs.getString("option_3") + " - " + rs.getString("explanation_3"));
+//                        System.out.println("4. " + rs.getString("option_4") + " - " + rs.getString("explanation_4"));
 
                         System.out.print("Enter the ID of the correct answer (1-4): ");
                         int userAnswer = scanner.nextInt();
@@ -619,7 +624,7 @@ public void deleteChapter(String chapterId, int textbookId) {
 
                         // Log the activity attempt
                         ActivityAttempt attempt = new ActivityAttempt(
-                            rs.getString("id"),
+                            rs.getString("activity_id"),
                                 sectionId,
                                 chapterId,
                                 textbookId,

@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Student {
-    User loggedUser;
 
     private final UserService userService = new UserService();
     Scanner scanner = new Scanner(System.in);
@@ -145,7 +144,7 @@ public class Student {
     //function to view block
     private void viewBlock(int textbookId, String chapterId, String sectionId) {
         //TODO: fetch block details from db
-        etextbookService.displayContentBlock(sectionId, chapterId, textbookId, this.loggedUser.getId());
+        etextbookService.displayContentBlock(sectionId, chapterId, textbookId, this.user.getId());
         String menuOption = "";
 
         /*
