@@ -60,6 +60,11 @@ public class CourseService {
         System.out.println("Added ta to course!");
     }
 
+    public void viewStudentsEnrolledByCourseId (String course_id) {
+        ActiveCourse ac = this.activeCourseRepository.findActiveCourseById(course_id);
+        this.viewStudentsEnrolled(ac.getToken());
+    }
+
     public void viewStudentsEnrolled (String course_token) {
         List<String> students = this.enrollmentRepository.findStudentsByCourseToken(course_token);
         if (students.isEmpty()) {
@@ -98,13 +103,13 @@ public class CourseService {
         }
     }
 
-    public void viewWorklist (String faculty_id) {
+    public void viewWorklist (String course_id) {
         List<PendingApproval> pendingApprovals = new ArrayList<>();
-        pendingApprovals = this.pendingApprovalRepository.findPendingApprovalsByFaculty(faculty_id);
+        pendingApprovals = this.pendingApprovalRepository.findApprovalsByCourseId(course_id);
         if (pendingApprovals.isEmpty()) {
-            System.out.println("No pending approvals for faculty "+ faculty_id);
+            System.out.println("No pending approvals for course "+ course_id);
         } else {
-            System.out.println("Pending approvals for faculty "+ faculty_id+ ":");
+            System.out.println("Pending approvals for course "+ course_id+ ":");
             for(PendingApproval p : pendingApprovals) {
                 System.out.println(p.toString());
             }
@@ -137,8 +142,7 @@ public class CourseService {
         PendingApproval pa = this.pendingApprovalRepository.findApprovalByKey(student_id, course_token);
         if (pa != null) {
             if (ac.getCapacity() > 0) {
-                Enrollment e = new Enrollment(student_id, course_token);
-                this.enrollmentRepository.createEnrollment(e);
+                this.updateEnrollment(student_id, course_token);
                 this.pendingApprovalRepository.deletePendingApproval(pa.getStudent_id(), pa.getCourse_token());
                 this.activeCourseRepository.updateCapacity(ac.getToken(), ac.getCapacity() - 1);
             } else {

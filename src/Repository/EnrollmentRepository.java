@@ -27,7 +27,7 @@ public class EnrollmentRepository {
             pstmt.executeUpdate();
             System.out.println("Menu.Student "+ enrollment.getStudent_id()+ " enrolled in active course "+ enrollment.getCourse_token());
         } catch (SQLException e) {
-            System.out.println("Could not enroll.");
+            System.out.println("Could not enroll. "+e.getMessage());
         }
     }
 
