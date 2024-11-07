@@ -157,9 +157,10 @@ public class EtextbookService {
         }
     }
 
-    public  void displayContentBlock(String sectionId, String chapterId, int textbookId) {
+    public  void displayContentBlock(String sectionId, String chapterId, int textbookId, String studentId) {
         try {
-            etextbookRepository.displaySectionContent(sectionId, chapterId, textbookId);
+            etextbookRepository.displaySectionContent(sectionId, chapterId, textbookId, studentId);
+
         } catch (Exception e) {
             System.err.println("Error hiding section: " + e.getMessage());
         }

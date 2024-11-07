@@ -1,8 +1,12 @@
 package Menu;
 
 import Entity.User;
+import Repository.ActivityAttemptRepository;
 import Service.CourseService;
 import Service.EtextbookService;
+import Service.UserService;
+
+import Service.UserService;
 import Util.Helper;
 
 import java.sql.Connection;
@@ -11,6 +15,9 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Student {
+    User loggedUser;
+
+    private final UserService userService = new UserService();
     Scanner scanner = new Scanner(System.in);
     Helper helper;
     private final CourseService courseService = new CourseService();
@@ -138,7 +145,7 @@ public class Student {
     //function to view block
     private void viewBlock(int textbookId, String chapterId, String sectionId) {
         //TODO: fetch block details from db
-        etextbookService.displayContentBlock(sectionId, chapterId, textbookId);
+        etextbookService.displayContentBlock(sectionId, chapterId, textbookId, this.loggedUser.getId());
         String menuOption = "";
 
         /*
@@ -199,6 +206,8 @@ public class Student {
 
     //function to show points
     private void viewParticipationActivityPoints() {
+        int totalPoints = new ActivityAttemptRepository().calculateTotalPoints(user.getId());
+        System.out.println("Total Participation Activity Points: " + totalPoints);
         //TODO: fetch and display points of user
         System.out.println("Score Menu:\n1. Go back");
         System.out.println("Enter your choice (1): ");

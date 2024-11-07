@@ -1,13 +1,15 @@
 package Repository;
 
+import Entity.ActivityAttempt;
 import Entity.Etextbook;
 import Util.DatabaseConnection;
 
 import java.sql.*;
+import java.time.Instant;
 import java.util.Scanner;
 
 public class EtextbookRepository {
-
+    private final ActivityAttemptRepository attemptRepository = new ActivityAttemptRepository(); // For logging attempts
     public void createEtextbook(Etextbook etextbook) {
         // Adjust SQL to include the id field for manual input
         String sql = "INSERT INTO e_textbook (id, title) VALUES (?, ?)";
@@ -516,7 +518,7 @@ public void deleteChapter(String chapterId, int textbookId) {
         }
     }
 
-    public void displaySectionContent(String sectionId, String chapterId, int textbookId) {
+    public void displaySectionContent(String sectionId, String chapterId, int textbookId, String studentId) {
         String query = """
                 SELECT
                    c.block_id,
@@ -555,6 +557,7 @@ public void deleteChapter(String chapterId, int textbookId) {
                        WHEN c.content_type = 'activity' THEN 3
                    END
                 """;
+        
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -592,6 +595,22 @@ public void deleteChapter(String chapterId, int textbookId) {
 
                         System.out.print("Enter the ID of the correct answer (1-4): ");
                         int userAnswer = scanner.nextInt();
+                        int attemptScore = (userAnswer == rs.getInt("correct_option")) ? 3 : 1;
+                        System.out.println(userAnswer == rs.getInt("correct_option") ? "Correct Answer!" : "Incorrect Answer. The correct option is " + correctOption);
+
+                        // Log the activity attempt
+                        ActivityAttempt attempt = new ActivityAttempt(
+                            rs.getString("id"),
+                                sectionId,
+                                chapterId,
+                                textbookId,
+                                studentId,
+                                rs.getString("block_id"),
+                                userAnswer,
+                                attemptScore,
+                                Timestamp.from(Instant.now())
+                        );
+                        attemptRepository.createActivityAttempt(attempt);
 
                         int correctOption = rs.getInt("correct_option");
                         if (userAnswer == correctOption) {
@@ -599,6 +618,8 @@ public void deleteChapter(String chapterId, int textbookId) {
                         } else {
                             System.out.println("Incorrect Answer. The correct option is " + correctOption);
                         }
+
+
 
                         System.out.println("\n--- Menu ---");
                         System.out.println("1. Next");
