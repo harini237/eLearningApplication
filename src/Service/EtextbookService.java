@@ -33,9 +33,9 @@ public class EtextbookService {
     }
     
 
-    public void addChapter(String chapterId, int textbookId, String title) {    
+    public void addChapter(String chapterId, int textbookId, String title, String createdBy) {    
         try {
-            etextbookRepository.addChapter(chapterId, textbookId, title);
+            etextbookRepository.addChapter(chapterId, textbookId, title, createdBy);
         } catch (Exception e) {
             System.err.println("Error adding chapter: " + e.getMessage());
         }
@@ -65,9 +65,9 @@ public class EtextbookService {
         }
     }
 
-    public void addSection(int textbookId, String chapterId, String sectionNumber, String title) {
+    public void addSection(int textbookId, String chapterId, String sectionNumber, String title, String createdBy) {
         try {
-            etextbookRepository.addSection(textbookId, chapterId, sectionNumber, title);
+            etextbookRepository.addSection(textbookId, chapterId, sectionNumber, title, createdBy);
         } catch (Exception e) {
             System.err.println("Error adding section: " + e.getMessage());
         }

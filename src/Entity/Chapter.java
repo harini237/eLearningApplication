@@ -15,6 +15,7 @@ public class Chapter {
         this.textbookId = textbookId;
         this.title = title;
         this.visibility = visibility;
+        this.createdBy = createdBy;
     }
 
     // Getters and Setters

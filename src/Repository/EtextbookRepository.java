@@ -36,8 +36,8 @@ public class EtextbookRepository {
         }
     }
     
-    public void addChapter(String chapterId, int textbookId, String title) {
-        String sql = "INSERT INTO chapter (chapter_id, textbook_id, title, visibility) VALUES (?, ?, ?, ?)";
+    public void addChapter(String chapterId, int textbookId, String title, String createdBy) {
+        String sql = "INSERT INTO chapter (chapter_id, textbook_id, title, visibility, created_by) VALUES (?, ?, ?, ?, ?)";
     
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -46,6 +46,7 @@ public class EtextbookRepository {
             pstmt.setInt(2, textbookId);   // Set textbook ID
             pstmt.setString(3, title);     // Set chapter title
             pstmt.setInt(4, 1);            // Set visibility to 1 (true)
+            pstmt.setString(5, createdBy);
     
             int rowsAffected = pstmt.executeUpdate();
     
@@ -207,8 +208,8 @@ public void deleteChapter(String chapterId, int textbookId) {
     }
      
    
-    public void addSection(int textbookId, String chapterId, String sectionNumber, String title) {
-        String sql = "INSERT INTO section (section_id, chapter_id, textbook_id, title, visibility) VALUES (?, ?, ?, ?, ?)";
+    public void addSection(int textbookId, String chapterId, String sectionNumber, String title, String createdBy) {
+        String sql = "INSERT INTO section (section_id, chapter_id, textbook_id, title, visibility, created_by) VALUES (?, ?, ?, ?, ?, ?)";
     
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -218,6 +219,7 @@ public void deleteChapter(String chapterId, int textbookId) {
             pstmt.setInt(3, textbookId);       // Set textbook ID
             pstmt.setString(4, title);         // Set section title
             pstmt.setInt(5, 1);                // Set visibility to 1 (true)
+            pstmt.setString(6, createdBy);                // Set visibility to 1 (true)
     
             int rowsAffected = pstmt.executeUpdate();
     

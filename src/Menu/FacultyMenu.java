@@ -152,7 +152,7 @@ public class FacultyMenu {
         System.out.print("Enter Chapter Title: ");
         String chapterTitle = scanner.next();
 
-        etextbookService.addChapter(chapterId, textbookId, chapterTitle);
+        etextbookService.addChapter(chapterId, textbookId, chapterTitle, this.loggedUser.getId());
         System.out.println("New chapter added successfully.");
         navigationStack.pop();
     }
@@ -218,7 +218,7 @@ public class FacultyMenu {
             return;
         }
 
-        etextbookService.addSection(textbookId, chapterId, sectionNumber, title);
+        etextbookService.addSection(textbookId, chapterId, sectionNumber, title, this.loggedUser.getId());
 
         System.out.println("\n1. Add New Content Block");
         System.out.println("2. Go Back");

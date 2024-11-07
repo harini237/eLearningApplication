@@ -216,7 +216,7 @@ public class TA {
 
         Integer textbookId = this.courseService.getTextbookByCourse(courseID);
 
-        this.etextbookService.addChapter(chapterID, textbookId, title);
+        this.etextbookService.addChapter(chapterID, textbookId, title, this.user.getId());
 
         System.out.println("1. Add new section\n2. Go back");
         System.out.println("Enter your choice (1-2): ");
@@ -299,7 +299,7 @@ public class TA {
             }
         }
 
-        this.etextbookService.addSection(textbookId, chapterID, sectionNumber, title);
+        this.etextbookService.addSection(textbookId, chapterID, sectionNumber, title, this.user.getId());
 
         System.out.println("1. Add new content block\n2. Go back");
         System.out.println("Enter your choice (1-2): ");

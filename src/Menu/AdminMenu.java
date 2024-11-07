@@ -145,7 +145,7 @@ public class AdminMenu {
             return;
         }
         
-        etextbookService.addChapter(chapterId, textbookId, title);
+        etextbookService.addChapter(chapterId, textbookId, title, this.loggedUser.getId());
 
 
         System.out.println("\n1. Add New Section");
@@ -179,7 +179,7 @@ public class AdminMenu {
             return;
         }
 
-        etextbookService.addSection(textbookId, chapterId, sectionNumber, title);
+        etextbookService.addSection(textbookId, chapterId, sectionNumber, title, this.loggedUser.getId());
 
         System.out.println("\n1. Add New Content Block");
         System.out.println("2. Go Back");
