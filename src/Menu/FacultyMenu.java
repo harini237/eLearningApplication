@@ -75,11 +75,11 @@ public class FacultyMenu {
 
         switch (choice) {
             case 1 -> courseService.viewWorklist(courseId);
-            case 2 -> approveEnrollment(courseId);
+            case 2 -> navigationStack.push(() -> approveEnrollment(courseId));
             case 3 -> courseService.viewStudentsEnrolled(courseId);
-            case 4 -> addNewChapter(textbookId);
-            case 5 -> modifyChapter(textbookId);
-            case 6 -> addTA(courseId);
+            case 4 -> navigationStack.push(() ->addNewChapter(textbookId));
+            case 5 -> navigationStack.push(() -> modifyChapter(textbookId));
+            case 6 -> navigationStack.push(() -> addTA(courseId));
             case 7 -> navigationStack.pop();
             default -> System.out.println("Invalid choice. Returning to Active Course Menu.");
         }
@@ -102,8 +102,8 @@ public class FacultyMenu {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> addNewChapter(textbookId);
-            case 2 -> modifyChapter(textbookId);
+            case 1 -> navigationStack.push(() ->addNewChapter(textbookId));
+            case 2 -> navigationStack.push(() -> modifyChapter(textbookId));
             case 3 -> navigationStack.pop();
             default -> System.out.println("Invalid choice. Returning to Evaluation Course Menu.");
         }
@@ -130,6 +130,7 @@ public class FacultyMenu {
         } else {
             System.out.println("Passwords do not match. Returning to Faculty Landing Menu.");
         }
+        navigationStack.pop();
     }
 
     // Approve Enrollment
@@ -140,6 +141,7 @@ public class FacultyMenu {
 
 //        facultyService.approveEnrollment(courseId, studentId);
         System.out.println("Student enrollment approved.");
+        navigationStack.pop();
     }
 
     // Add New Chapter
@@ -152,6 +154,7 @@ public class FacultyMenu {
 
         etextbookService.addChapter(chapterId, textbookId, chapterTitle);
         System.out.println("New chapter added successfully.");
+        navigationStack.pop();
     }
 
     // Modify Chapter Menu
@@ -172,12 +175,11 @@ public class FacultyMenu {
         switch (choice) {
             case 1 -> etextbookService.hideChapter(textbookId, chapterId);
             case 2 -> etextbookService.deleteChapter(textbookId, chapterId);
-            case 3 -> addNewSection(scanner, textbookId, chapterId);
-            case 4 -> modifySection(textbookId, chapterId);
+            case 3 -> navigationStack.push(() -> addNewSection(scanner, textbookId, chapterId));
+            case 4 ->  navigationStack.push(() -> modifySection(textbookId, chapterId));
             case 5 -> navigationStack.pop();
             default -> System.out.println("Invalid choice. Returning to Modify Chapter Menu.");
         }
-        navigationStack.push(() -> modifyChapter(textbookId));
     }
 
     // Add TA
@@ -194,6 +196,7 @@ public class FacultyMenu {
 
 //        facultyService.addTA(courseId, firstName, lastName, email, password);
         System.out.println("TA added successfully.");
+        navigationStack.pop();
     }
 
     // Add New Section
@@ -247,12 +250,11 @@ public class FacultyMenu {
         switch (choice) {
             case 1 -> etextbookService.hideSection(textbookId, chapterId, sectionId);
             case 2 -> etextbookService.deleteSection(textbookId, chapterId, sectionId);
-            case 3 -> addContentBlock(textbookId, chapterId, sectionId);
-            case 4 -> addModifyBlock(textbookId, chapterId, sectionId);
+            case 3 -> navigationStack.push(() ->addContentBlock(textbookId, chapterId, sectionId));
+            case 4 -> navigationStack.push(() -> addModifyBlock(textbookId, chapterId, sectionId));
             case 5 ->  navigationStack.pop();
             default -> System.out.println("Invalid choice. Returning to Modify Section Menu.");
         }
-        navigationStack.push(() -> modifySection(textbookId, chapterId));
     }
 
     // Add Content Block
@@ -270,13 +272,12 @@ public class FacultyMenu {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> addTextBlock(scanner, textbookId, chapterId, sectionId, blockId);
-            case 2 -> addPictureBlock(scanner, textbookId, chapterId, sectionId, blockId);
-            case 3 -> addActivity(scanner, textbookId, chapterId, sectionId, blockId);
+            case 1 -> navigationStack.push(() -> addTextBlock(scanner, textbookId, chapterId, sectionId, blockId));
+            case 2 -> navigationStack.push(() -> addPictureBlock(scanner, textbookId, chapterId, sectionId, blockId));
+            case 3 -> navigationStack.push(() -> addActivity(scanner, textbookId, chapterId, sectionId, blockId));
             case 4 ->  navigationStack.pop();
             default -> System.out.println("Invalid choice. Returning to Add Content Block Menu.");
         }
-        navigationStack.push(() -> addContentBlock(textbookId, chapterId, sectionId));
     }
 
     private void addModifyBlock(int textbookId, String chapterId, String sectionId) {
@@ -297,17 +298,16 @@ public class FacultyMenu {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> hideContentBlock(scanner, textbookId, chapterId, sectionId, blockId);
-            case 2 -> deleteContentBlock(scanner, textbookId, chapterId, sectionId, blockId);
-            case 3 -> addTextBlock(scanner, textbookId, chapterId, sectionId, blockId);
-            case 4 -> addPictureBlock(scanner, textbookId, chapterId, sectionId, blockId);
-            case 5 -> addActivity(scanner, textbookId, chapterId, sectionId, blockId);
-            case 6 -> hideActivity(scanner, textbookId, chapterId, sectionId, blockId);
-            case 7 -> deleteActivity(scanner, textbookId, chapterId, sectionId, blockId);
-            case 8 -> navigationStack.push(() -> modifySection(textbookId, chapterId));
+            case 1 -> navigationStack.push(() -> hideContentBlock(scanner, textbookId, chapterId, sectionId, blockId));
+            case 2 -> navigationStack.push(() ->deleteContentBlock(scanner, textbookId, chapterId, sectionId, blockId));
+            case 3 -> navigationStack.push(() -> addTextBlock(scanner, textbookId, chapterId, sectionId, blockId));
+            case 4 -> navigationStack.push(() -> addPictureBlock(scanner, textbookId, chapterId, sectionId, blockId));
+            case 5 -> navigationStack.push(() -> addActivity(scanner, textbookId, chapterId, sectionId, blockId));
+            case 6 -> navigationStack.push(() -> hideActivity(scanner, textbookId, chapterId, sectionId, blockId));
+            case 7 -> navigationStack.push(() -> deleteActivity(scanner, textbookId, chapterId, sectionId, blockId));
+            case 8 -> navigationStack.pop();
             default -> System.out.println("Invalid choice. Returning to Add Content Block Menu.");
         }
-        navigationStack.push(() -> addContentBlock(textbookId, chapterId, sectionId));
     }
 
     private void hideContentBlock(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
@@ -318,10 +318,8 @@ public class FacultyMenu {
         
         if (choice == 1) {
             etextbookService.hideContentBlock(contentBlockId, sectionNumber, chapterId, textbookId);
-            navigationStack.pop();
-        } else {
-            navigationStack.pop();  // Go back to Content Block
         }
+        navigationStack.pop();  // Go back to Content Block
     }   
 
     private void deleteContentBlock(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
@@ -332,10 +330,9 @@ public class FacultyMenu {
         
         if (choice == 1) {
             etextbookService.deleteContentBlock(contentBlockId, sectionNumber, chapterId, textbookId);
-            navigationStack.pop();
-        } else {
-            navigationStack.pop();  // Go back to Content Block
         }
+        navigationStack.pop();  // Go back to Content Block
+
     }
 
     private void deleteActivity(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
@@ -346,10 +343,8 @@ public class FacultyMenu {
         
         if (choice == 1) {
             etextbookService.deleteActivity(contentBlockId, sectionNumber, chapterId, textbookId, contentBlockId);
-            navigationStack.pop();
-        } else {
-            navigationStack.pop();  // Go back to Content Block
         }
+        navigationStack.pop();  // Go back to Content Block
     }
     private void hideActivity(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
         System.out.println("\n1. Save");
@@ -359,10 +354,8 @@ public class FacultyMenu {
         
         if (choice == 1) {
             etextbookService.hideActivity(contentBlockId, sectionNumber, chapterId, textbookId, contentBlockId);
-            navigationStack.pop();
-        } else {
-            navigationStack.pop();  // Go back to Content Block
         }
+        navigationStack.pop();  // Go back to Content Block
     }   
 
 
@@ -380,11 +373,9 @@ public class FacultyMenu {
         int choice = scanner.nextInt();
         
         if (choice == 1) {
-            etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, content, "text", this.loggedUser.getId(), this.loggedUser.getId()); 
-            navigationStack.pop();
-        } else {
-            navigationStack.pop();  // Go back to Content Block
+            etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, content, "text", this.loggedUser.getId(), this.loggedUser.getId());
         }
+        navigationStack.pop();  // Go back to Content Block
     }
     private void addPictureBlock(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
         System.out.println("\n--- Add New Picture ---");
@@ -400,10 +391,8 @@ public class FacultyMenu {
     
         if (choice == 1) {
             etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, picturePath, "picture",this.loggedUser.getId(), this.loggedUser.getId());
-           // navigationStack.pop();
-        } else {
-            navigationStack.pop();  // Go back to Content Block
-        }   
+        }
+        navigationStack.pop();  // Go back to Content Block
     }
     
 
@@ -419,9 +408,8 @@ public class FacultyMenu {
 
         if (choice == 1) { 
             navigationStack.push(() -> addQuestion(scanner, textbookId, chapterId, sectionNumber, contentBlockId, activityId));
-        } else {
-            navigationStack.pop();  // Go back to Content Block
         }
+        navigationStack.pop();  // Go back to Content Block
     }
     private void addQuestion(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId, String activityId) {
         System.out.println("\n--- Add Question ---");

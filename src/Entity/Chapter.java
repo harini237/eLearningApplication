@@ -5,6 +5,7 @@ public class Chapter {
     private int textbookId;
     private String title;
     private Boolean visibility;
+    private String createdBy;
 
     // Constructors
     public Chapter() {}
@@ -57,5 +58,13 @@ public class Chapter {
                 ", title='" + title + '\'' +
                 ", visibility=" + visibility +
                 '}';
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }
