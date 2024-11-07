@@ -76,7 +76,7 @@ public class FacultyMenu {
         switch (choice) {
             case 1 -> courseService.viewWorklist(courseId);
             case 2 -> navigationStack.push(() -> approveEnrollment(courseId));
-            case 3 -> courseService.viewStudentsEnrolled(courseId);
+            case 3 -> courseService.viewStudentsEnrolledByCourseId(courseId);
             case 4 -> navigationStack.push(() ->addNewChapter(textbookId));
             case 5 -> navigationStack.push(() -> modifyChapter(textbookId));
             case 6 -> navigationStack.push(() -> addTA(courseId));
