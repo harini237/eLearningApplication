@@ -89,7 +89,7 @@ public class Home {
         // Use UserService to validate login with the hashed password
         User user = userService.getUserById(username);
 
-        if (user != null && user.getRole().equalsIgnoreCase(role) && user.getPassword().equals(password)) {
+        if (user != null && user.getRole().equalsIgnoreCase(role) && user.getPassword().equals(PasswordUtil.hashPassword(password))) {
             System.out.println("Login successful!");
 
             if(user.getIsPwdResetReq()){

@@ -1,7 +1,6 @@
 package Repository;
 
-import Entity.ActivityAttempt;
-import Entity.Etextbook;
+import Entity.*;
 import Util.DatabaseConnection;
 
 import java.sql.*;
@@ -206,6 +205,24 @@ public void deleteChapter(String chapterId, int textbookId) {
             System.err.println("Error hiding content block: " + e.getMessage());
         }
     }
+
+    public Section getSection(int textbookId, String chapterId, String sectionNumber){
+        String sql = "SELECT section_id, chapter_id, textbook_id, title, visibility, created_by " +
+                "FROM section WHERE textbook_id = ? AND chapter_id = ? AND section_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, textbookId);
+            pstmt.setString(2, chapterId);
+            pstmt.setString(3, sectionNumber);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                return new Section(rs.getString("section_id"), rs.getString("chapter_id"), rs.getInt("textbook_id"), rs.getString("title"), rs.getBoolean("visibility"), rs.getString("created_by"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
      
    
     public void addSection(int textbookId, String chapterId, String sectionNumber, String title, String createdBy) {
@@ -325,7 +342,7 @@ public void deleteChapter(String chapterId, int textbookId) {
     }
     
     public void addQuestion(String activityId, int textbookId, String sectionNumber, String chapterId,  String contentBlockId, String questionId, String questionText, String option1, String explanation1, String option2, String explanation2, String option3, String explanation3, String option4, String explanation4, int correctOption) {
-        String sql = "INSERT INTO question (activity_id, textbook_id, section_id ,chapter_id, content_block_id, id, question_text, option_1, explanation_1, option_2, explanation_2, option_3, explanation_3, option_4, explanation_4, correct_option) " +
+        String sql = "INSERT INTO question (activity_id, textbook_id, section_id ,chapter_id, content_block_id, question_id, question_text, option_1, explanation_1, option_2, explanation_2, option_3, explanation_3, option_4, explanation_4, correct_option) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -646,6 +663,44 @@ public void deleteChapter(String chapterId, int textbookId) {
         } catch (SQLException e) {
             System.err.println("Database error: " + e.getMessage());
         }
+    }
+
+    public Chapter getChapter(int textbookId, String chapterId){
+        String sql = "SELECT chapter_id, textbook_id, title, visibility, created_by\n" +
+                "        FROM chapter\n" +
+                "        WHERE chapter_id= ? AND textbook_id= ?;";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, textbookId);
+            pstmt.setString(2, chapterId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                return new Chapter(rs.getString("chapter_id"), rs.getInt("textbook_id"), rs.getString("title"), rs.getBoolean("visibility"), rs.getString("created_by"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ContentBlock getContentBlock (String contentBlockId, String sectionId, String chapterId, int textbookId) {
+        String sql = "SELECT block_id, section_id, chapter_id, textbook_id, content, content_type, hidden, modified_at, created_at, visibility, created_by, modified_by\n" +
+                "FROM content_block\n" +
+                "WHERE block_id= ? AND section_id= ? AND chapter_id= ? AND textbook_id=?;";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, contentBlockId);
+            pstmt.setString(2, sectionId);
+            pstmt.setString(3, chapterId);
+            pstmt.setInt(4, textbookId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                return new ContentBlock(rs.getString("block_id"), rs.getString("section_id"), rs.getString("chapter_id"), rs.getInt("textbook_id"), rs.getString("content"), rs.getString("content_type"), rs.getString("created_by"), rs.getString("modified_by"), rs.getBoolean("hidden"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     
 }

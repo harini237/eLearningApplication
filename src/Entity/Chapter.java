@@ -1,7 +1,7 @@
 package Entity;
 
 public class Chapter {
-    private int id;
+    private String chapterId;
     private int textbookId;
     private String title;
     private Boolean visibility;
@@ -10,8 +10,8 @@ public class Chapter {
     // Constructors
     public Chapter() {}
 
-    public Chapter(int id, int textbookId, String title, Boolean visibility) {
-        this.id = id;
+    public Chapter(String id, int textbookId, String title, Boolean visibility, String createdBy) {
+        this.chapterId = id;
         this.textbookId = textbookId;
         this.title = title;
         this.visibility = visibility;
@@ -19,12 +19,12 @@ public class Chapter {
     }
 
     // Getters and Setters
-    public int getId() {
-        return id;
+    public String getId() {
+        return chapterId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(String id) {
+        this.chapterId = id;
     }
 
     public int getTextbookId() {

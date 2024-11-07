@@ -169,7 +169,7 @@ public class FacultyMenu {
 
         switch (choice) {
             case 1 -> etextbookService.hideChapter(textbookId, chapterId);
-            case 2 -> etextbookService.deleteChapter(textbookId, chapterId);
+            case 2 -> etextbookService.deleteChapter(textbookId, chapterId, this.loggedUser);
             case 3 -> navigationStack.push(() -> addNewSection(scanner, textbookId, chapterId));
             case 4 ->  navigationStack.push(() -> modifySection(textbookId, chapterId));
             case 5 -> navigationStack.pop();
@@ -219,8 +219,9 @@ public class FacultyMenu {
         System.out.println("2. Go Back");
         System.out.print("Enter choice (1-2): ");
         int choice = scanner.nextInt();
-
+        System.out.println("Selected Option : "+ choice);
         if (choice == 1) {
+            System.out.println(" ITS IN HERE ");
             navigationStack.push(() -> addContentBlock(textbookId, chapterId, sectionNumber));
         } else {
             navigationStack.pop();  // Go back to Chapter creation
@@ -244,7 +245,7 @@ public class FacultyMenu {
 
         switch (choice) {
             case 1 -> etextbookService.hideSection(textbookId, chapterId, sectionId);
-            case 2 -> etextbookService.deleteSection(textbookId, chapterId, sectionId);
+            case 2 -> etextbookService.deleteSection(textbookId, chapterId, sectionId,this.loggedUser);
             case 3 -> navigationStack.push(() ->addContentBlock(textbookId, chapterId, sectionId));
             case 4 -> navigationStack.push(() -> addModifyBlock(textbookId, chapterId, sectionId));
             case 5 ->  navigationStack.pop();
@@ -294,7 +295,7 @@ public class FacultyMenu {
 
         switch (choice) {
             case 1 -> navigationStack.push(() -> hideContentBlock(scanner, textbookId, chapterId, sectionId, blockId));
-            case 2 -> navigationStack.push(() ->deleteContentBlock(scanner, textbookId, chapterId, sectionId, blockId));
+            case 2 -> navigationStack.push(() ->deleteContentBlock(scanner, textbookId, chapterId, sectionId, blockId, this.loggedUser));
             case 3 -> navigationStack.push(() -> addTextBlock(scanner, textbookId, chapterId, sectionId, blockId));
             case 4 -> navigationStack.push(() -> addPictureBlock(scanner, textbookId, chapterId, sectionId, blockId));
             case 5 -> navigationStack.push(() -> addActivity(scanner, textbookId, chapterId, sectionId, blockId));
@@ -313,21 +314,22 @@ public class FacultyMenu {
         
         if (choice == 1) {
             etextbookService.hideContentBlock(contentBlockId, sectionNumber, chapterId, textbookId);
+        } else {
+            navigationStack.pop();  // Go back to Content Block
         }
-        navigationStack.pop();  // Go back to Content Block
     }   
 
-    private void deleteContentBlock(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
+    private void deleteContentBlock(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId, User user) {
         System.out.println("\n1. Save");
         System.out.println("2. Cancel");
         System.out.print("Enter choice (1-2): ");
         int choice = scanner.nextInt();
         
         if (choice == 1) {
-            etextbookService.deleteContentBlock(contentBlockId, sectionNumber, chapterId, textbookId);
+            etextbookService.deleteContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, user);
+        } else {
+            navigationStack.pop();  // Go back to Content Block
         }
-        navigationStack.pop();  // Go back to Content Block
-
     }
 
     private void deleteActivity(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
@@ -338,8 +340,9 @@ public class FacultyMenu {
         
         if (choice == 1) {
             etextbookService.deleteActivity(contentBlockId, sectionNumber, chapterId, textbookId, contentBlockId);
+        } else {
+            navigationStack.pop();  // Go back to Content Block
         }
-        navigationStack.pop();  // Go back to Content Block
     }
     private void hideActivity(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
         System.out.println("\n1. Save");
@@ -349,8 +352,9 @@ public class FacultyMenu {
         
         if (choice == 1) {
             etextbookService.hideActivity(contentBlockId, sectionNumber, chapterId, textbookId, contentBlockId);
+        }else {
+            navigationStack.pop();  // Go back to Content Block
         }
-        navigationStack.pop();  // Go back to Content Block
     }   
 
 
@@ -369,8 +373,9 @@ public class FacultyMenu {
         
         if (choice == 1) {
             etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, content, "text", this.loggedUser.getId(), this.loggedUser.getId());
+        } else {
+            navigationStack.pop();  // Go back to Content Block
         }
-        navigationStack.pop();  // Go back to Content Block
     }
     private void addPictureBlock(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
         System.out.println("\n--- Add New Picture ---");
@@ -386,8 +391,9 @@ public class FacultyMenu {
     
         if (choice == 1) {
             etextbookService.addContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, picturePath, "picture",this.loggedUser.getId(), this.loggedUser.getId());
+        } else {
+            navigationStack.pop();  // Go back to Content Block
         }
-        navigationStack.pop();  // Go back to Content Block
     }
     
 
@@ -396,15 +402,16 @@ public class FacultyMenu {
         System.out.print("Enter Activity ID: ");
         String activityId = scanner.next();
 
-        System.out.println("\n1. Add Question");
+        System.out.println("\n1. Add Question Here");
         System.out.println("2. Go Back");
         System.out.print("Enter choice (1-2): ");
         int choice = scanner.nextInt();
 
-        if (choice == 1) { 
+        if (choice == 1) {
             navigationStack.push(() -> addQuestion(scanner, textbookId, chapterId, sectionNumber, contentBlockId, activityId));
+        } else {
+            navigationStack.pop();  // Go back to Content Block
         }
-        navigationStack.pop();  // Go back to Content Block
     }
     private void addQuestion(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId, String activityId) {
         System.out.println("\n--- Add Question ---");
@@ -451,7 +458,7 @@ public class FacultyMenu {
             // Rollback: delete the associated activity and content block if question creation fails
             System.out.println("Rolling back changes due to error.");
             etextbookService.deleteActivity(contentBlockId, sectionNumber, chapterId, textbookId, activityId); // Implement deleteActivity method in EtextbookService
-            etextbookService.deleteContentBlock(contentBlockId, sectionNumber, chapterId, textbookId); // Implement deleteContentBlock method in EtextbookService
+            etextbookService.deleteContentBlock(contentBlockId, sectionNumber, chapterId, textbookId, this.loggedUser); // Implement deleteContentBlock method in EtextbookService
     
             System.out.println("Associated activity and content block deleted successfully.");
         }

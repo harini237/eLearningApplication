@@ -1,10 +1,10 @@
 package Service;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-import Entity.Etextbook;
-import Entity.Activity;
+import Entity.*;
 import Repository.ActivityRepository;
 import Repository.EtextbookRepository;
 
@@ -12,12 +12,14 @@ public class EtextbookService {
 
     private final EtextbookRepository etextbookRepository;
     private final ActivityRepository activityRepository;
+    private final PermissionService permissionService;
 
     // Constructor
     public EtextbookService() {
 
         this.etextbookRepository = new EtextbookRepository();
         this.activityRepository = new ActivityRepository();
+        this.permissionService = new PermissionService();
     }
 
     public void createEtextbook(int textbookId, String title) {
@@ -49,9 +51,14 @@ public class EtextbookService {
         }
     }
 
-    public void deleteChapter(int textbookId, String chapterId) {
+    public void deleteChapter(int textbookId, String chapterId, User user) {
         try {
-            etextbookRepository.deleteChapter(chapterId, textbookId);
+            Chapter chapter = etextbookRepository.getChapter(textbookId, chapterId);
+            if(permissionService.canDeleteChapter(user, chapter)){
+                etextbookRepository.deleteChapter(chapterId, textbookId);
+            } else {
+                System.out.println("Sorry Restricted Access, You can't delete this section!!!");
+            }
         } catch (Exception e) {
             System.err.println("Error deleting chapter: " + e.getMessage());
         }
@@ -124,10 +131,16 @@ public class EtextbookService {
         }
     }
     
-    public void deleteContentBlock(String contentBlockId, String sectionId, String chapterId, int textbookId) {
+    public void deleteContentBlock(String contentBlockId, String sectionId, String chapterId, int textbookId, User user) {
         try {
-            etextbookRepository.deleteContentBlock(contentBlockId, sectionId, chapterId, textbookId);
-            System.out.println("Content block deleted successfully.");
+            ContentBlock content = etextbookRepository.getContentBlock(contentBlockId, sectionId, chapterId, textbookId);
+            if(permissionService.canDeleteContent(user, content)){
+                etextbookRepository.deleteContentBlock(contentBlockId, sectionId, chapterId, textbookId);
+                System.out.println("Content block deleted successfully.");
+
+            } else {
+                System.out.println("Sorry Restricted Access, You can't delete this section!!!");
+            }
         } catch (Exception e) {
             System.err.println("Error deleting content block: " + e.getMessage());
         }
@@ -141,9 +154,16 @@ public class EtextbookService {
         }
     }
     
-    public void deleteSection(int textbookId, String chapterId, String sectionId) {
+    public void deleteSection(int textbookId, String chapterId, String sectionId, User user) {
         try {
-            etextbookRepository.deleteSection(textbookId, chapterId, sectionId);
+            // Get Section
+            Section section = etextbookRepository.getSection(textbookId, chapterId, sectionId);
+            if(permissionService.canDeleteSection(user, section)){
+                etextbookRepository.deleteSection(textbookId, chapterId, sectionId);
+            } else {
+                System.out.println("Sorry Restricted Access, You can't delete this section!!!");
+            }
+
         } catch (Exception e) {
             System.err.println("Error deleting section: " + e.getMessage());
         }

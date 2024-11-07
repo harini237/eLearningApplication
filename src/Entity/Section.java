@@ -1,39 +1,19 @@
 package Entity;
 
 public class Section {
-    private Integer id;
-    private Integer chapterId;
-    private Integer textbookId;
-    private String title;
-    private Boolean visibility;
-    private String createdBy;
-
-    // Constructors
-    public Section() {}
-
-    public Section(Integer id, Integer chapterId, Integer textbookId, String title, Boolean visibility, String createdBy) {
-        this.id = id;
-        this.chapterId = chapterId;
-        this.textbookId = textbookId;
-        this.title = title;
-        this.visibility = visibility;
-        this.createdBy = createdBy;
-    }
-
-    // Getters and Setters
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Integer getChapterId() {
+    public String getChapterId() {
         return chapterId;
     }
 
-    public void setChapterId(Integer chapterId) {
+    public void setChapterId(String chapterId) {
         this.chapterId = chapterId;
     }
 
@@ -60,6 +40,26 @@ public class Section {
     public void setVisibility(Boolean visibility) {
         this.visibility = visibility;
     }
+
+    private String id;
+    private String chapterId;
+    private Integer  textbookId;
+    private String title;
+    private Boolean visibility;
+    private String createdBy;
+
+    // Constructors
+    public Section() {}
+
+    public Section(String id, String chapterId, Integer textbookId, String title, Boolean visibility, String createdBy) {
+        this.id = id;
+        this.chapterId = chapterId;
+        this.textbookId = textbookId;
+        this.title = title;
+        this.visibility = visibility;
+        this.createdBy = createdBy;
+    }
+
 
     @Override
     public String toString() {
