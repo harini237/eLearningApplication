@@ -266,10 +266,12 @@ public class FacultyMenu {
         System.out.println("\n--- Add Content Block Menu ---");
         System.out.println("1. Hide Content Block");
         System.out.println("2. Delete Content Block");
-        System.out.println("1. Add Text");
-        System.out.println("2. Add Picture");
-        System.out.println("3. Add Activity");
-        System.out.println("4. Go Back");
+        System.out.println("3. Add Text");
+        System.out.println("4. Add Picture");
+        System.out.println("5. Add Activity");
+        System.out.println("6. Hide Activity");
+        System.out.println("7. Delete Activity");
+        System.out.println("8. Go Back");
         System.out.print("Enter choice (1-4): ");
         int choice = scanner.nextInt();
 
@@ -279,7 +281,9 @@ public class FacultyMenu {
             case 3 -> addTextBlock(scanner, textbookId, chapterId, sectionId, blockId);
             case 4 -> addPictureBlock(scanner, textbookId, chapterId, sectionId, blockId);
             case 5 -> addActivity(scanner, textbookId, chapterId, sectionId, blockId);
-            case 6 -> navigationStack.push(() -> modifySection(textbookId, chapterId));
+            case 6 -> hideActivity(scanner, textbookId, chapterId, sectionId, blockId);
+            case 7 -> deleteActivity(scanner, textbookId, chapterId, sectionId, blockId);
+            case 8 -> navigationStack.push(() -> modifySection(textbookId, chapterId));
             default -> System.out.println("Invalid choice. Returning to Add Content Block Menu.");
         }
         navigationStack.push(() -> addContentBlock(textbookId, chapterId, sectionId));
@@ -312,6 +316,34 @@ public class FacultyMenu {
             navigationStack.pop();  // Go back to Content Block
         }
     }
+
+    private void deleteActivity(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
+        System.out.println("\n1. Save");
+        System.out.println("2. Cancel");
+        System.out.print("Enter choice (1-2): ");
+        int choice = scanner.nextInt();
+        
+        if (choice == 1) {
+            etextbookService.deleteActivity(contentBlockId, sectionNumber, chapterId, textbookId, contentBlockId);
+            navigationStack.pop();
+        } else {
+            navigationStack.pop();  // Go back to Content Block
+        }
+    }
+    private void hideActivity(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
+        System.out.println("\n1. Save");
+        System.out.println("2. Cancel");
+        System.out.print("Enter choice (1-2): ");
+        int choice = scanner.nextInt();
+        
+        if (choice == 1) {
+            etextbookService.hideActivity(contentBlockId, sectionNumber, chapterId, textbookId, contentBlockId);
+            navigationStack.pop();
+        } else {
+            navigationStack.pop();  // Go back to Content Block
+        }
+    }   
+
 
 
     private void addTextBlock(Scanner scanner, int textbookId, String chapterId, String sectionNumber, String contentBlockId) {
