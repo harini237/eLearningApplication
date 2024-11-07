@@ -175,6 +175,27 @@ public class UserRepository {
         }
     }
 
+    public void updateUserRole (String userId, int roleId, String role) {
+        User user = null;
+        String sql = "UPDATE user " +
+                "SET roleId = ?, role = ? " +
+                "WHERE id = ?";
+
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, roleId);
+            pstmt.setString(2, role);
+            pstmt.setString(3, userId);
+
+            pstmt.executeUpdate();
+            System.out.println("Updated role for "+userId);
+        } catch (SQLException e) {
+            System.out.println("Could not update role.");
+        }
+    }
+
 
     public List<Permission> getUserPermissions(int userId) {
         Role role = getUserRoles(userId);

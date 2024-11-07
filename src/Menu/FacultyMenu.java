@@ -43,7 +43,7 @@ public class FacultyMenu {
         switch (choice) {
             case 1 -> navigationStack.push(this::activeCourseMenu);
             case 2 -> navigationStack.push(this::evaluationCourseMenu);
-//            case 3 -> facultyService.viewCourses();
+            case 3 -> courseService.viewAssignedCourses(this.loggedUser.getId());
             case 4 -> changePassword();
             case 5 -> {
                 navigationStack.pop();
@@ -109,11 +109,6 @@ public class FacultyMenu {
         }
     }
 
-    // View Courses
-    private void viewCourses() {
-//        facultyService.viewCourses();
-    }
-
     // Change Password
     private void changePassword() {
         Scanner scanner = new Scanner(System.in);
@@ -139,7 +134,7 @@ public class FacultyMenu {
         System.out.print("Enter Student ID to approve: ");
         String studentId = scanner.next();
 
-//        facultyService.approveEnrollment(courseId, studentId);
+        courseService.approveEnrollment(studentId, courseId);
         System.out.println("Student enrollment approved.");
         navigationStack.pop();
     }
@@ -194,7 +189,7 @@ public class FacultyMenu {
         System.out.print("Enter TA Default Password: ");
         String password = scanner.next();
 
-//        facultyService.addTA(courseId, firstName, lastName, email, password);
+        courseService.addTA(courseId, firstName, lastName, email, password);
         System.out.println("TA added successfully.");
         navigationStack.pop();
     }

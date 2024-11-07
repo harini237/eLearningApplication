@@ -29,6 +29,28 @@ public class PendingApprovalRepository {
         }
     }
 
+    public PendingApproval findApprovalByKey (String student_id, String course_token) {
+        PendingApproval pa = null;
+        String sql = "SELECT course_token, student_id FROM pending_approval " +
+                "WHERE course_token = ? AND student_id = ?";
+
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, course_token);
+            pstmt.setString(2, student_id);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                pa = new PendingApproval(rs.getString("student_id"),rs.getString("course_token"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Could not find pending approval.");
+        }
+        return pa;
+    }
+
     public List<PendingApproval> findApprovalsByCourse (String course_token) {
         List<PendingApproval> approvals = new ArrayList<>();
 

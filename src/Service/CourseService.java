@@ -111,20 +111,41 @@ public class CourseService {
         }
     }
 
-    public void approveEnrollment (String student_id, String faculty_id) {
-        List<PendingApproval> pendingApprovals = new ArrayList<>();
-        pendingApprovals = this.pendingApprovalRepository.findApprovalsByStudentAndFaculty(student_id, faculty_id);
+    public void addTA (String courseId, String firstName, String lastName, String email, String password) {
+        ActiveCourse ac = this.activeCourseRepository.findActiveCourseById(courseId);
+        String course_token = ac.getToken();
+        User user = this.userService.getUserByEmail(email);
+        if (user != null) {
+            Integer roleId = user.getRoleId();
+            if (roleId == 3) {
+                this.addTaToActiveCourse(user.getId(), course_token);
+            } else {
+                this.userService.updateUserRoleById(user.getId(), roleId);
+            }
+        } else {
+            this.userService.createFirstTimeUser(firstName, lastName, email, password, 3);
+            user = this.userService.getUserByEmail(email);
+        }
+        TaCourseMap taCourseMap = new TaCourseMap(user.getId(), course_token);
+        this.taCourseMapRepository.createTaCourseMap(taCourseMap);
+    }
 
-        for (PendingApproval pa: pendingApprovals) {
-            ActiveCourse ac = this.activeCourseRepository.findActiveCourseByToken(pa.getCourse_token());
+    public void approveEnrollment (String student_id, String course_id) {
+        ActiveCourse ac = this.activeCourseRepository.findActiveCourseById(course_id);
+        String course_token = ac.getToken();
+
+        PendingApproval pa = this.pendingApprovalRepository.findApprovalByKey(student_id, course_token);
+        if (pa != null) {
             if (ac.getCapacity() > 0) {
-                Enrollment e = new Enrollment(pa.getCourse_token(), pa.getStudent_id());
+                Enrollment e = new Enrollment(student_id, course_token);
                 this.enrollmentRepository.createEnrollment(e);
                 this.pendingApprovalRepository.deletePendingApproval(pa.getStudent_id(), pa.getCourse_token());
                 this.activeCourseRepository.updateCapacity(ac.getToken(), ac.getCapacity() - 1);
             } else {
                 System.out.println("Could not approve enrollment. Class capacity exceeded!");
             }
+        } else {
+            System.out.println("There is no pending approval for student "+student_id+" in course "+course_id);
         }
     }
 
