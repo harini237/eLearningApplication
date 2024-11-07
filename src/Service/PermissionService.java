@@ -1,6 +1,7 @@
 package Service;
 
 import Entity.ContentBlock;
+import Entity.Section;
 import Entity.User;
 import Repository.UserRepository;
 
@@ -41,6 +42,19 @@ public class PermissionService {
             return true; // Faculty can delete their own content
         }
         if (isTA(user) && userRepository.getUserById(content.getCreatedBy()).getRole().equals("TA") && content.getCreatedBy().equals(user.getId())) {
+            return true; // TA can delete their own content or other TAs' content
+        }
+        return false;
+    }
+
+    public boolean canDeleteSection(User user, Section section) {
+        if (isAdmin(user)) {
+            return true; // Admin can delete any content
+        }
+        if (isFaculty(user) && section.getCreatedBy().equals(user.getId())) {
+            return true; // Faculty can delete their own content
+        }
+        if (isTA(user) && userRepository.getUserById(section.getCreatedBy()).getRole().equals("TA") && section.getCreatedBy().equals(user.getId())) {
             return true; // TA can delete their own content or other TAs' content
         }
         return false;

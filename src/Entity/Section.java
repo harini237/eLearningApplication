@@ -6,16 +6,18 @@ public class Section {
     private Integer textbookId;
     private String title;
     private Boolean visibility;
+    private String createdBy;
 
     // Constructors
     public Section() {}
 
-    public Section(Integer id, Integer chapterId, Integer textbookId, String title, Boolean visibility) {
+    public Section(Integer id, Integer chapterId, Integer textbookId, String title, Boolean visibility, String createdBy) {
         this.id = id;
         this.chapterId = chapterId;
         this.textbookId = textbookId;
         this.title = title;
         this.visibility = visibility;
+        this.createdBy = createdBy;
     }
 
     // Getters and Setters
@@ -68,5 +70,13 @@ public class Section {
                 ", title='" + title + '\'' +
                 ", visibility=" + visibility +
                 '}';
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }
