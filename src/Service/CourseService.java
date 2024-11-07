@@ -119,6 +119,7 @@ public class CourseService {
             Integer roleId = user.getRoleId();
             if (roleId == 3) {
                 this.addTaToActiveCourse(user.getId(), course_token);
+                return;
             } else {
                 this.userService.updateUserRoleById(user.getId(), roleId);
             }
@@ -126,8 +127,7 @@ public class CourseService {
             this.userService.createFirstTimeUser(firstName, lastName, email, password, 3);
             user = this.userService.getUserByEmail(email);
         }
-        TaCourseMap taCourseMap = new TaCourseMap(user.getId(), course_token);
-        this.taCourseMapRepository.createTaCourseMap(taCourseMap);
+        this.addTaToActiveCourse(user.getId(), course_token);
     }
 
     public void approveEnrollment (String student_id, String course_id) {
