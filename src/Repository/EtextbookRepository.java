@@ -596,7 +596,7 @@ public void deleteChapter(String chapterId, int textbookId) {
                         System.out.print("Enter the ID of the correct answer (1-4): ");
                         int userAnswer = scanner.nextInt();
                         int attemptScore = (userAnswer == rs.getInt("correct_option")) ? 3 : 1;
-                        System.out.println(userAnswer == rs.getInt("correct_option") ? "Correct Answer!" : "Incorrect Answer. The correct option is " + correctOption);
+                        System.out.println(userAnswer == rs.getInt("correct_option") ? "Correct Answer!" : "Incorrect Answer. The correct option is " + rs.getInt("correct_option"));
 
                         // Log the activity attempt
                         ActivityAttempt attempt = new ActivityAttempt(
